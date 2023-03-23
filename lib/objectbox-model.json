@@ -1,0 +1,72 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "2:1",
+      "lastPropertyId": "7:7690913918601784105",
+      "name": "ObjectboxWord",
+      "properties": [
+        {
+          "id": "1:8246024000468252730",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1933101338332134448",
+          "name": "langId",
+          "type": 6
+        },
+        {
+          "id": "3:2245466148711448707",
+          "name": "letter",
+          "type": 9
+        },
+        {
+          "id": "4:4737207353756559193",
+          "name": "wordId",
+          "type": 6
+        },
+        {
+          "id": "5:7231270088001517744",
+          "name": "word",
+          "type": 9
+        },
+        {
+          "id": "6:6985924929833847872",
+          "name": "lword",
+          "type": 9
+        },
+        {
+          "id": "7:7690913918601784105",
+          "name": "lwordMask",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:1",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    6340663483916346837
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    469393349394600467,
+    6468022653824554886,
+    4251876405332875370,
+    962416795588697287,
+    1446233554302581116,
+    6725053102633110456,
+    5056786493163352175
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
