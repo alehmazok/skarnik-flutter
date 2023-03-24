@@ -15,7 +15,7 @@ class InitDatabaseUseCase extends NoArgsEitherUseCase<int> {
   InitDatabaseUseCase(this._databaseRepository);
 
   @override
-  FutureOr<Either<Object, int>> call() async {
+  Future<Either<Object, int>> call() async {
     try {
       final result = await _databaseRepository.createDatabase();
 

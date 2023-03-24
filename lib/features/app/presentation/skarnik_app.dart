@@ -4,8 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 
 import '../domain/use_case/init_database.dart';
-import 'skarnk_router.dart';
+import '../domain/use_case/init_remote_config.dart';
 import 'skarnik_app_cubit.dart';
+import 'skarnk_router.dart';
 
 class SkarnikApp extends StatelessWidget {
   const SkarnikApp({Key? key}) : super(key: key);
@@ -30,6 +31,7 @@ class SkarnikApp extends StatelessWidget {
       builder: (lightTheme, darkTheme) => BlocProvider(
         create: (context) => SkarnikAppCubit(
           initDatabaseUseCase: getIt<InitDatabaseUseCase>(),
+          initRemoteConfigUseCase: getIt<InitRemoteConfigUseCase>(),
         ),
         child: MaterialApp.router(
           routerConfig: SkarnikRouter.goRouter,

@@ -48,7 +48,7 @@ class TranslationPage extends StatelessWidget {
             if (state is TranslationLoadedState) {
               return SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

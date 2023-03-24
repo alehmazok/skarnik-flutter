@@ -19,9 +19,8 @@ class SearchUseCase extends EitherUseCase1<Iterable<Word>, String> {
   @override
   Future<Either<Object, Iterable<Word>>> call(String argument) async {
     try {
-      _logger.fine('Search for query: $argument');
       final results = await _searchRepository.search(argument);
-      _logger.fine(results.toString());
+      _logger.fine('For query `$argument` found ${results.length} results');
 
       return right(results);
     } catch (e, st) {
