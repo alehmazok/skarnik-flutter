@@ -3,8 +3,8 @@ import 'package:objectbox/objectbox.dart';
 import '../../domain/entity/word.dart';
 
 @Entity(uid: 1)
-class ObjectboxWord implements Word {
-  @Id()
+class ObjectboxSearchWord implements Word {
+  @Id(assignable: false)
   int id = 0;
 
   @override
@@ -14,6 +14,7 @@ class ObjectboxWord implements Word {
   String letter;
 
   @override
+  @Unique()
   int wordId;
 
   @override
@@ -25,7 +26,7 @@ class ObjectboxWord implements Word {
   @override
   String? lwordMask;
 
-  ObjectboxWord({
+  ObjectboxSearchWord({
     required this.langId,
     required this.letter,
     required this.wordId,

@@ -12,10 +12,10 @@ class ObjectboxWordRepository implements WordRepository {
 
   @override
   Future<Word?> getWord({required langId, required wordId}) async {
-    final box = objectboxService.wordBox;
+    final box = objectboxService.searchBox;
     final query = box
         .query(
-          ObjectboxWord_.langId.equals(langId) & ObjectboxWord_.wordId.equals(wordId),
+          ObjectboxSearchWord_.langId.equals(langId) & ObjectboxSearchWord_.wordId.equals(wordId),
         )
         .build();
 

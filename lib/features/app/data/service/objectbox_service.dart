@@ -1,10 +1,18 @@
-import 'package:skarnik_flutter/features/app/data/model/objectbox_word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
+import '../model/objectbox_history_word.dart';
+import '../model/objectbox_search_word.dart';
+
 class ObjectboxService {
-  final Store store;
+  final Store searchStore;
+  final Store historyStore;
 
-  Box<ObjectboxWord> get wordBox => store.box<ObjectboxWord>();
+  Box<ObjectboxSearchWord> get searchBox => searchStore.box<ObjectboxSearchWord>();
 
-  ObjectboxService(this.store);
+  Box<ObjectboxHistoryWord> get historyBox => historyStore.box<ObjectboxHistoryWord>();
+
+  ObjectboxService({
+    required this.searchStore,
+    required this.historyStore,
+  });
 }

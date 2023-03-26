@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:skarnik_flutter/features/app/data/model/objectbox_word.dart';
+import 'package:skarnik_flutter/features/app/data/model/objectbox_search_word.dart';
 import 'package:skarnik_flutter/features/app/data/service/objectbox_service.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
@@ -14,12 +14,12 @@ class ObjectboxSearchRepository implements SearchRepository {
 
   @override
   Future<Iterable<Word>> search(String query) async {
-    final box = _objectboxService.store.box<ObjectboxWord>();
+    final box = _objectboxService.searchStore.box<ObjectboxSearchWord>();
     final queryBuilder = box
         .query(
-          ObjectboxWord_.lword.startsWith(query) | ObjectboxWord_.lwordMask.startsWith(query),
+          ObjectboxSearchWord_.lword.startsWith(query) | ObjectboxSearchWord_.lwordMask.startsWith(query),
         )
-        .order(ObjectboxWord_.lword)
+        .order(ObjectboxSearchWord_.lword)
         .build();
 
     return queryBuilder.find();

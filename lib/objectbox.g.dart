@@ -14,14 +14,15 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'features/app/data/model/objectbox_word.dart';
+import 'features/app/data/model/objectbox_history_word.dart';
+import 'features/app/data/model/objectbox_search_word.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 1),
-      name: 'ObjectboxWord',
+      name: 'ObjectboxSearchWord',
       lastPropertyId: const IdUid(7, 7690913918601784105),
       flags: 0,
       properties: <ModelProperty>[
@@ -44,7 +45,8 @@ final _entities = <ModelEntity>[
             id: const IdUid(4, 4737207353756559193),
             name: 'wordId',
             type: 6,
-            flags: 0),
+            flags: 40,
+            indexId: const IdUid(1, 6950839157362923633)),
         ModelProperty(
             id: const IdUid(5, 7231270088001517744),
             name: 'word',
@@ -57,6 +59,51 @@ final _entities = <ModelEntity>[
             flags: 0),
         ModelProperty(
             id: const IdUid(7, 7690913918601784105),
+            name: 'lwordMask',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(3, 2),
+      name: 'ObjectboxHistoryWord',
+      lastPropertyId: const IdUid(7, 62019299264781155),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 2210635481141394105),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 3569231611713480762),
+            name: 'langId',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 8032261620738518603),
+            name: 'letter',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 2168629768157903924),
+            name: 'wordId',
+            type: 6,
+            flags: 40,
+            indexId: const IdUid(2, 6767957250904925596)),
+        ModelProperty(
+            id: const IdUid(5, 987607834441689594),
+            name: 'word',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 6907252566274804777),
+            name: 'lword',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 62019299264781155),
             name: 'lwordMask',
             type: 9,
             flags: 0)
@@ -85,8 +132,8 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(2, 1),
-      lastIndexId: const IdUid(0, 0),
+      lastEntityId: const IdUid(3, 2),
+      lastIndexId: const IdUid(2, 6767957250904925596),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [6340663483916346837],
@@ -106,15 +153,15 @@ ModelDefinition getObjectBoxModel() {
       version: 1);
 
   final bindings = <Type, EntityDefinition>{
-    ObjectboxWord: EntityDefinition<ObjectboxWord>(
+    ObjectboxSearchWord: EntityDefinition<ObjectboxSearchWord>(
         model: _entities[0],
-        toOneRelations: (ObjectboxWord object) => [],
-        toManyRelations: (ObjectboxWord object) => {},
-        getId: (ObjectboxWord object) => object.id,
-        setId: (ObjectboxWord object, int id) {
+        toOneRelations: (ObjectboxSearchWord object) => [],
+        toManyRelations: (ObjectboxSearchWord object) => {},
+        getId: (ObjectboxSearchWord object) => object.id,
+        setId: (ObjectboxSearchWord object, int id) {
           object.id = id;
         },
-        objectToFB: (ObjectboxWord object, fb.Builder fbb) {
+        objectToFB: (ObjectboxSearchWord object, fb.Builder fbb) {
           final letterOffset = fbb.writeString(object.letter);
           final wordOffset = fbb.writeString(object.word);
           final lwordOffset = fbb.writeString(object.lword);
@@ -136,7 +183,54 @@ ModelDefinition getObjectBoxModel() {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
 
-          final object = ObjectboxWord(
+          final object = ObjectboxSearchWord(
+              langId:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              letter: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              wordId:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+              word: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 12, ''),
+              lword: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 14, ''),
+              lwordMask: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 16))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+
+          return object;
+        }),
+    ObjectboxHistoryWord: EntityDefinition<ObjectboxHistoryWord>(
+        model: _entities[1],
+        toOneRelations: (ObjectboxHistoryWord object) => [],
+        toManyRelations: (ObjectboxHistoryWord object) => {},
+        getId: (ObjectboxHistoryWord object) => object.id,
+        setId: (ObjectboxHistoryWord object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ObjectboxHistoryWord object, fb.Builder fbb) {
+          final letterOffset = fbb.writeString(object.letter);
+          final wordOffset = fbb.writeString(object.word);
+          final lwordOffset = fbb.writeString(object.lword);
+          final lwordMaskOffset = object.lwordMask == null
+              ? null
+              : fbb.writeString(object.lwordMask!);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.langId);
+          fbb.addOffset(2, letterOffset);
+          fbb.addInt64(3, object.wordId);
+          fbb.addOffset(4, wordOffset);
+          fbb.addOffset(5, lwordOffset);
+          fbb.addOffset(6, lwordMaskOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ObjectboxHistoryWord(
               langId:
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
               letter: const fb.StringReader(asciiOptimization: true)
@@ -158,33 +252,64 @@ ModelDefinition getObjectBoxModel() {
   return ModelDefinition(model, bindings);
 }
 
-/// [ObjectboxWord] entity fields to define ObjectBox queries.
-class ObjectboxWord_ {
-  /// see [ObjectboxWord.id]
+/// [ObjectboxSearchWord] entity fields to define ObjectBox queries.
+class ObjectboxSearchWord_ {
+  /// see [ObjectboxSearchWord.id]
   static final id =
-      QueryIntegerProperty<ObjectboxWord>(_entities[0].properties[0]);
+      QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[0]);
 
-  /// see [ObjectboxWord.langId]
+  /// see [ObjectboxSearchWord.langId]
   static final langId =
-      QueryIntegerProperty<ObjectboxWord>(_entities[0].properties[1]);
+      QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[1]);
 
-  /// see [ObjectboxWord.letter]
+  /// see [ObjectboxSearchWord.letter]
   static final letter =
-      QueryStringProperty<ObjectboxWord>(_entities[0].properties[2]);
+      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[2]);
 
-  /// see [ObjectboxWord.wordId]
+  /// see [ObjectboxSearchWord.wordId]
   static final wordId =
-      QueryIntegerProperty<ObjectboxWord>(_entities[0].properties[3]);
+      QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[3]);
 
-  /// see [ObjectboxWord.word]
+  /// see [ObjectboxSearchWord.word]
   static final word =
-      QueryStringProperty<ObjectboxWord>(_entities[0].properties[4]);
+      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[4]);
 
-  /// see [ObjectboxWord.lword]
+  /// see [ObjectboxSearchWord.lword]
   static final lword =
-      QueryStringProperty<ObjectboxWord>(_entities[0].properties[5]);
+      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[5]);
 
-  /// see [ObjectboxWord.lwordMask]
+  /// see [ObjectboxSearchWord.lwordMask]
   static final lwordMask =
-      QueryStringProperty<ObjectboxWord>(_entities[0].properties[6]);
+      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[6]);
+}
+
+/// [ObjectboxHistoryWord] entity fields to define ObjectBox queries.
+class ObjectboxHistoryWord_ {
+  /// see [ObjectboxHistoryWord.id]
+  static final id =
+      QueryIntegerProperty<ObjectboxHistoryWord>(_entities[1].properties[0]);
+
+  /// see [ObjectboxHistoryWord.langId]
+  static final langId =
+      QueryIntegerProperty<ObjectboxHistoryWord>(_entities[1].properties[1]);
+
+  /// see [ObjectboxHistoryWord.letter]
+  static final letter =
+      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[2]);
+
+  /// see [ObjectboxHistoryWord.wordId]
+  static final wordId =
+      QueryIntegerProperty<ObjectboxHistoryWord>(_entities[1].properties[3]);
+
+  /// see [ObjectboxHistoryWord.word]
+  static final word =
+      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[4]);
+
+  /// see [ObjectboxHistoryWord.lword]
+  static final lword =
+      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[5]);
+
+  /// see [ObjectboxHistoryWord.lwordMask]
+  static final lwordMask =
+      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[6]);
 }

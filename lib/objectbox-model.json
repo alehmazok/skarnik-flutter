@@ -6,7 +6,7 @@
     {
       "id": "2:1",
       "lastPropertyId": "7:7690913918601784105",
-      "name": "ObjectboxWord",
+      "name": "ObjectboxSearchWord",
       "properties": [
         {
           "id": "1:8246024000468252730",
@@ -27,7 +27,9 @@
         {
           "id": "4:4737207353756559193",
           "name": "wordId",
-          "type": 6
+          "type": 6,
+          "flags": 40,
+          "indexId": "1:6950839157362923633"
         },
         {
           "id": "5:7231270088001517744",
@@ -46,10 +48,56 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:2",
+      "lastPropertyId": "7:62019299264781155",
+      "name": "ObjectboxHistoryWord",
+      "properties": [
+        {
+          "id": "1:2210635481141394105",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3569231611713480762",
+          "name": "langId",
+          "type": 6
+        },
+        {
+          "id": "3:8032261620738518603",
+          "name": "letter",
+          "type": 9
+        },
+        {
+          "id": "4:2168629768157903924",
+          "name": "wordId",
+          "type": 6,
+          "flags": 40,
+          "indexId": "2:6767957250904925596"
+        },
+        {
+          "id": "5:987607834441689594",
+          "name": "word",
+          "type": 9
+        },
+        {
+          "id": "6:6907252566274804777",
+          "name": "lword",
+          "type": 9
+        },
+        {
+          "id": "7:62019299264781155",
+          "name": "lwordMask",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:1",
-  "lastIndexId": "0:0",
+  "lastEntityId": "3:2",
+  "lastIndexId": "2:6767957250904925596",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

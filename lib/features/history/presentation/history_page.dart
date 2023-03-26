@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_cubit.dart';
+
+import '../domain/use_case/load_history.dart';
+import 'history_cubit.dart';
+import 'widgets/history_list_view.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -37,8 +42,23 @@ class HistoryPage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<SkarnikAppCubit, SkarnikAppState>(
-        builder: (context, state) {
-          return ListView();
+        builder: (context, appState) {
+          if (appState is SkarnikAppInitedState) {
+            return BlocProvider<HistoryCubit>(
+              create: (context) => HistoryCubit(
+                loadHistoryUseCase: getIt<LoadHistoryUseCase>(),
+              ),
+              child: BlocBuilder<HistoryCubit, HistoryState>(
+                builder: (context, state) {
+                  if (state is HistoryLoadedState) {
+                    return HistoryListView(words: state.words);
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

@@ -18,12 +18,6 @@ abstract class NoArgsUseCase<R> extends BaseUseCase<R> {
   FutureOr<R> call();
 }
 
-abstract class EitherUseCase<R, A> extends BaseUseCase<R> {
-  const EitherUseCase() : super();
-
-  FutureOr<Either<Object, R>> call(A args);
-}
-
 abstract class EitherUseCase1<Result, Argument> extends BaseUseCase<Result> {
   const EitherUseCase1() : super();
 

@@ -9,37 +9,44 @@ import 'package:skarnik_flutter/logging.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
 import '../../domain/repository/database_repository.dart';
-import '../model/objectbox_word.dart';
+import '../model/objectbox_search_word.dart';
 import '../service/objectbox_service.dart';
 
 @Injectable(as: DatabaseRepository)
 class ObjectboxDatabaseRepository implements DatabaseRepository {
   static const _mdbFileName = 'data.mdb';
   static const _mdbAsset = 'assets/objectbox/$_mdbFileName';
-  static const _mdbCopyDirectoryName = 'objectbox_copy';
+  static const _mdbSearchDirectoryName = 'objectbox_search';
+  static const _mdbHistoryDirectoryName = 'objectbox_history';
 
   final _logger = getLogger(ObjectboxDatabaseRepository);
 
   @override
   Future<int> createDatabase() async {
-    final mdbCopyFile = await _getMdbCopyFile();
+    final mdbCopyFile = await _getSearchMdbCopyFile();
     final exists = await mdbCopyFile.exists();
     if (!exists) {
       await _createDatabaseCopy(mdbCopyFile);
     }
-    final store = await _openObjectboxStore();
-    _registerService(store);
-    final box = store.box<ObjectboxWord>();
+    final searchStore = await _openObjectboxStore();
+    final historyStore = await _openHistoryObjectboxStore();
+    _registerService(
+      searchStore: searchStore,
+      historyStore: historyStore,
+    );
+    final box = searchStore.box<ObjectboxSearchWord>();
 
     return box.count();
   }
 
-  Future<File> _getMdbCopyFile() async => File(join(await _getObjectBoxCopyDir(), _mdbFileName));
+  Future<File> _getSearchMdbCopyFile() async => File(join(await _getSearchObjectBoxDir(), _mdbFileName));
 
-  Future<String> _getObjectBoxCopyDir() async {
+  Future<String> _getSearchObjectBoxDir() => _getObjectBoxDir(_mdbSearchDirectoryName);
+
+  Future<String> _getObjectBoxDir(String dir) async {
     final documentsDir = await getApplicationDocumentsDirectory();
 
-    return join(documentsDir.path, _mdbCopyDirectoryName);
+    return join(documentsDir.path, dir);
   }
 
   Future<void> _createDatabaseCopy(File file) async {
@@ -53,10 +60,19 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
     await file.writeAsBytes(totalBytes);
   }
 
-  Future<Store> _openObjectboxStore() async => openStore(directory: await _getObjectBoxCopyDir());
+  Future<Store> _openObjectboxStore() async => openStore(
+        directory: await _getSearchObjectBoxDir(),
+      );
 
-  void _registerService(Store store) {
-    final service = ObjectboxService(store);
+  Future<Store> _openHistoryObjectboxStore() async => openStore(
+        directory: await _getObjectBoxDir(_mdbHistoryDirectoryName),
+      );
+
+  void _registerService({
+    required Store searchStore,
+    required Store historyStore,
+  }) {
+    final service = ObjectboxService(searchStore: searchStore, historyStore: historyStore);
     _logger.fine('Рэгіструем `${service.runtimeType}` залежнасць, як сінглтон.');
     getIt.registerSingleton(service);
   }

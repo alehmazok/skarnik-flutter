@@ -7,6 +7,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
+import '../domain/use_case/save_to_history.dart';
 import 'translation_cubit.dart';
 
 class TranslationPage extends StatelessWidget {
@@ -37,6 +38,7 @@ class TranslationPage extends StatelessWidget {
         wordId: wordId,
         getWordUseCase: getIt<GetWordUseCase>(),
         getTranslationUseCase: getIt<GetTranslationUseCase>(),
+        saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
