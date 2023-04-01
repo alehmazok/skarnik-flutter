@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/app/presentation/skarnik_app_cubit.dart';
 
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
@@ -44,8 +45,19 @@ class TranslationPage extends StatelessWidget {
         appBar: AppBar(
           title: word == null ? null : Text('«${word.word}»'),
           centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () => {},
+              icon: const Icon(Icons.share),
+            ),
+          ],
         ),
-        body: BlocBuilder<TranslationCubit, TranslationState>(
+        body: BlocConsumer<TranslationCubit, TranslationState>(
+          listener: (context, state) {
+            if (state is TranslationLoadedState) {
+              context.read<SkarnikAppCubit>().updateHistory(state.translation.word);
+            }
+          },
           builder: (context, state) {
             if (state is TranslationLoadedState) {
               return SingleChildScrollView(

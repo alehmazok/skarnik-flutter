@@ -42,12 +42,22 @@ class HistoryPage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<SkarnikAppCubit, SkarnikAppState>(
+        buildWhen: (_, current) => current is SkarnikAppInitedState,
         builder: (context, appState) {
           if (appState is SkarnikAppInitedState) {
             return BlocProvider<HistoryCubit>(
               create: (context) => HistoryCubit(
                 loadHistoryUseCase: getIt<LoadHistoryUseCase>(),
               ),
+              child: BlocListener<SkarnikAppCubit, SkarnikAppState>(
+                listener: (context, state) {
+                  if (state is SkarnikAppHistoryUpdatedState) {
+                    context.read<HistoryCubit>().reload();
+                  }
+                },
+                child: const HistoryListView(),
+              ),
+/*
               child: BlocBuilder<HistoryCubit, HistoryState>(
                 builder: (context, state) {
                   if (state is HistoryLoadedState) {
@@ -56,6 +66,7 @@ class HistoryPage extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+*/
             );
           }
           return const Center(child: CircularProgressIndicator());

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/logging.dart';
 
+import '../domain/entity/word.dart';
 import '../domain/use_case/init_database.dart';
 import '../domain/use_case/init_remote_config.dart';
 
@@ -30,6 +31,15 @@ class SkarnikAppFailedState extends SkarnikAppState {
   const SkarnikAppFailedState(this.error);
 }
 
+class SkarnikAppHistoryUpdatedState extends SkarnikAppState {
+  final Word word;
+
+  @override
+  List<Object> get props => [word.wordId];
+
+  const SkarnikAppHistoryUpdatedState(this.word);
+}
+
 class SkarnikAppCubit extends Cubit<SkarnikAppState> {
   final InitDatabaseUseCase initDatabaseUseCase;
   final InitRemoteConfigUseCase initRemoteConfigUseCase;
@@ -53,4 +63,6 @@ class SkarnikAppCubit extends Cubit<SkarnikAppState> {
       },
     );
   }
+
+  void updateHistory(Word word) => emit(SkarnikAppHistoryUpdatedState(word));
 }

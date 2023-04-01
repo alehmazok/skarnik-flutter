@@ -9,7 +9,7 @@ import 'package:skarnik_flutter/logging.dart';
 import '../repository/history_repository.dart';
 
 @injectable
-class LoadHistoryUseCase extends NoArgsEitherUseCase<Iterable<Word>> {
+class LoadHistoryUseCase extends EitherUseCase1<Iterable<Word>, int> {
   final _logger = getLogger(LoadHistoryUseCase);
 
   final HistoryRepository _historyRepository;
@@ -17,9 +17,9 @@ class LoadHistoryUseCase extends NoArgsEitherUseCase<Iterable<Word>> {
   LoadHistoryUseCase(this._historyRepository);
 
   @override
-  FutureOr<Either<Object, Iterable<Word>>> call() async {
+  FutureOr<Either<Object, Iterable<Word>>> call(int argument) async {
     try {
-      final words = await _historyRepository.getAll();
+      final words = await _historyRepository.getAll(argument);
       return right(words);
     } catch (e, st) {
       _logger.severe('An error occurred:', e, st);

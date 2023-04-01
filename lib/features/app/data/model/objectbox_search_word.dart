@@ -36,5 +36,5 @@ class ObjectboxSearchWord implements Word {
   });
 
   @override
-  String toString() => 'ObjectboxWord(id: $id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
+  String toString() => 'ObjectboxSearchWord(id: $id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
 }

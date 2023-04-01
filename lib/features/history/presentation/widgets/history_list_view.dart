@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
 
 class HistoryListView extends StatelessWidget {
-  final Iterable<Word> words;
-
-  const HistoryListView({
-    Key? key,
-    required this.words,
-  }) : super(key: key);
+  const HistoryListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final words = this.words.toList();
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        final word = words[index];
-        return ListTile(
-          title: Text(word.word),
-          subtitle: Text(word.dictName),
-        );
-      },
-      itemCount: words.length,
+    return PagedListView<int, Word>(
+      pagingController: context.read<HistoryCubit>().pagingController,
+      builderDelegate: PagedChildBuilderDelegate<Word>(
+        itemBuilder: (context, word, index) {
+          return ListTile(
+            title: Text(word.word),
+            subtitle: Text(word.dictName),
+            onTap: () => context.go('/translate/word', extra: word),
+          );
+        },
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../domain/use_case/load_history.dart';
@@ -25,29 +26,36 @@ class HistoryFailedState extends HistoryState {
   const HistoryFailedState(this.error);
 }
 
-class HistoryLoadedState extends HistoryState {
-  final BuiltList<Word> words;
-
-  @override
-  List<Object> get props => [words];
-
-  const HistoryLoadedState(this.words);
-}
-
 class HistoryCubit extends Cubit<HistoryState> {
   final LoadHistoryUseCase loadHistoryUseCase;
+  final pagingController = PagingController<int, Word>(firstPageKey: 0);
 
   HistoryCubit({
     required this.loadHistoryUseCase,
   }) : super(const HistoryInitedState()) {
-    _load();
+    pagingController.addPageRequestListener(_load);
   }
 
-  Future<void> _load() async {
-    final loadHistory = await loadHistoryUseCase();
+  Future<void> _load(int offset) async {
+    final loadHistory = await loadHistoryUseCase(offset);
     loadHistory.fold(
       (error) => emit(HistoryFailedState(error)),
-      (words) => emit(HistoryLoadedState(words.toBuiltList())),
+      (words) {
+        if (words.length < AppConfig.historyWordsPerPageLimit) {
+          pagingController.appendLastPage(words.toList());
+        } else {
+          final nextOffset = AppConfig.historyWordsPerPageLimit + offset;
+          pagingController.appendPage(words.toList(), nextOffset);
+        }
+      },
     );
+  }
+
+  void reload() => pagingController.refresh();
+
+  @override
+  Future<void> close() {
+    pagingController.dispose();
+    return super.close();
   }
 }

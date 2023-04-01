@@ -41,6 +41,9 @@ class SearchLoadedState extends SearchState {
   const SearchLoadedState(this.items);
 
   factory SearchLoadedState.empty() => SearchLoadedState(BuiltList());
+
+  @override
+  String toString() => 'SearchLoadedState(items=${items.length})';
 }
 
 class SearchKeyboardChangedState extends SearchState {
