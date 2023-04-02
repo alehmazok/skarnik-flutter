@@ -28,7 +28,7 @@ class HistoryPage extends StatelessWidget {
           child: TextField(
             autofocus: false,
             decoration: const InputDecoration(
-              hintText: 'Search words',
+              hintText: 'Пошук слоў',
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(

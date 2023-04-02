@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
@@ -15,18 +16,21 @@ class TranslationPage extends StatelessWidget {
   final Word? word;
   final int langId;
   final int wordId;
+  final bool saveToHistory;
 
   const TranslationPage({
     Key? key,
     this.word,
     required this.langId,
     required this.wordId,
+    this.saveToHistory = true,
   }) : super(key: key);
 
-  factory TranslationPage.word(Word word) => TranslationPage(
+  factory TranslationPage.word({required Word word, required bool saveToHistory}) => TranslationPage(
         word: word,
         langId: word.langId,
         wordId: word.wordId,
+        saveToHistory: saveToHistory,
       );
 
   @override
@@ -37,6 +41,7 @@ class TranslationPage extends StatelessWidget {
       create: (context) => TranslationCubit(
         langId: langId,
         wordId: wordId,
+        saveToHistory: saveToHistory,
         getWordUseCase: getIt<GetWordUseCase>(),
         getTranslationUseCase: getIt<GetTranslationUseCase>(),
         saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
@@ -46,9 +51,16 @@ class TranslationPage extends StatelessWidget {
           title: word == null ? null : Text('«${word.word}»'),
           centerTitle: true,
           actions: [
-            IconButton(
-              onPressed: () => {},
-              icon: const Icon(Icons.share),
+            BlocBuilder<TranslationCubit, TranslationState>(
+              builder: (context, state) {
+                if (state is TranslationLoadedState) {
+                  return IconButton(
+                    onPressed: () => Share.share(state.translation.uri.toString()),
+                    icon: const Icon(Icons.share),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ],
         ),
@@ -80,6 +92,7 @@ class TranslationPage extends StatelessWidget {
                         shrinkWrap: true,
                         style: {'div#skarnik': Style(fontSize: FontSize.large)},
                         scrollPhysics: const NeverScrollableScrollPhysics(),
+                        onAnchorTap: (url, context, attrs, element) => debugPrint('open: $url'),
                       ),
                     ],
                   ),

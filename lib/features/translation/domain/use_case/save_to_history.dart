@@ -22,7 +22,7 @@ class SaveToHistoryUseCase extends EitherUseCase1<int, Word> {
       final id = await _historyRepository.save(argument);
       return right(id);
     } catch (e, st) {
-      _logger.severe('An error occurred while saving word to history:', e, st);
+      _logger.severe('Адбылася памылка пры захаванні слова ў гісторыю:', e, st);
       return left(e);
     }
   }

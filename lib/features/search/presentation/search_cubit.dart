@@ -33,14 +33,23 @@ class SearchFailedState extends SearchState {
 }
 
 class SearchLoadedState extends SearchState {
+  final String query;
   final BuiltList<Word> items;
 
   @override
-  List<Object> get props => [items];
+  List<Object> get props => [query, items];
 
-  const SearchLoadedState(this.items);
+  bool get isNothingFound => query.isNotEmpty && items.isEmpty;
 
-  factory SearchLoadedState.empty() => SearchLoadedState(BuiltList());
+  const SearchLoadedState({
+    required this.query,
+    required this.items,
+  });
+
+  factory SearchLoadedState.empty() => SearchLoadedState(
+        query: '',
+        items: BuiltList(),
+      );
 
   @override
   String toString() => 'SearchLoadedState(items=${items.length})';
@@ -85,7 +94,12 @@ class SearchCubit extends Cubit<SearchState> {
     final search = await searchUseCase(query);
     search.fold(
       (error) => emit(SearchFailedState(error)),
-      (result) => emit(SearchLoadedState(result.toBuiltList())),
+      (result) => emit(
+        SearchLoadedState(
+          query: query,
+          items: result.toBuiltList(),
+        ),
+      ),
     );
   }
 

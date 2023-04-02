@@ -25,7 +25,13 @@ abstract class SkarnikRouter {
           ),
           GoRoute(
             path: 'translate/word',
-            builder: (context, state) => TranslationPage.word(state.extra as Word),
+            builder: (context, state) {
+              final arguments = state.extra as Map<String, dynamic>;
+              return TranslationPage.word(
+                word: arguments['word'] as Word,
+                saveToHistory: arguments['save_to_history'] as bool,
+              );
+            },
           ),
         ],
       ),

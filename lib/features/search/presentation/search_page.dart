@@ -35,7 +35,7 @@ class SearchPage extends StatelessWidget {
                   controller: cubit.searchTextController,
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Search words',
+                    hintText: 'Пошук слоў',
                     border: InputBorder.none,
                     suffixIcon: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +56,10 @@ class SearchPage extends StatelessWidget {
           buildWhen: (_, current) => current is SearchLoadedState,
           builder: (context, state) {
             if (state is SearchLoadedState) {
-              return SearchListView(words: state.items);
+              return SearchListView(
+                isNothingFound: state.isNothingFound,
+                words: state.items,
+              );
             }
             return const SizedBox.shrink();
           },

@@ -18,7 +18,14 @@ class HistoryListView extends StatelessWidget {
           return ListTile(
             title: Text(word.word),
             subtitle: Text(word.dictName),
-            onTap: () => context.go('/translate/word', extra: word),
+            onTap: () => context.go(
+              '/translate/word',
+              extra: {
+                'word': word,
+                // Не захоўваць у гісторыю, таму што пераход быў зроблены ўласна з экрана Гісторыі.
+                'save_to_history': false,
+              },
+            ),
           );
         },
       ),
