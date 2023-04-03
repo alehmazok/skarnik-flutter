@@ -45,3 +45,6 @@ app.*.map.json
 
 # Assets
 assets/objectbox/
+
+# Release
+release_notes.txt
