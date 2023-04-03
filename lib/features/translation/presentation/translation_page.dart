@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
@@ -12,6 +11,7 @@ import '../domain/use_case/log_analytics_share.dart';
 import '../domain/use_case/log_analytics_translation.dart';
 import '../domain/use_case/save_to_history.dart';
 import 'translation_cubit.dart';
+import 'widgets/translation_html.dart';
 
 class TranslationPage extends StatelessWidget {
   final Word? word;
@@ -115,17 +115,7 @@ class TranslationPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      SelectableHtml(
-                        data: state.translation.html,
-                        shrinkWrap: true,
-                        style: {'div#skarnik': Style(fontSize: FontSize.large)},
-                        scrollPhysics: const NeverScrollableScrollPhysics(),
-                        onAnchorTap: (url, ctx, attrs, element) {
-                          if (url != null) {
-                            context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(url));
-                          }
-                        },
-                      ),
+                      TranslationHtml(content: state.translation.html),
                     ],
                   ),
                 ),

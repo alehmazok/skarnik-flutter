@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
@@ -16,23 +14,13 @@ import '../../domain/repository/translation_repository.dart';
 
 @Injectable(as: TranslationRepository)
 class SkarnikTranslationRepository implements TranslationRepository {
-  static const _host = AppConfig.host;
   final _logger = getLogger(SkarnikTranslationRepository);
-  final _dio = Dio()
-    ..interceptors.addAll([
-      DioCacheManager(CacheConfig(baseUrl: _host)).interceptor,
-      if (kDebugMode)
-        // TODO: вынесцi кудысьцi
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-          responseBody: false,
-        ),
-    ]);
+  final Dio _dio;
 
   late final Word _word;
   late Uri _uri;
+
+  SkarnikTranslationRepository(this._dio);
 
   @override
   Future<Translation> getTranslation(Word word) async {
@@ -45,16 +33,15 @@ class SkarnikTranslationRepository implements TranslationRepository {
   _setUri(int wordId) {
     _uri = Uri(
       scheme: 'https',
-      host: _host,
+      host: AppConfig.host,
       pathSegments: [_word.dictPath, '$wordId'],
     );
   }
 
-  Translation _buildTranslation(String html) => Translation(
+  Translation _buildTranslation(String html) => Translation.build(
         uri: _uri,
         word: _word,
-        // TODO: вынесці логіку мадыфікацыі тэксту і html ў іншы юскейс.
-        html: html.replaceAll(RegExp('color="#?'), 'color="#'),
+        html: html,
       );
 
   Future<Translation> _fetch() async {

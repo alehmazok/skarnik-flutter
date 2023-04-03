@@ -13,9 +13,25 @@ class Translation extends Equatable {
         html,
       ];
 
-  const Translation({
+  const Translation._({
     required this.uri,
     required this.word,
     required this.html,
   });
+
+  factory Translation.build({
+    required Uri uri,
+    required Word word,
+    required String html,
+  }) {
+    return Translation._(
+      uri: uri,
+      word: word,
+      html: _modifyHtml(html),
+    );
+  }
+
+  static String _modifyHtml(String html) {
+    return html.replaceAll(RegExp('color="#?'), 'color="#');
+  }
 }
