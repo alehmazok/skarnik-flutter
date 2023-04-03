@@ -1,5 +1,3 @@
-
-
 abstract class Word {
   int get langId;
 

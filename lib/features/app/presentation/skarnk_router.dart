@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../history/presentation/history_page.dart';
@@ -18,10 +19,15 @@ abstract class SkarnikRouter {
           ),
           GoRoute(
             path: 'translate/:langId/:wordId',
-            builder: (context, state) => TranslationPage(
-              langId: int.parse(state.params['langId'] ?? ''),
-              wordId: int.parse(state.params['wordId'] ?? ''),
-            ),
+            builder: (context, state) {
+              final langId = int.parse(state.params['langId'] ?? '');
+              final wordId = int.parse(state.params['wordId'] ?? '');
+              return TranslationPage(
+                key: Key('$langId/$wordId'),
+                langId: langId,
+                wordId: wordId,
+              );
+            },
           ),
           GoRoute(
             path: 'translate/word',

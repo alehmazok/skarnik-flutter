@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:injectable/injectable.dart';
@@ -15,18 +16,19 @@ import '../../domain/repository/translation_repository.dart';
 
 @Injectable(as: TranslationRepository)
 class SkarnikTranslationRepository implements TranslationRepository {
-  static const _host = 'skarnik.by';
+  static const _host = AppConfig.host;
   final _logger = getLogger(SkarnikTranslationRepository);
   final _dio = Dio()
     ..interceptors.addAll([
       DioCacheManager(CacheConfig(baseUrl: _host)).interceptor,
-      // TODO: вынесцi кудысьцi
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: false,
-      ),
+      if (kDebugMode)
+        // TODO: вынесцi кудысьцi
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+          responseBody: false,
+        ),
     ]);
 
   late final Word _word;

@@ -13,11 +13,23 @@ class HistoryListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PagedListView<int, Word>(
       pagingController: context.read<HistoryCubit>().pagingController,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       builderDelegate: PagedChildBuilderDelegate<Word>(
+        noItemsFoundIndicatorBuilder: (_) => const Center(
+          child: Text(
+            'Пачніце ўводзіць слова ў пошук...',
+            textAlign: TextAlign.center,
+          ),
+        ),
         itemBuilder: (context, word, index) {
           return ListTile(
             title: Text(word.word),
-            subtitle: Text(word.dictName),
+            subtitle: Text(
+              word.dictName,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
             onTap: () => context.go(
               '/translate/word',
               extra: {

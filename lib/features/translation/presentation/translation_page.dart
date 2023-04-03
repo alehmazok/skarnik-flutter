@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
-import 'package:skarnik_flutter/features/app/presentation/skarnik_app_cubit.dart';
+import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
 
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
+import '../domain/use_case/log_analytics_share.dart';
+import '../domain/use_case/log_analytics_translation.dart';
 import '../domain/use_case/save_to_history.dart';
 import 'translation_cubit.dart';
 
@@ -36,7 +37,6 @@ class TranslationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final word = this.word;
-
     return BlocProvider(
       create: (context) => TranslationCubit(
         langId: langId,
@@ -45,17 +45,28 @@ class TranslationPage extends StatelessWidget {
         getWordUseCase: getIt<GetWordUseCase>(),
         getTranslationUseCase: getIt<GetTranslationUseCase>(),
         saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
+        logAnalyticsShareUseCase: getIt<LogAnalyticsShareUseCase>(),
+        logAnalyticsTranslationUseCase: getIt<LogAnalyticsTranslationUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: word == null ? null : Text('«${word.word}»'),
+          title: word == null
+              ? BlocBuilder<TranslationCubit, TranslationState>(
+                  builder: (context, state) {
+                    if (state is TranslationLoadedState) {
+                      return Text('«${state.translation.word.word}»');
+                    }
+                    return const SizedBox.shrink();
+                  },
+                )
+              : Text('«${word.word}»'),
           centerTitle: true,
           actions: [
             BlocBuilder<TranslationCubit, TranslationState>(
               builder: (context, state) {
                 if (state is TranslationLoadedState) {
                   return IconButton(
-                    onPressed: () => Share.share(state.translation.uri.toString()),
+                    onPressed: () => context.read<TranslationCubit>().share(state.translation),
                     icon: const Icon(Icons.share),
                   );
                 }
@@ -67,7 +78,24 @@ class TranslationPage extends StatelessWidget {
         body: BlocConsumer<TranslationCubit, TranslationState>(
           listener: (context, state) {
             if (state is TranslationLoadedState) {
-              context.read<SkarnikAppCubit>().updateHistory(state.translation.word);
+              context.read<SkarnikAppBloc>().add(SkarnikAppHistoryUpdated(state.translation.word));
+            }
+            if (state is TranslationFailedState) {
+              // TODO: зрабіць больш дакладную і прыгожую апрацоўку памылак.
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 15),
+                    content: Text(
+                      'Прабачце, адбылася памылка перакладу слова.',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.errorContainer,
+                      ),
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
             }
           },
           builder: (context, state) {
@@ -92,7 +120,11 @@ class TranslationPage extends StatelessWidget {
                         shrinkWrap: true,
                         style: {'div#skarnik': Style(fontSize: FontSize.large)},
                         scrollPhysics: const NeverScrollableScrollPhysics(),
-                        onAnchorTap: (url, context, attrs, element) => debugPrint('open: $url'),
+                        onAnchorTap: (url, ctx, attrs, element) {
+                          if (url != null) {
+                            context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(url));
+                          }
+                        },
                       ),
                     ],
                   ),

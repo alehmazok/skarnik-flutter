@@ -1,12 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/core/pair.dart';
 
 import '../domain/entity/translation.dart';
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
+import '../domain/use_case/log_analytics_share.dart';
+import '../domain/use_case/log_analytics_translation.dart';
 import '../domain/use_case/save_to_history.dart';
 
 class TranslationState extends Equatable {
@@ -48,6 +51,8 @@ class TranslationCubit extends Cubit<TranslationState> {
   final GetWordUseCase getWordUseCase;
   final GetTranslationUseCase getTranslationUseCase;
   final SaveToHistoryUseCase saveToHistoryUseCase;
+  final LogAnalyticsShareUseCase logAnalyticsShareUseCase;
+  final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
 
   TranslationCubit({
     required this.langId,
@@ -56,6 +61,8 @@ class TranslationCubit extends Cubit<TranslationState> {
     required this.getWordUseCase,
     required this.getTranslationUseCase,
     required this.saveToHistoryUseCase,
+    required this.logAnalyticsShareUseCase,
+    required this.logAnalyticsTranslationUseCase,
   }) : super(const TranslationInProgressState()) {
     _getWord();
   }
@@ -72,10 +79,19 @@ class TranslationCubit extends Cubit<TranslationState> {
         }
         return Future.value(right(pair.second));
       },
+    ).flatMap(
+      (translation) => logAnalyticsTranslationUseCase(translation).map((_) => translation),
     );
     getTranslation.fold(
       (error) => emit(TranslationFailedState(error)),
       (translation) => emit(TranslationLoadedState(translation)),
     );
+  }
+
+  Future<void> share(Translation translation) async {
+    await Share.share(translation.uri.toString(), subject: translation.word.word);
+
+    // Не апрацоўваць вынік выканання юскейса.
+    await logAnalyticsShareUseCase(translation);
   }
 }

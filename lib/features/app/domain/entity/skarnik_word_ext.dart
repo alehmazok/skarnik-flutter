@@ -1,6 +1,18 @@
 import 'word.dart';
 
 extension SkarnikWordExt on Word {
+  static int getLangId(String dictPath) {
+    switch (dictPath) {
+      case 'rusbel':
+        return 0;
+      case 'belrus':
+        return 1;
+      case 'tsbm':
+        return 2;
+    }
+    throw ArgumentError('Невядомы path слоўніка: ’$dictPath`');
+  }
+
   String get dictPath {
     switch (langId) {
       case 0:
