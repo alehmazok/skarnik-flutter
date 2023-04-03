@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-            android:label="Skarnik"
+            android:label="@string/AppName"
             android:name="${applicationName}"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round">
@@ -36,8 +36,8 @@
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
 
-                <data android:host="skarnik.by"/>
-                <data android:host="www.skarnik.by"/>
+                <data android:host="${hostname}"/>
+                <data android:host="www.${hostname}"/>
             </intent-filter>
         </activity>
         <!-- Не лагаваць у аналітыку пераходы па экранах -->
