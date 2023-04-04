@@ -1,31 +1,27 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../entity/translation.dart';
+import '../repository/analytics_translation_repository.dart';
 
 @injectable
 class LogAnalyticsShareUseCase extends EitherUseCase1<bool, Translation> {
   final _logger = getLogger(LogAnalyticsShareUseCase);
 
-  LogAnalyticsShareUseCase();
+  final AnalyticsTranslationRepository _analyticsTranslationRepository;
+
+  LogAnalyticsShareUseCase(this._analyticsTranslationRepository);
 
   @override
   Future<Either<Object, bool>> call(Translation argument) async {
     try {
-      final analytics = FirebaseAnalytics.instance;
-      analytics.logShare(
-        contentType: ContentType.text.mimeType,
-        itemId: argument.uri.toString(),
-        method: 'system',
-      );
+      _analyticsTranslationRepository.logShare(argument);
     } catch (e, st) {
-      _logger.warning('Адбылася памылка пры спробе залагаваць падзею шарынга слова `${argument.word.word}`:', e, st);
+      _logger.warning('Адбылася памылка пры спробе залагіраваць падзею шарынга слова `${argument.word.word}`:', e, st);
     }
     return const Right(true);
   }

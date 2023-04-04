@@ -83,8 +83,8 @@ class TranslationCubit extends Cubit<TranslationState> {
       (translation) => logAnalyticsTranslationUseCase(translation).map((_) => translation),
     );
     getTranslation.fold(
-      (error) => emit(TranslationFailedState(error)),
-      (translation) => emit(TranslationLoadedState(translation)),
+      (error) => emitGuarded(TranslationFailedState(error)),
+      (translation) => emitGuarded(TranslationLoadedState(translation)),
     );
   }
 
@@ -93,5 +93,10 @@ class TranslationCubit extends Cubit<TranslationState> {
 
     // Не апрацоўваць вынік выканання юскейса.
     await logAnalyticsShareUseCase(translation);
+  }
+
+  void emitGuarded(TranslationState state) {
+    if (isClosed) return;
+    emit(state);
   }
 }
