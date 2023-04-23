@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../history/presentation/history_page.dart';
+import '../../home/presentation/home_page.dart';
 import '../../search/presentation/search_page.dart';
 import '../../translation/presentation/translation_page.dart';
 import '../domain/entity/word.dart';
@@ -11,7 +12,7 @@ abstract class SkarnikRouter {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const HistoryPage(),
+        builder: (context, state) => const HomePage(),
         routes: [
           GoRoute(
             path: 'search',

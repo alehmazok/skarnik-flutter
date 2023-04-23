@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/logging.dart';
 
 import '../domain/use_case/load_history.dart';
 
@@ -27,12 +28,15 @@ class HistoryFailedState extends HistoryState {
 }
 
 class HistoryCubit extends Cubit<HistoryState> {
+  final _logger = getLogger(HistoryCubit);
+
   final LoadHistoryUseCase loadHistoryUseCase;
   final pagingController = PagingController<int, Word>(firstPageKey: 0);
 
   HistoryCubit({
     required this.loadHistoryUseCase,
   }) : super(const HistoryInitedState()) {
+    _logger.fine('New instance created: $hashCode');
     pagingController.addPageRequestListener(_load);
   }
 
@@ -55,6 +59,7 @@ class HistoryCubit extends Cubit<HistoryState> {
 
   @override
   Future<void> close() {
+    _logger.fine('Cubit has been closed');
     pagingController.dispose();
     return super.close();
   }

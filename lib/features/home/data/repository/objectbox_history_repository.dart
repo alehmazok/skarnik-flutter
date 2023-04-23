@@ -14,12 +14,9 @@ class ObjectboxHistoryRepository implements HistoryRepository {
 
   @override
   Future<Iterable<Word>> getAll(int offset) async {
-    final query = _objectboxService.historyBox
-        .query()
-        .order(ObjectboxHistoryWord_.id, flags: Order.descending)
-        .build()
+    final query = _objectboxService.historyBox.query().order(ObjectboxHistoryWord_.id, flags: Order.descending).build()
       ..limit = AppConfig.historyWordsPerPageLimit
       ..offset = offset;
-    return query.findAsync();
+    return query.find();
   }
 }
