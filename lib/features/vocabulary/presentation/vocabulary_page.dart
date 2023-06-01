@@ -36,11 +36,6 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
                   Tab(text: 'Бел-Рус'),
                   Tab(text: 'Тлумачальны'),
                 ],
-                // onTap: (index) => cubit.pageController.animateToPage(
-                //   index,
-                //   duration: const Duration(milliseconds: 250),
-                //   curve: Curves.linear,
-                // ),
               ),
             ),
             body: TabBarView(
@@ -51,17 +46,6 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
                 VocabularyNumPage(langId: 2),
               ],
             ),
-            // body: BlocBuilder<VocabularyCubit, VocabularyState>(
-            //   builder: (context, state) {
-            //     if (state is VocabularyLoadedState) {
-            //       return AlphabetListView(
-            //         langId: state.langId,
-            //         words: state.words,
-            //       );
-            //     }
-            //     return const Center(child: CircularProgressIndicator());
-            //   },
-            // ),
           );
         },
       ),

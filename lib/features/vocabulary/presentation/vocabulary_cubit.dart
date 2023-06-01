@@ -70,7 +70,6 @@ class VocabularyCubit extends Cubit<VocabularyState> {
         super(const VocabularyInitedState()) {
     _logger.fine('New instance created: $hashCode');
     loadWords(0);
-    // streamWords(0);
     tabController.addListener(() {
       _logger.fine('Listener: ${tabController.index}');
       loadWords(tabController.index);
@@ -85,33 +84,16 @@ class VocabularyCubit extends Cubit<VocabularyState> {
       return;
     }
     final loadVocabulary = await loadVocabularyUseCase(langId);
-    loadVocabulary.fold(
-      (error) => emit(VocabularyFailedState(error)),
+    final nextState = loadVocabulary.fold(
+      (error) => VocabularyFailedState(error),
       (words) {
         _cache ??= {};
         _cache![langId] = words.toBuiltList();
-        emit(VocabularyLoadedState(langId, words.toBuiltList()));
+        return VocabularyLoadedState(langId, words.toBuiltList());
       },
     );
-  }
-
-  Future<void> streamWords(int langId) async {
-    // await Future.delayed(const Duration(milliseconds: 400));
-    emit(const VocabularyInitedState());
-    if (_cache?[langId] != null) {
-      emit(VocabularyLoadedState(langId, _cache![langId]!));
-      return;
-    }
-    final streamVocabulary = await streamVocabularyUseCase(langId);
-    streamVocabulary.fold(
-      (error) => emit(VocabularyFailedState(error)),
-      (stream) {
-        stream.listen((words) {
-          _cache?[langId] = words.toBuiltList();
-          emit(VocabularyLoadedState(langId, _cache![langId]!));
-        }).disposedBy(_disposeBag);
-      },
-    );
+    if (isClosed) return;
+    emit(nextState);
   }
 
   @override

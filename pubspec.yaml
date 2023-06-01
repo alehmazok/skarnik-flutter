@@ -67,6 +67,7 @@ dependencies:
   flutter_isolate: ^2.0.4
   azlistview: ^2.0.0
   collection: ^1.17.0
+  settings_ui: ^2.0.2
 
 dev_dependencies:
   flutter_test:

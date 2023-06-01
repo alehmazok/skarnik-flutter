@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -6,9 +7,19 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: const Center(
-        child: Text('У распрацоўцы...'),
+      appBar: AppBar(
+        title: const Text('Наладкі'),
+      ),
+      body: SettingsList(
+        sections: [
+          SettingsSection(
+            tiles: [
+              SettingsTile(
+                title: const Text('Ачысціць гісторыю пошуку'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
