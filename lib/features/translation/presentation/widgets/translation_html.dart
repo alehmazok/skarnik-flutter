@@ -30,16 +30,18 @@ class TranslationHtml extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
       builder: (context, mode, child) {
-        return SelectableHtml(
-          data: _modifyContentForBrightness(Theme.of(context).brightness),
-          shrinkWrap: true,
-          style: {'div#skarnik': Style(fontSize: FontSize.large)},
-          scrollPhysics: const NeverScrollableScrollPhysics(),
-          onAnchorTap: (url, ctx, attrs, element) {
-            if (url != null) {
-              context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(url));
-            }
-          },
+        return SelectionArea(
+          child: Html(
+            data: _modifyContentForBrightness(Theme.of(context).brightness),
+            shrinkWrap: true,
+            style: {'div#skarnik': Style(fontSize: FontSize.large)},
+            // scrollPhysics: const NeverScrollableScrollPhysics(),
+            onAnchorTap: (url, attrs, element) {
+              if (url != null) {
+                context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(url));
+              }
+            },
+          ),
         );
       },
     );

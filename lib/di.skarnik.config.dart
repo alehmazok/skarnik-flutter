@@ -35,9 +35,9 @@ import 'package:skarnik_flutter/features/app/domain/use_case/init_remote_config.
 import 'package:skarnik_flutter/features/app/domain/use_case/log_analytics_app_started.dart'
     as _i26;
 import 'package:skarnik_flutter/features/history/data/repository/objectbox_history_repository.dart'
-    as _i19;
+    as _i21;
 import 'package:skarnik_flutter/features/history/domain/repository/history_repository.dart'
-    as _i18;
+    as _i20;
 import 'package:skarnik_flutter/features/history/domain/use_case/load_history.dart'
     as _i25;
 import 'package:skarnik_flutter/features/home/data/repository/objectbox_history_repository.dart'
@@ -52,30 +52,36 @@ import 'package:skarnik_flutter/features/search/domain/repository/search_reposit
     as _i30;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
     as _i32;
+import 'package:skarnik_flutter/features/settings/data/repository/objectbox_settings_history_repository.dart'
+    as _i34;
+import 'package:skarnik_flutter/features/settings/domain/repository/settings_history_repository.dart'
+    as _i33;
+import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.dart'
+    as _i41;
 import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
     as _i12;
 import 'package:skarnik_flutter/features/translation/data/repository/dev_analytics_translation_repository.dart'
-    as _i7;
-import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
     as _i8;
+import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
+    as _i7;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
-    as _i21;
+    as _i19;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_word_repository.dart'
-    as _i38;
+    as _i40;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
-    as _i34;
+    as _i36;
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart'
     as _i6;
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart'
-    as _i20;
+    as _i18;
 import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart'
-    as _i33;
+    as _i35;
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart'
-    as _i37;
-import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart'
     as _i39;
+import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart'
+    as _i42;
 import 'package:skarnik_flutter/features/translation/domain/use_case/get_word.dart'
-    as _i40;
+    as _i43;
 import 'package:skarnik_flutter/features/translation/domain/use_case/log_analytics_share.dart'
     as _i27;
 import 'package:skarnik_flutter/features/translation/domain/use_case/log_analytics_translation.dart'
@@ -83,19 +89,19 @@ import 'package:skarnik_flutter/features/translation/domain/use_case/log_analyti
 import 'package:skarnik_flutter/features/translation/domain/use_case/save_to_history.dart'
     as _i29;
 import 'package:skarnik_flutter/features/vocabulary/data/repository/vocabulary_repository.dart'
-    as _i36;
+    as _i38;
 import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary_repository.dart'
-    as _i35;
+    as _i37;
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
-    as _i41;
+    as _i44;
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/stream_vocabulary.dart'
-    as _i42;
+    as _i45;
 
 const String _dev = 'dev';
 const String _prod = 'prod';
 
 extension GetItInjectableX on _i1.GetIt {
-  // initializes the registration of main-scope dependencies inside of GetIt
+// initializes the registration of main-scope dependencies inside of GetIt
   _i1.GetIt init({
     String? environment,
     _i2.EnvironmentFilter? environmentFilter,
@@ -114,12 +120,12 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i7.DevAnalyticsTranslationRepository(),
-      registerFor: {_dev},
+      () => _i7.FirebaseAnalyticsTranslationRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i8.FirebaseAnalyticsTranslationRepository(),
-      registerFor: {_prod},
+      () => _i8.DevAnalyticsTranslationRepository(),
+      registerFor: {_dev},
     );
     gh.factory<_i9.DatabaseRepository>(
         () => _i10.ObjectboxDatabaseRepository());
@@ -140,7 +146,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i24.LoadHistoryUseCase>(
         () => _i24.LoadHistoryUseCase(gh<_i15.HistoryRepository>()));
     gh.factory<_i25.LoadHistoryUseCase>(
-        () => _i25.LoadHistoryUseCase(gh<_i18.HistoryRepository>()));
+        () => _i25.LoadHistoryUseCase(gh<_i20.HistoryRepository>()));
     gh.factory<_i26.LogAnalyticsAppOpenUseCase>(() =>
         _i26.LogAnalyticsAppOpenUseCase(gh<_i3.AnalyticsAppRepository>()));
     gh.factory<_i27.LogAnalyticsShareUseCase>(() =>
@@ -150,25 +156,29 @@ extension GetItInjectableX on _i1.GetIt {
         _i28.LogAnalyticsTranslationUseCase(
             gh<_i6.AnalyticsTranslationRepository>()));
     gh.factory<_i29.SaveToHistoryUseCase>(
-        () => _i29.SaveToHistoryUseCase(gh<_i20.HistoryRepository>()));
+        () => _i29.SaveToHistoryUseCase(gh<_i18.HistoryRepository>()));
     gh.factory<_i30.SearchRepository>(
         () => _i31.ObjectboxSearchRepository(gh<_i17.ObjectboxService>()));
     gh.factory<_i32.SearchUseCase>(
         () => _i32.SearchUseCase(gh<_i30.SearchRepository>()));
-    gh.factory<_i33.TranslationRepository>(
-        () => _i34.SkarnikTranslationRepository(gh<_i11.Dio>()));
-    gh.factory<_i35.VocabularyRepository>(
-        () => _i36.ObjectboxVocabularyRepository(gh<_i17.ObjectboxService>()));
-    gh.factory<_i37.WordRepository>(
-        () => _i38.ObjectboxWordRepository(gh<_i17.ObjectboxService>()));
-    gh.factory<_i39.GetTranslationUseCase>(
-        () => _i39.GetTranslationUseCase(gh<_i33.TranslationRepository>()));
-    gh.factory<_i40.GetWordUseCase>(
-        () => _i40.GetWordUseCase(gh<_i37.WordRepository>()));
-    gh.factory<_i41.LoadVocabularyUseCase>(
-        () => _i41.LoadVocabularyUseCase(gh<_i35.VocabularyRepository>()));
-    gh.factory<_i42.StreamVocabularyUseCase>(
-        () => _i42.StreamVocabularyUseCase(gh<_i35.VocabularyRepository>()));
+    gh.factory<_i33.SettingsHistoryRepository>(() =>
+        _i34.ObjectboxSettingsHistoryRepository(gh<_i17.ObjectboxService>()));
+    gh.factory<_i35.TranslationRepository>(
+        () => _i36.SkarnikTranslationRepository(gh<_i11.Dio>()));
+    gh.factory<_i37.VocabularyRepository>(
+        () => _i38.ObjectboxVocabularyRepository(gh<_i17.ObjectboxService>()));
+    gh.factory<_i39.WordRepository>(
+        () => _i40.ObjectboxWordRepository(gh<_i17.ObjectboxService>()));
+    gh.factory<_i41.ClearHistoryUseCase>(
+        () => _i41.ClearHistoryUseCase(gh<_i33.SettingsHistoryRepository>()));
+    gh.factory<_i42.GetTranslationUseCase>(
+        () => _i42.GetTranslationUseCase(gh<_i35.TranslationRepository>()));
+    gh.factory<_i43.GetWordUseCase>(
+        () => _i43.GetWordUseCase(gh<_i39.WordRepository>()));
+    gh.factory<_i44.LoadVocabularyUseCase>(
+        () => _i44.LoadVocabularyUseCase(gh<_i37.VocabularyRepository>()));
+    gh.factory<_i45.StreamVocabularyUseCase>(
+        () => _i45.StreamVocabularyUseCase(gh<_i37.VocabularyRepository>()));
     return this;
   }
 }

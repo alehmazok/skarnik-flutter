@@ -83,7 +83,7 @@ class TranslationPage extends StatelessWidget {
             if (state is TranslationFailedState) {
               // TODO: зрабіць больш дакладную і прыгожую апрацоўку памылак.
               ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
+                ..clearSnackBars()
                 ..showSnackBar(
                   SnackBar(
                     duration: const Duration(seconds: 15),
@@ -93,7 +93,6 @@ class TranslationPage extends StatelessWidget {
                         color: Theme.of(context).colorScheme.errorContainer,
                       ),
                     ),
-                    behavior: SnackBarBehavior.floating,
                   ),
                 );
             }
