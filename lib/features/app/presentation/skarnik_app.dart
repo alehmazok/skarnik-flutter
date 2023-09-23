@@ -14,22 +14,28 @@ import 'skarnk_router.dart';
 class SkarnikApp extends StatelessWidget {
   const SkarnikApp({Key? key}) : super(key: key);
 
+  static final lightTheme = ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.grey,
+      primaryContainer: Colors.red,
+      onPrimaryContainer: Colors.white,
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
+
+  static final darkTheme = lightTheme.copyWith(
+    brightness: Brightness.dark,
+  );
+
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
-      light: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.grey,
-          primaryContainer: Colors.red,
-          onPrimaryContainer: Colors.white,
-        ),
-      ),
-      dark: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
+      light: lightTheme,
+      dark: darkTheme,
       initial: AdaptiveThemeMode.system,
       builder: (lightTheme, darkTheme) => BlocProvider(
         create: (context) => SkarnikAppBloc(

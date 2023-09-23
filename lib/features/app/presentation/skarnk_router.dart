@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../history/presentation/history_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../search/presentation/search_page.dart';
 import '../../translation/presentation/translation_page.dart';
@@ -21,8 +20,8 @@ abstract class SkarnikRouter {
           GoRoute(
             path: 'translate/:langId/:wordId',
             builder: (context, state) {
-              final langId = int.parse(state.params['langId'] ?? '');
-              final wordId = int.parse(state.params['wordId'] ?? '');
+              final langId = int.parse(state.pathParameters['langId'] ?? '');
+              final wordId = int.parse(state.pathParameters['wordId'] ?? '');
               return TranslationPage(
                 key: Key('$langId/$wordId'),
                 langId: langId,
