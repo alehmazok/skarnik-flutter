@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 
 import '../domain/use_case/clear_history.dart';
@@ -41,6 +42,22 @@ class SettingsPage extends StatelessWidget {
                     onTap: () => _showClearHistoryConfirmation(context),
                     enabled: enabled,
                   );
+                },
+              ),
+              FutureBuilder<PackageInfo>(
+                future: PackageInfo.fromPlatform(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final data = snapshot.data;
+                    if (data != null) {
+                      return ListTile(
+                        subtitle: Text(
+                          '${data.appName} ${data.version} (${data.buildNumber})',
+                        ),
+                      );
+                    }
+                  }
+                  return const SizedBox.shrink();
                 },
               ),
             ],

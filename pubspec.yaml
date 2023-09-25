@@ -63,6 +63,7 @@ dependencies:
   logging: ^1.2.0
   objectbox: 2.2.0 # Temporary fix: https://github.com/objectbox/objectbox-dart/issues/563
   objectbox_flutter_libs: any
+  package_info_plus: ^4.1.0
   path_provider: ^2.1.1
   pretty_dio_logger: ^1.2.0-beta-1
   rxdart: ^0.27.7
