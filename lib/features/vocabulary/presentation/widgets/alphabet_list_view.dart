@@ -1,9 +1,12 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:vibration/vibration.dart';
 
-class AlphabetListView extends StatelessWidget {
+class SimpleListView extends StatefulWidget {
   static const rusBelAlphabet = [
     'А',
     'Б',
@@ -69,56 +72,101 @@ class AlphabetListView extends StatelessWidget {
     'Я',
   ];
 
-  static const alphabets = [
-    rusBelAlphabet,
-    belRusAlphabet,
-    belRusAlphabet,
-  ];
+  static const alphabetsMap = {
+    SkarnikWordExt.langIdRusBel: rusBelAlphabet,
+    SkarnikWordExt.langIdBelRus: belRusAlphabet,
+    SkarnikWordExt.langIdTsbm: belRusAlphabet,
+  };
 
   final int langId;
-  final Iterable<Word> words;
+  final List<Word> words;
 
-  const AlphabetListView({
+  const SimpleListView({
     Key? key,
     required this.langId,
     required this.words,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final words = this.words.toList();
-    return AzListView(
-      indexBarData: alphabets[langId],
-      data: words.map((word) => WordSuspensionBean.fromWord(word)).toList(),
-      itemCount: words.length,
-      itemBuilder: (context, index) {
-        final word = words[index];
-        return ListTile(
-          title: Text(word.word),
-          onTap: () => context.go(
-            '/translate/word',
-            extra: {
-              'word': word,
-              'save_to_history': true,
-            },
-          ),
-        );
-      },
-    );
-  }
+  State<SimpleListView> createState() => _SimpleListViewState();
 }
 
-class WordSuspensionBean extends ISuspensionBean {
-  final String word;
-  final String tag;
+class _SimpleListViewState extends State<SimpleListView> {
+  final _wordScrollController = ItemScrollController();
+  final _indexBarDragNotifier = IndexBarDragNotifier();
+  late final VoidCallback _indexBarListener;
+  bool _hasVibration = false;
 
-  WordSuspensionBean({required this.word, required this.tag});
-
-  factory WordSuspensionBean.fromWord(Word word) => WordSuspensionBean(
-        word: word.word,
-        tag: word.word[0],
-      );
+  Future<void> _initVibration() async {
+    _hasVibration = await Vibration.hasVibrator() ?? false;
+  }
 
   @override
-  String getSuspensionTag() => tag;
+  void initState() {
+    super.initState();
+    _indexBarListener = () {
+      final letter = _indexBarDragNotifier.dragDetails.value.tag;
+      if (letter != null) {
+        _onLetterPressed(letter);
+      }
+    };
+    _indexBarDragNotifier.dragDetails.addListener(_indexBarListener);
+    _initVibration();
+  }
+
+  @override
+  void dispose() {
+    _indexBarDragNotifier.dragDetails.removeListener(_indexBarListener);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final alphabet = SimpleListView.alphabetsMap[widget.langId]!;
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Flexible(
+          flex: 10,
+          child: ScrollablePositionedList.builder(
+            itemScrollController: _wordScrollController,
+            itemBuilder: (context, index) {
+              final word = widget.words[index];
+              return ListTile(
+                title: Text(word.word),
+                onTap: () => context.go(
+                  '/translate/word',
+                  extra: {
+                    'word': word,
+                    'save_to_history': true,
+                  },
+                ),
+              );
+            },
+            itemCount: widget.words.length,
+          ),
+        ),
+        SizedBox(
+          width: 24,
+          child: IndexBar(
+            data: alphabet,
+            indexBarDragListener: _indexBarDragNotifier,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onLetterPressed(String letter) {
+    letter = letter.toLowerCase();
+    final index = widget.words.indexWhere((it) => it.letter == letter);
+    if (index > 0) {
+      _wordScrollController.jumpTo(index: index);
+      if (_hasVibration) {
+        Vibration.vibrate(duration: 25);
+      }
+    }
+  }
 }

@@ -14,14 +14,13 @@ class VocabularyNumPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Build page with number $langId');
     return BlocBuilder<VocabularyCubit, VocabularyState>(
       buildWhen: (_, current) => current is VocabularyLoadedState && current.langId == langId,
       builder: (context, state) {
         if (state is VocabularyLoadedState) {
-          return AlphabetListView(
+          return SimpleListView(
             langId: state.langId,
-            words: state.words,
+            words: state.words.toList(),
           );
         }
         return const Center(child: CircularProgressIndicator());

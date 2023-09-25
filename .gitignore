@@ -48,3 +48,6 @@ assets/objectbox/
 
 # Release
 release_notes.txt
+
+# FVM
+.fvm/flutter_sdk

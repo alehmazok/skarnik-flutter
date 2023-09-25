@@ -5,7 +5,7 @@ import 'package:skarnik_flutter/di.skarnik.dart';
 import '../domain/use_case/load_vocabulary.dart';
 import '../domain/use_case/stream_vocabulary.dart';
 import 'vocabulary_cubit.dart';
-import 'widgets/vocabulary_page.dart';
+import 'widgets/vocabulary_num_page.dart';
 
 class VocabularyPage extends StatefulWidget {
   const VocabularyPage({Key? key}) : super(key: key);

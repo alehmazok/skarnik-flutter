@@ -29,16 +29,6 @@ class _HomePageState extends State<HomePage> {
         if (appState is SkarnikAppInitedState) {
           return Scaffold(
             body: _pages[_selectedIndex],
-            // body: Stack(
-            //   fit: StackFit.expand,
-            //   children: _pages.mapIndexed((index, page) {
-            //     if (index == _selectedIndex) {
-            //       return Offstage(offstage: false, child: page);
-            //     } else {
-            //       return Offstage(child: page);
-            //     }
-            //   }).toList(),
-            // ),
             bottomNavigationBar: NavigationBar(
               selectedIndex: _selectedIndex,
               onDestinationSelected: (index) => setState(() {

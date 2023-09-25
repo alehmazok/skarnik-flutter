@@ -66,7 +66,11 @@ class VocabularyCubit extends Cubit<VocabularyState> {
     required this.loadVocabularyUseCase,
     required this.streamVocabularyUseCase,
     required this.tickerProvider,
-  })  : tabController = TabController(length: 3, vsync: tickerProvider),
+  })  : tabController = TabController(
+          length: 3,
+          vsync: tickerProvider,
+          animationDuration: Duration.zero,
+        ),
         super(const VocabularyInitedState()) {
     _logger.fine('New instance created: $hashCode');
     loadWords(0);
