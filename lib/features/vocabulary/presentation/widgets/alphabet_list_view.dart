@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -98,7 +100,8 @@ class _SimpleListViewState extends State<SimpleListView> {
   bool _hasVibration = false;
 
   Future<void> _initVibration() async {
-    _hasVibration = await Vibration.hasVibrator() ?? false;
+    // Не падабаецца, як працуе вібрацыя на Андройдзе.
+    _hasVibration = !Platform.isAndroid && (await Vibration.hasVibrator() ?? false);
   }
 
   @override

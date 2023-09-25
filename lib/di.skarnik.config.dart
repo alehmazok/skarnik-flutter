@@ -35,17 +35,17 @@ import 'package:skarnik_flutter/features/app/domain/use_case/init_remote_config.
 import 'package:skarnik_flutter/features/app/domain/use_case/log_analytics_app_started.dart'
     as _i26;
 import 'package:skarnik_flutter/features/history/data/repository/objectbox_history_repository.dart'
-    as _i21;
+    as _i16;
 import 'package:skarnik_flutter/features/history/domain/repository/history_repository.dart'
-    as _i20;
+    as _i15;
 import 'package:skarnik_flutter/features/history/domain/use_case/load_history.dart'
-    as _i25;
+    as _i24;
 import 'package:skarnik_flutter/features/home/data/repository/objectbox_history_repository.dart'
     as _i19;
 import 'package:skarnik_flutter/features/home/domain/repository/history_repository.dart'
     as _i18;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
-    as _i24;
+    as _i25;
 import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
     as _i31;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
@@ -65,7 +65,7 @@ import 'package:skarnik_flutter/features/translation/data/repository/dev_analyti
 import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
     as _i7;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
-    as _i16;
+    as _i21;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_word_repository.dart'
     as _i40;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
@@ -73,7 +73,7 @@ import 'package:skarnik_flutter/features/translation/data/repository/skarnik_tra
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart'
     as _i6;
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart'
-    as _i15;
+    as _i20;
 import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart'
     as _i35;
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart'
@@ -144,9 +144,9 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i23.InitRemoteConfigUseCase>(
         () => _i23.InitRemoteConfigUseCase());
     gh.factory<_i24.LoadHistoryUseCase>(
-        () => _i24.LoadHistoryUseCase(gh<_i18.HistoryRepository>()));
+        () => _i24.LoadHistoryUseCase(gh<_i15.HistoryRepository>()));
     gh.factory<_i25.LoadHistoryUseCase>(
-        () => _i25.LoadHistoryUseCase(gh<_i20.HistoryRepository>()));
+        () => _i25.LoadHistoryUseCase(gh<_i18.HistoryRepository>()));
     gh.factory<_i26.LogAnalyticsAppOpenUseCase>(() =>
         _i26.LogAnalyticsAppOpenUseCase(gh<_i3.AnalyticsAppRepository>()));
     gh.factory<_i27.LogAnalyticsShareUseCase>(() =>
@@ -156,7 +156,7 @@ extension GetItInjectableX on _i1.GetIt {
         _i28.LogAnalyticsTranslationUseCase(
             gh<_i6.AnalyticsTranslationRepository>()));
     gh.factory<_i29.SaveToHistoryUseCase>(
-        () => _i29.SaveToHistoryUseCase(gh<_i15.HistoryRepository>()));
+        () => _i29.SaveToHistoryUseCase(gh<_i20.HistoryRepository>()));
     gh.factory<_i30.SearchRepository>(
         () => _i31.ObjectboxSearchRepository(gh<_i17.ObjectboxService>()));
     gh.factory<_i32.SearchUseCase>(
