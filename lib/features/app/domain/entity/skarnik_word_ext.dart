@@ -1,14 +1,14 @@
 import 'word.dart';
 
+const int langIdRusBel = 0;
+const int langIdBelRus = 1;
+const int langIdTsbm = 2;
+
+const String dictPathRusBel = 'rusbel';
+const String dictPathBelRus = 'belrus';
+const String dictPathTsbm = 'tsbm';
+
 extension SkarnikWordExt on Word {
-  static const int langIdRusBel = 0;
-  static const int langIdBelRus = 1;
-  static const int langIdTsbm = 2;
-
-  static const String dictPathRusBel = 'rusbel';
-  static const String dictPathBelRus = 'belrus';
-  static const String dictPathTsbm = 'tsbm';
-
   static const langIdDictPathMap = {
     langIdRusBel: dictPathRusBel,
     langIdBelRus: dictPathBelRus,

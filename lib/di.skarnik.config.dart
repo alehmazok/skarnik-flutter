@@ -35,17 +35,17 @@ import 'package:skarnik_flutter/features/app/domain/use_case/init_remote_config.
 import 'package:skarnik_flutter/features/app/domain/use_case/log_analytics_app_started.dart'
     as _i26;
 import 'package:skarnik_flutter/features/history/data/repository/objectbox_history_repository.dart'
-    as _i16;
-import 'package:skarnik_flutter/features/history/domain/repository/history_repository.dart'
-    as _i15;
-import 'package:skarnik_flutter/features/history/domain/use_case/load_history.dart'
-    as _i24;
-import 'package:skarnik_flutter/features/home/data/repository/objectbox_history_repository.dart'
     as _i19;
-import 'package:skarnik_flutter/features/home/domain/repository/history_repository.dart'
+import 'package:skarnik_flutter/features/history/domain/repository/history_repository.dart'
     as _i18;
-import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
+import 'package:skarnik_flutter/features/history/domain/use_case/load_history.dart'
     as _i25;
+import 'package:skarnik_flutter/features/home/data/repository/objectbox_history_repository.dart'
+    as _i16;
+import 'package:skarnik_flutter/features/home/domain/repository/history_repository.dart'
+    as _i15;
+import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
+    as _i24;
 import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
     as _i31;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
@@ -94,8 +94,6 @@ import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary
     as _i37;
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
     as _i44;
-import 'package:skarnik_flutter/features/vocabulary/domain/use_case/stream_vocabulary.dart'
-    as _i45;
 
 const String _dev = 'dev';
 const String _prod = 'prod';
@@ -177,8 +175,6 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i43.GetWordUseCase(gh<_i39.WordRepository>()));
     gh.factory<_i44.LoadVocabularyUseCase>(
         () => _i44.LoadVocabularyUseCase(gh<_i37.VocabularyRepository>()));
-    gh.factory<_i45.StreamVocabularyUseCase>(
-        () => _i45.StreamVocabularyUseCase(gh<_i37.VocabularyRepository>()));
     return this;
   }
 }

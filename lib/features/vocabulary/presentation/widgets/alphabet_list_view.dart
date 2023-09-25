@@ -75,9 +75,9 @@ class SimpleListView extends StatefulWidget {
   ];
 
   static const alphabetsMap = {
-    SkarnikWordExt.langIdRusBel: rusBelAlphabet,
-    SkarnikWordExt.langIdBelRus: belRusAlphabet,
-    SkarnikWordExt.langIdTsbm: belRusAlphabet,
+    langIdRusBel: rusBelAlphabet,
+    langIdBelRus: belRusAlphabet,
+    langIdTsbm: belRusAlphabet,
   };
 
   final int langId;
