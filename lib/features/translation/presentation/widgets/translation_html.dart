@@ -1,5 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Element;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
@@ -34,7 +34,7 @@ class TranslationHtml extends StatelessWidget {
           child: Html(
             data: _modifyContentForBrightness(Theme.of(context).brightness),
             shrinkWrap: true,
-            style: {'div#skarnik': Style(fontSize: FontSize.large)},
+            style: {'*': Style(fontSize: FontSize.large)},
             // scrollPhysics: const NeverScrollableScrollPhysics(),
             onAnchorTap: (url, attrs, element) {
               if (url != null) {
