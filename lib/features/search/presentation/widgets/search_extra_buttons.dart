@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'letter_button.dart';
 
 class SearchExtraButtons extends StatelessWidget {
-  static const _margin = 16.0;
+  // static const _margin = 16.0;
   static const _spacerWidth = 8.0;
 
   const SearchExtraButtons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
-        children: const [
+        children: [
           LetterButton(letter: 'и'),
           SizedBox(width: _spacerWidth),
           LetterButton(letter: 'щ'),
