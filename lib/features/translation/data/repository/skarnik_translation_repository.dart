@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
@@ -12,8 +11,8 @@ import 'package:skarnik_flutter/logging.dart';
 import '../../domain/entity/translation.dart';
 import '../../domain/repository/translation_repository.dart';
 
-@Injectable(as: TranslationRepository)
-class SkarnikTranslationRepository implements TranslationRepository {
+@Injectable(as: FallbackTranslationRepository)
+class SkarnikTranslationRepository implements FallbackTranslationRepository {
   final _logger = getLogger(SkarnikTranslationRepository);
   final Dio _dio;
 
@@ -33,7 +32,7 @@ class SkarnikTranslationRepository implements TranslationRepository {
   _setUri(int wordId) {
     _uri = Uri(
       scheme: 'https',
-      host: AppConfig.host,
+      host: AppConfig.skarnikSiteHostName,
       pathSegments: [_word.dictPath, '$wordId'],
     );
   }
@@ -68,11 +67,7 @@ class SkarnikTranslationRepository implements TranslationRepository {
     final trn = tgt?.querySelector('p#trn');
     final rdr = tgt?.querySelector('p#rdr');
     if (trn != null) {
-      final divWrapper = Element.tag('div')
-        ..append(trn)
-        ..id = 'skarnik';
-
-      return _buildTranslation(divWrapper.outerHtml);
+      return _buildTranslation(trn.outerHtml);
     } else if (rdr != null) {
       _setUri(_word.wordId + 1);
 

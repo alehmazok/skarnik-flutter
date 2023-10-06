@@ -5,5 +5,7 @@ abstract class AppConfig {
 
   static const historyWordsPerPageLimit = 50;
 
-  static const host = 'skarnik.by';
+  static const skarnikSiteHostName = 'skarnik.by';
+
+  static const apiHostName = 'skarnik.play.of.by';
 }

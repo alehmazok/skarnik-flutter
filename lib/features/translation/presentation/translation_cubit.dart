@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
@@ -68,30 +67,34 @@ class TranslationCubit extends Cubit<TranslationState> {
   }
 
   Future<void> _getWord() async {
-    final getTranslation = await getWordUseCase(langId, wordId)
+    final getTranslation = await getWordUseCase(langId: langId, wordId: wordId)
         .flatMap(
-      (word) => getTranslationUseCase(word).map((translation) => Pair(word, translation)),
+      (word) => getTranslationUseCase(word).map(
+        (translation) => Pair(word, translation),
+      ),
     )
         .flatMap(
       (pair) {
         if (saveToHistory) {
           return saveToHistoryUseCase(pair.first).map((_) => pair.second);
         }
-        return Future.value(right(pair.second));
+        return Future.value(Success(pair.second));
       },
     ).flatMap(
       (translation) => logAnalyticsTranslationUseCase(translation).map((_) => translation),
     );
-    getTranslation.fold(
-      (error) => emitGuarded(TranslationFailedState(error)),
-      (translation) => emitGuarded(TranslationLoadedState(translation)),
-    );
+    switch (getTranslation) {
+      case Failure(error: final error):
+        emitGuarded(TranslationFailedState(error));
+      case Success(result: final translation):
+        emitGuarded(TranslationLoadedState(translation));
+    }
   }
 
   Future<void> share(Translation translation) async {
     await Share.share(translation.uri.toString(), subject: translation.word.word);
 
-    // Не апрацоўваць вынік выканання юскейса.
+    // Не апрацоўваць вынік выканання usecase-а.
     await logAnalyticsShareUseCase(translation);
   }
 

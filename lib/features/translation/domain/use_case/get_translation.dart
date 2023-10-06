@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
@@ -10,25 +9,34 @@ import '../entity/translation.dart';
 import '../repository/translation_repository.dart';
 
 @injectable
-class GetTranslationUseCase extends EitherUseCase1<Translation, Word> {
+class GetTranslationUseCase {
   final _logger = getLogger(GetTranslationUseCase);
 
-  final TranslationRepository _translationRepository;
+  final PrimaryTranslationRepository _primaryTranslationRepository;
+  final FallbackTranslationRepository _fallbackTranslationRepository;
 
-  GetTranslationUseCase(this._translationRepository);
+  GetTranslationUseCase(
+    this._primaryTranslationRepository,
+    this._fallbackTranslationRepository,
+  );
 
-  @override
-  Future<Either<Object, Translation>> call(Word argument) async {
+  Future<UseCaseResult<Translation>> call(Word word) async {
     try {
-      final translation = await _translationRepository.getTranslation(argument);
-
-      _logger.fine(translation.html);
-
-      return right(translation);
+      final translation = await _primaryTranslationRepository.getTranslation(word);
+      return Success(translation);
     } catch (e, st) {
-      _logger.severe('Адбылася памылка падчас запыту перакладу:', e, st);
+      _logger.severe('Адбылася памылка падчас запыту перакладу праз API:', e, st);
+      return _callFallback(word);
+    }
+  }
 
-      return left(e);
+  Future<UseCaseResult<Translation>> _callFallback(Word argument) async {
+    try {
+      final translation = await _fallbackTranslationRepository.getTranslation(argument);
+      return Success(translation);
+    } catch (e, st) {
+      _logger.severe('Адбылася памылка падчас запыту перакладу праз сайт:', e, st);
+      return Failure(e);
     }
   }
 }
