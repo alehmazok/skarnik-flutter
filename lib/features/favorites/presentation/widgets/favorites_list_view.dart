@@ -5,15 +5,15 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
-import '../history_cubit.dart';
+import '../favorites_cubit.dart';
 
-class HistoryListView extends StatelessWidget {
-  const HistoryListView({Key? key}) : super(key: key);
+class FavoritesListView extends StatelessWidget {
+  const FavoritesListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PagedListView<int, Word>(
-      pagingController: context.read<HistoryCubit>().pagingController,
+      pagingController: context.read<FavoritesCubit>().pagingController,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       builderDelegate: PagedChildBuilderDelegate<Word>(
         noItemsFoundIndicatorBuilder: (_) => const Center(
@@ -36,7 +36,7 @@ class HistoryListView extends StatelessWidget {
               extra: {
                 'word': word,
                 // Не захоўваць у гісторыю, таму што пераход быў зроблены ўласна з экрана Гісторыі.
-                'save_to_history': false,
+                'save_to_favorites': false,
               },
             ),
           );

@@ -4,18 +4,18 @@ import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 
 import '../../app/presentation/skarnik_app_bloc.dart';
-import '../domain/use_case/load_history.dart';
-import 'history_cubit.dart';
-import 'widgets/history_list_view.dart';
+import '../domain/use_case/load_favorites.dart';
+import 'favorites_cubit.dart';
+import 'widgets/favorites_list_view.dart';
 
-class HistoryPage extends StatelessWidget {
-  const HistoryPage({Key? key}) : super(key: key);
+class FavoritesPage extends StatelessWidget {
+  const FavoritesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HistoryCubit(
-        loadHistoryUseCase: getIt<LoadHistoryUseCase>(),
+      create: (context) => FavoritesCubit(
+        loadFavoritesUseCase: getIt<LoadFavoritesUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -54,7 +54,7 @@ class HistoryPage extends StatelessWidget {
                 return IconButton(
                   onPressed: () => context.go(
                     '/settings',
-                    extra: context.read<HistoryCubit>(),
+                    extra: context.read<FavoritesCubit>(),
                   ),
                   icon: const Icon(Icons.settings_rounded),
                 );
@@ -64,14 +64,14 @@ class HistoryPage extends StatelessWidget {
         ),
         body: BlocListener<SkarnikAppBloc, SkarnikAppState>(
           listener: (context, state) {
-            if (state is SkarnikAppHistoryUpdatedState) {
-              context.read<HistoryCubit>().reload();
-            }
-            if (state is SkarnikAppAppLinkReceivedState) {
-              context.go('/translate/${state.langId}/${state.wordId}');
-            }
+            // if (state is SkarnikAppFavoritesUpdatedState) {
+            //   context.read<FavoritesCubit>().reload();
+            // }
+            // if (state is SkarnikAppAppLinkReceivedState) {
+            //   context.go('/translate/${state.langId}/${state.wordId}');
+            // }
           },
-          child: const HistoryListView(),
+          child: const FavoritesListView(),
         ),
       ),
     );

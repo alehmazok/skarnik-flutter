@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
 
+import '../../app/presentation/skarnik_app_bloc.dart';
+import '../../favorites/presentation/favorites_page.dart';
 import '../../history/presentation/history_page.dart';
-import '../../settings/presentation/settings_page.dart';
 import '../../vocabulary/presentation/vocabulary_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,8 +17,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   static const _pages = [
     HistoryPage(),
+    FavoritesPage(),
     VocabularyPage(),
-    SettingsPage(),
   ];
 
   @override
@@ -40,12 +40,12 @@ class _HomePageState extends State<HomePage> {
                   label: 'Пошук',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.menu_book_rounded),
-                  label: 'Слоўнік',
+                  icon: Icon(Icons.bookmark_rounded),
+                  label: 'Закладкі',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.settings_rounded),
-                  label: 'Наладкі',
+                  icon: Icon(Icons.menu_book_rounded),
+                  label: 'Слоўнік',
                 ),
               ],
             ),

@@ -50,17 +50,6 @@ class TranslationPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: word == null
-              ? BlocBuilder<TranslationCubit, TranslationState>(
-                  builder: (context, state) {
-                    if (state is TranslationLoadedState) {
-                      return Text('«${state.translation.word.word}»');
-                    }
-                    return const SizedBox.shrink();
-                  },
-                )
-              : Text('«${word.word}»'),
-          centerTitle: true,
           actions: [
             BlocBuilder<TranslationCubit, TranslationState>(
               builder: (context, state) {
@@ -105,6 +94,26 @@ class TranslationPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(
+                        child: BlocBuilder<TranslationCubit, TranslationState>(
+                          builder: (context, state) {
+                            final String text;
+                            if (word != null) {
+                              text = word.word;
+                            } else if (state is TranslationLoadedState) {
+                              text = state.translation.word.word;
+                            } else {
+                              text = '';
+                            }
+                            return Text(
+                              '«$text»',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       SizedBox(
                         width: double.infinity,
                         child: Text(

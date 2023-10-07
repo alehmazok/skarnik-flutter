@@ -94,10 +94,46 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "4:3",
+      "lastPropertyId": "7:3794220720396200128",
+      "name": "ObjectboxFavoriteWord",
+      "properties": [
+        {
+          "id": "1:4543241904431980795",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1441095813867295227",
+          "name": "langId",
+          "type": 6
+        },
+        {
+          "id": "3:4958884637484099258",
+          "name": "letter",
+          "type": 9
+        },
+        {
+          "id": "4:1060321079331553370",
+          "name": "wordId",
+          "type": 6,
+          "flags": 40,
+          "indexId": "3:6668724822744587284"
+        },
+        {
+          "id": "5:8268186311141102367",
+          "name": "word",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "3:2",
-  "lastIndexId": "2:6767957250904925596",
+  "lastEntityId": "4:3",
+  "lastIndexId": "3:6668724822744587284",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -113,7 +149,9 @@
     962416795588697287,
     1446233554302581116,
     6725053102633110456,
-    5056786493163352175
+    5056786493163352175,
+    4080064186539668059,
+    3794220720396200128
   ],
   "retiredRelationUids": [],
   "version": 1

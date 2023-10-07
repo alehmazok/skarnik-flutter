@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
 
 import '../../home/presentation/home_page.dart';
 import '../../search/presentation/search_page.dart';
+import '../../settings/presentation/settings_page.dart';
 import '../../translation/presentation/translation_page.dart';
 import '../domain/entity/word.dart';
 
@@ -16,6 +19,13 @@ abstract class SkarnikRouter {
           GoRoute(
             path: 'search',
             builder: (context, state) => const SearchPage(),
+          ),
+          GoRoute(
+            path: 'settings',
+            builder: (context, state) => BlocProvider.value(
+              value: state.extra as HistoryCubit,
+              child: const SettingsPage(),
+            ),
           ),
           GoRoute(
             path: 'translate/:langId/:wordId',

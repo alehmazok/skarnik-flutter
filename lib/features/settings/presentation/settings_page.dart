@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
+import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
 
 import '../domain/use_case/clear_history.dart';
 import 'settings_cubit.dart';
@@ -23,6 +24,7 @@ class SettingsPage extends StatelessWidget {
         body: BlocListener<SettingsCubit, SettingsState>(
           listener: (context, state) {
             if (state is SettingsClearedState) {
+              context.read<HistoryCubit>().reload();
               ScaffoldMessenger.of(context)
                 ..clearSnackBars()
                 ..showSnackBar(

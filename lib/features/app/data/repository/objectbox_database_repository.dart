@@ -72,7 +72,10 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
     required Store searchStore,
     required Store historyStore,
   }) {
-    final service = ObjectboxService(searchStore: searchStore, historyStore: historyStore);
+    final service = ObjectboxService(
+      searchStore: searchStore,
+      historyStore: historyStore,
+    );
     _logger.fine('Рэгіструем `${service.runtimeType}` залежнасць, як сінглтон.');
     getIt.registerSingleton(service);
   }
