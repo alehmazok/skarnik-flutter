@@ -18,7 +18,7 @@ import 'package:skarnik_flutter/features/app/data/repository/firebase_analytics_
     as _i5;
 import 'package:skarnik_flutter/features/app/data/repository/objectbox_database_repository.dart'
     as _i10;
-import 'package:skarnik_flutter/features/app/data/service/objectbox_service.dart'
+import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart'
     as _i17;
 import 'package:skarnik_flutter/features/app/domain/repository/analytics_app_repository.dart'
     as _i3;
@@ -45,13 +45,13 @@ import 'package:skarnik_flutter/features/history/data/repository/objectbox_histo
 import 'package:skarnik_flutter/features/history/domain/repository/history_repository.dart'
     as _i24;
 import 'package:skarnik_flutter/features/history/domain/use_case/load_history.dart'
-    as _i29;
+    as _i30;
 import 'package:skarnik_flutter/features/home/data/repository/objectbox_history_repository.dart'
     as _i23;
 import 'package:skarnik_flutter/features/home/domain/repository/history_repository.dart'
     as _i22;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
-    as _i30;
+    as _i29;
 import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
     as _i37;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
@@ -63,33 +63,41 @@ import 'package:skarnik_flutter/features/settings/data/repository/objectbox_sett
 import 'package:skarnik_flutter/features/settings/domain/repository/settings_history_repository.dart'
     as _i39;
 import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.dart'
-    as _i45;
+    as _i49;
 import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
     as _i12;
 import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository.dart'
     as _i34;
 import 'package:skarnik_flutter/features/translation/data/repository/dev_analytics_translation_repository.dart'
-    as _i8;
-import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
     as _i7;
+import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
+    as _i8;
+import 'package:skarnik_flutter/features/translation/data/repository/objectbox_favorites_repository.dart'
+    as _i42;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
     as _i21;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_word_repository.dart'
-    as _i44;
+    as _i46;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
     as _i14;
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart'
     as _i6;
+import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart'
+    as _i41;
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart'
     as _i20;
 import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart'
     as _i13;
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart'
-    as _i43;
-import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart'
-    as _i46;
-import 'package:skarnik_flutter/features/translation/domain/use_case/get_word.dart'
+    as _i45;
+import 'package:skarnik_flutter/features/translation/domain/use_case/add_to_favorites.dart'
     as _i47;
+import 'package:skarnik_flutter/features/translation/domain/use_case/check_in_favorites.dart'
+    as _i48;
+import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart'
+    as _i50;
+import 'package:skarnik_flutter/features/translation/domain/use_case/get_word.dart'
+    as _i51;
 import 'package:skarnik_flutter/features/translation/domain/use_case/log_analytics_share.dart'
     as _i32;
 import 'package:skarnik_flutter/features/translation/domain/use_case/log_analytics_translation.dart'
@@ -97,11 +105,11 @@ import 'package:skarnik_flutter/features/translation/domain/use_case/log_analyti
 import 'package:skarnik_flutter/features/translation/domain/use_case/save_to_history.dart'
     as _i35;
 import 'package:skarnik_flutter/features/vocabulary/data/repository/vocabulary_repository.dart'
-    as _i42;
+    as _i44;
 import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary_repository.dart'
-    as _i41;
+    as _i43;
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
-    as _i48;
+    as _i52;
 
 const String _dev = 'dev';
 const String _prod = 'prod';
@@ -126,29 +134,29 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i7.FirebaseAnalyticsTranslationRepository(),
-      registerFor: {_prod},
+      () => _i7.DevAnalyticsTranslationRepository(),
+      registerFor: {_dev},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i8.DevAnalyticsTranslationRepository(),
-      registerFor: {_dev},
+      () => _i8.FirebaseAnalyticsTranslationRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i9.DatabaseRepository>(
         () => _i10.ObjectboxDatabaseRepository());
     gh.singleton<_i11.Dio>(_i12.SkarnikDio());
     gh.factory<_i13.FallbackTranslationRepository>(
         () => _i14.SkarnikTranslationRepository(gh<_i11.Dio>()));
-    gh.factory<_i15.FavoritesRepository>(
-        () => _i16.ObjectboxFavoritesRepository(gh<_i17.ObjectboxService>()));
+    gh.factory<_i15.FavoritesRepository>(() =>
+        _i16.ObjectboxFavoritesRepository(gh<_i17.ObjectboxStoreHolder>()));
     gh.factory<_i18.GetAppLinkStreamUseCase>(
         () => _i18.GetAppLinkStreamUseCase());
     gh.factory<_i19.HandleAppLinkUseCase>(() => _i19.HandleAppLinkUseCase());
     gh.factory<_i20.HistoryRepository>(
-        () => _i21.ObjectboxHistoryRepository(gh<_i17.ObjectboxService>()));
+        () => _i21.ObjectboxHistoryRepository(gh<_i17.ObjectboxStoreHolder>()));
     gh.factory<_i22.HistoryRepository>(
-        () => _i23.ObjectboxHistoryRepository(gh<_i17.ObjectboxService>()));
+        () => _i23.ObjectboxHistoryRepository(gh<_i17.ObjectboxStoreHolder>()));
     gh.factory<_i24.HistoryRepository>(
-        () => _i25.ObjectboxHistoryRepository(gh<_i17.ObjectboxService>()));
+        () => _i25.ObjectboxHistoryRepository(gh<_i17.ObjectboxStoreHolder>()));
     gh.factory<_i26.InitDatabaseUseCase>(
         () => _i26.InitDatabaseUseCase(gh<_i9.DatabaseRepository>()));
     gh.factory<_i27.InitRemoteConfigUseCase>(
@@ -156,9 +164,9 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i28.LoadFavoritesUseCase>(
         () => _i28.LoadFavoritesUseCase(gh<_i15.FavoritesRepository>()));
     gh.factory<_i29.LoadHistoryUseCase>(
-        () => _i29.LoadHistoryUseCase(gh<_i24.HistoryRepository>()));
+        () => _i29.LoadHistoryUseCase(gh<_i22.HistoryRepository>()));
     gh.factory<_i30.LoadHistoryUseCase>(
-        () => _i30.LoadHistoryUseCase(gh<_i22.HistoryRepository>()));
+        () => _i30.LoadHistoryUseCase(gh<_i24.HistoryRepository>()));
     gh.factory<_i31.LogAnalyticsAppOpenUseCase>(() =>
         _i31.LogAnalyticsAppOpenUseCase(gh<_i3.AnalyticsAppRepository>()));
     gh.factory<_i32.LogAnalyticsShareUseCase>(() =>
@@ -172,25 +180,33 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i35.SaveToHistoryUseCase>(
         () => _i35.SaveToHistoryUseCase(gh<_i20.HistoryRepository>()));
     gh.factory<_i36.SearchRepository>(
-        () => _i37.ObjectboxSearchRepository(gh<_i17.ObjectboxService>()));
+        () => _i37.ObjectboxSearchRepository(gh<_i17.ObjectboxStoreHolder>()));
     gh.factory<_i38.SearchUseCase>(
         () => _i38.SearchUseCase(gh<_i36.SearchRepository>()));
     gh.factory<_i39.SettingsHistoryRepository>(() =>
-        _i40.ObjectboxSettingsHistoryRepository(gh<_i17.ObjectboxService>()));
-    gh.factory<_i41.VocabularyRepository>(
-        () => _i42.ObjectboxVocabularyRepository(gh<_i17.ObjectboxService>()));
-    gh.factory<_i43.WordRepository>(
-        () => _i44.ObjectboxWordRepository(gh<_i17.ObjectboxService>()));
-    gh.factory<_i45.ClearHistoryUseCase>(
-        () => _i45.ClearHistoryUseCase(gh<_i39.SettingsHistoryRepository>()));
-    gh.factory<_i46.GetTranslationUseCase>(() => _i46.GetTranslationUseCase(
+        _i40.ObjectboxSettingsHistoryRepository(
+            gh<_i17.ObjectboxStoreHolder>()));
+    gh.factory<_i41.TranslationFavoritesRepository>(() =>
+        _i42.ObjectboxTranslationFavoritesRepository(
+            gh<_i17.ObjectboxStoreHolder>()));
+    gh.factory<_i43.VocabularyRepository>(() =>
+        _i44.ObjectboxVocabularyRepository(gh<_i17.ObjectboxStoreHolder>()));
+    gh.factory<_i45.WordRepository>(
+        () => _i46.ObjectboxWordRepository(gh<_i17.ObjectboxStoreHolder>()));
+    gh.factory<_i47.AddToFavoritesUseCase>(() =>
+        _i47.AddToFavoritesUseCase(gh<_i41.TranslationFavoritesRepository>()));
+    gh.factory<_i48.CheckInFavoritesUseCase>(() => _i48.CheckInFavoritesUseCase(
+        gh<_i41.TranslationFavoritesRepository>()));
+    gh.factory<_i49.ClearHistoryUseCase>(
+        () => _i49.ClearHistoryUseCase(gh<_i39.SettingsHistoryRepository>()));
+    gh.factory<_i50.GetTranslationUseCase>(() => _i50.GetTranslationUseCase(
           gh<_i13.PrimaryTranslationRepository>(),
           gh<_i13.FallbackTranslationRepository>(),
         ));
-    gh.factory<_i47.GetWordUseCase>(
-        () => _i47.GetWordUseCase(gh<_i43.WordRepository>()));
-    gh.factory<_i48.LoadVocabularyUseCase>(
-        () => _i48.LoadVocabularyUseCase(gh<_i41.VocabularyRepository>()));
+    gh.factory<_i51.GetWordUseCase>(
+        () => _i51.GetWordUseCase(gh<_i45.WordRepository>()));
+    gh.factory<_i52.LoadVocabularyUseCase>(
+        () => _i52.LoadVocabularyUseCase(gh<_i43.VocabularyRepository>()));
     return this;
   }
 }

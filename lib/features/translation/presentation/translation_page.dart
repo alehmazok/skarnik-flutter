@@ -5,6 +5,8 @@ import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
 
+import '../domain/use_case/add_to_favorites.dart';
+import '../domain/use_case/check_in_favorites.dart';
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
 import '../domain/use_case/log_analytics_share.dart';
@@ -44,6 +46,8 @@ class TranslationPage extends StatelessWidget {
         saveToHistory: saveToHistory,
         getWordUseCase: getIt<GetWordUseCase>(),
         getTranslationUseCase: getIt<GetTranslationUseCase>(),
+        addToFavoritesUseCase: getIt<AddToFavoritesUseCase>(),
+        checkInFavoritesUseCase: getIt<CheckInFavoritesUseCase>(),
         saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
         logAnalyticsShareUseCase: getIt<LogAnalyticsShareUseCase>(),
         logAnalyticsTranslationUseCase: getIt<LogAnalyticsTranslationUseCase>(),
@@ -51,6 +55,17 @@ class TranslationPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           actions: [
+            BlocBuilder<TranslationCubit, TranslationState>(
+              builder: (context, state) {
+                if (state is TranslationLoadedState) {
+                  return IconButton(
+                    onPressed: () => context.read<TranslationCubit>().addToFavorites(state.translation),
+                    icon: Icon(state.inFavorites ? Icons.bookmark_added_rounded : Icons.bookmark_add_outlined),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
             BlocBuilder<TranslationCubit, TranslationState>(
               builder: (context, state) {
                 if (state is TranslationLoadedState) {
@@ -68,6 +83,17 @@ class TranslationPage extends StatelessWidget {
           listener: (context, state) {
             if (state is TranslationLoadedState) {
               context.read<SkarnikAppBloc>().add(SkarnikAppHistoryUpdated(state.translation.word));
+            }
+            if (state is TranslationAddedToFavoritesState) {
+              ScaffoldMessenger.of(context)
+                ..clearSnackBars()
+                ..showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Дададзена ў закладкі.',
+                    ),
+                  ),
+                );
             }
             if (state is TranslationFailedState) {
               // TODO: зрабіць больш дакладную і прыгожую апрацоўку памылак.

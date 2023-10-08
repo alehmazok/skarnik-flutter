@@ -8,19 +8,19 @@ import 'package:skarnik_flutter/logging.dart';
 import '../repository/favorites_repository.dart';
 
 @injectable
-class AddToFavoritesUseCase {
-  final _logger = getLogger(AddToFavoritesUseCase);
+class CheckInFavoritesUseCase {
+  final _logger = getLogger(CheckInFavoritesUseCase);
 
   final TranslationFavoritesRepository _repository;
 
-  AddToFavoritesUseCase(this._repository);
+  CheckInFavoritesUseCase(this._repository);
 
   Future<UseCaseResult<bool>> call(Word word) async {
     try {
-      await _repository.add(word);
-      return const Success(true);
+      final contains = await _repository.contains(word);
+      return Success(contains);
     } catch (e, st) {
-      _logger.severe('Адбылася памылка пры дадаванні слова ў закладкі:', e, st);
+      _logger.severe('Адбылася памылка пры праверцы слова ў закладках:', e, st);
       return Failure(e);
     }
   }

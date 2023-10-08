@@ -4,7 +4,7 @@ import '../model/objectbox_favorite_word.dart';
 import '../model/objectbox_history_word.dart';
 import '../model/objectbox_search_word.dart';
 
-class ObjectboxService {
+class ObjectboxStoreHolder {
   final Store searchStore;
   final Store historyStore;
 
@@ -14,7 +14,7 @@ class ObjectboxService {
 
   Box<ObjectboxFavoriteWord> get favoritesBox => historyStore.box<ObjectboxFavoriteWord>();
 
-  ObjectboxService({
+  ObjectboxStoreHolder({
     required this.searchStore,
     required this.historyStore,
   });

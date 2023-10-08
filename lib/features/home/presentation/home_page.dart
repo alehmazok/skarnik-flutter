@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
                   label: 'Пошук',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.bookmark_rounded),
+                  icon: Icon(Icons.bookmark_outline_rounded),
                   label: 'Закладкі',
                 ),
                 NavigationDestination(

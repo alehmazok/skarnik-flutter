@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/transformers.dart';
-import 'package:skarnik_flutter/features/app/data/service/objectbox_service.dart';
+import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
@@ -8,7 +8,7 @@ import '../../domain/repository/vocabulary_repository.dart';
 
 @Injectable(as: VocabularyRepository)
 class ObjectboxVocabularyRepository implements VocabularyRepository {
-  final ObjectboxService _objectboxService;
+  final ObjectboxStoreHolder _objectboxService;
 
   ObjectboxVocabularyRepository(this._objectboxService);
 

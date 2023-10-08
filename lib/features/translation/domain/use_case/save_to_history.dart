@@ -15,9 +15,9 @@ class SaveToHistoryUseCase {
 
   SaveToHistoryUseCase(this._historyRepository);
 
-  Future<UseCaseResult<int>> call(Word argument) async {
+  Future<UseCaseResult<int>> call(Word word) async {
     try {
-      final id = await _historyRepository.save(argument);
+      final id = await _historyRepository.save(word);
       return Success(id);
     } catch (e, st) {
       _logger.severe('Адбылася памылка пры захаванні слова ў гісторыю:', e, st);

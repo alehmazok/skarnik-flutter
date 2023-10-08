@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/features/app/data/model/objectbox_search_word.dart';
-import 'package:skarnik_flutter/features/app/data/service/objectbox_service.dart';
+import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
@@ -16,7 +16,7 @@ class ObjectboxSearchRepository implements SearchRepository {
     '\'': '‘',
   };
 
-  final ObjectboxService _objectboxService;
+  final ObjectboxStoreHolder _objectboxService;
 
   ObjectboxSearchRepository(this._objectboxService);
 
