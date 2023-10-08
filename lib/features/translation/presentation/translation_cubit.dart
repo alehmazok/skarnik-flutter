@@ -9,6 +9,7 @@ import '../domain/use_case/add_to_favorites.dart';
 import '../domain/use_case/check_in_favorites.dart';
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
+import '../domain/use_case/log_analytics_add_to_favorites.dart';
 import '../domain/use_case/log_analytics_share.dart';
 import '../domain/use_case/log_analytics_translation.dart';
 import '../domain/use_case/remove_from_favorites.dart';
@@ -81,6 +82,7 @@ class TranslationCubit extends Cubit<TranslationState> {
   final SaveToHistoryUseCase saveToHistoryUseCase;
   final LogAnalyticsShareUseCase logAnalyticsShareUseCase;
   final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
+  final LogAnalyticsAddToFavoritesUseCase logAnalyticsAddToFavoritesUseCase;
 
   TranslationCubit({
     required this.langId,
@@ -94,6 +96,7 @@ class TranslationCubit extends Cubit<TranslationState> {
     required this.saveToHistoryUseCase,
     required this.logAnalyticsShareUseCase,
     required this.logAnalyticsTranslationUseCase,
+    required this.logAnalyticsAddToFavoritesUseCase,
   }) : super(const TranslationInProgressState()) {
     _getWord();
   }
@@ -149,7 +152,9 @@ class TranslationCubit extends Cubit<TranslationState> {
   }
 
   Future<void> addToFavorites(Word word) async {
-    final addToFavorites = await addToFavoritesUseCase(word);
+    final addToFavorites = await addToFavoritesUseCase(word).flatMap(
+      (_) => logAnalyticsAddToFavoritesUseCase(word),
+    );
     switch (addToFavorites) {
       case Failure(error: final error):
         emitGuarded(TranslationFailedState(error));

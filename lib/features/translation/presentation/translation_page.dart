@@ -9,6 +9,7 @@ import '../domain/use_case/add_to_favorites.dart';
 import '../domain/use_case/check_in_favorites.dart';
 import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
+import '../domain/use_case/log_analytics_add_to_favorites.dart';
 import '../domain/use_case/log_analytics_share.dart';
 import '../domain/use_case/log_analytics_translation.dart';
 import '../domain/use_case/remove_from_favorites.dart';
@@ -55,6 +56,7 @@ class TranslationPage extends StatelessWidget {
         saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
         logAnalyticsShareUseCase: getIt<LogAnalyticsShareUseCase>(),
         logAnalyticsTranslationUseCase: getIt<LogAnalyticsTranslationUseCase>(),
+        logAnalyticsAddToFavoritesUseCase: getIt<LogAnalyticsAddToFavoritesUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
