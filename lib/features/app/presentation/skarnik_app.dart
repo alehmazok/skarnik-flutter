@@ -18,17 +18,30 @@ class SkarnikApp extends StatelessWidget {
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.grey,
-      primaryContainer: Colors.red,
+      brightness: Brightness.light,
       onPrimaryContainer: Colors.white,
+      primary: Colors.red,
+      primaryContainer: Colors.red,
+      seedColor: Colors.grey,
     ),
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
     ),
   );
 
-  static final darkTheme = lightTheme.copyWith(
+  static final darkTheme = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.dark,
+    colorScheme: ColorScheme.fromSeed(
+      brightness: Brightness.dark,
+      onPrimaryContainer: Colors.white,
+      primary: Colors.red,
+      primaryContainer: Colors.red,
+      seedColor: Colors.grey,
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
   );
 
   @override
