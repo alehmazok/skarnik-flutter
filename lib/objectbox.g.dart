@@ -91,8 +91,7 @@ final _entities = <ModelEntity>[
             id: const IdUid(4, 2168629768157903924),
             name: 'wordId',
             type: 6,
-            flags: 40,
-            indexId: const IdUid(2, 6767957250904925596)),
+            flags: 0),
         ModelProperty(
             id: const IdUid(5, 987607834441689594),
             name: 'word',
@@ -136,8 +135,7 @@ final _entities = <ModelEntity>[
             id: const IdUid(4, 1060321079331553370),
             name: 'wordId',
             type: 6,
-            flags: 40,
-            indexId: const IdUid(3, 6668724822744587284)),
+            flags: 0),
         ModelProperty(
             id: const IdUid(5, 8268186311141102367),
             name: 'word',
@@ -180,7 +178,7 @@ ModelDefinition getObjectBoxModel() {
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [6340663483916346837],
-      retiredIndexUids: const [],
+      retiredIndexUids: const [6767957250904925596, 6668724822744587284],
       retiredPropertyUids: const [
         469393349394600467,
         6468022653824554886,

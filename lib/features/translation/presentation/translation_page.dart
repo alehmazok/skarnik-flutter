@@ -11,8 +11,11 @@ import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
 import '../domain/use_case/log_analytics_share.dart';
 import '../domain/use_case/log_analytics_translation.dart';
+import '../domain/use_case/remove_from_favorites.dart';
 import '../domain/use_case/save_to_history.dart';
 import 'translation_cubit.dart';
+import 'widgets/action_favorites.dart';
+import 'widgets/action_share.dart';
 import 'widgets/translation_html.dart';
 
 class TranslationPage extends StatelessWidget {
@@ -48,35 +51,16 @@ class TranslationPage extends StatelessWidget {
         getTranslationUseCase: getIt<GetTranslationUseCase>(),
         addToFavoritesUseCase: getIt<AddToFavoritesUseCase>(),
         checkInFavoritesUseCase: getIt<CheckInFavoritesUseCase>(),
+        removeFromFavoritesUseCase: getIt<RemoveFromFavoritesUseCase>(),
         saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
         logAnalyticsShareUseCase: getIt<LogAnalyticsShareUseCase>(),
         logAnalyticsTranslationUseCase: getIt<LogAnalyticsTranslationUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
-          actions: [
-            BlocBuilder<TranslationCubit, TranslationState>(
-              builder: (context, state) {
-                if (state is TranslationLoadedState) {
-                  return IconButton(
-                    onPressed: () => context.read<TranslationCubit>().addToFavorites(state.translation),
-                    icon: Icon(state.inFavorites ? Icons.bookmark_added_rounded : Icons.bookmark_add_outlined),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-            BlocBuilder<TranslationCubit, TranslationState>(
-              builder: (context, state) {
-                if (state is TranslationLoadedState) {
-                  return IconButton(
-                    onPressed: () => context.read<TranslationCubit>().share(state.translation),
-                    icon: const Icon(Icons.share),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+          actions: const [
+            ActionFavorites(),
+            ActionShare(),
           ],
         ),
         body: BlocConsumer<TranslationCubit, TranslationState>(
@@ -91,6 +75,17 @@ class TranslationPage extends StatelessWidget {
                   const SnackBar(
                     content: Text(
                       'Дададзена ў закладкі.',
+                    ),
+                  ),
+                );
+            }
+            if (state is TranslationRemovedFromFavoritesState) {
+              ScaffoldMessenger.of(context)
+                ..clearSnackBars()
+                ..showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Выдалена з закладак.',
                     ),
                   ),
                 );
@@ -112,7 +107,16 @@ class TranslationPage extends StatelessWidget {
                 );
             }
           },
+          buildWhen: (_, current) => current is TranslationLoadedState,
           builder: (context, state) {
+            final String wordText;
+            if (word != null) {
+              wordText = word.word;
+            } else if (state is TranslationLoadedState) {
+              wordText = state.translation.word.word;
+            } else {
+              wordText = '';
+            }
             if (state is TranslationLoadedState) {
               return SingleChildScrollView(
                 child: Padding(
@@ -121,22 +125,10 @@ class TranslationPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(
-                        child: BlocBuilder<TranslationCubit, TranslationState>(
-                          builder: (context, state) {
-                            final String text;
-                            if (word != null) {
-                              text = word.word;
-                            } else if (state is TranslationLoadedState) {
-                              text = state.translation.word.word;
-                            } else {
-                              text = '';
-                            }
-                            return Text(
-                              '«$text»',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            );
-                          },
+                        child: Text(
+                          '«$wordText»',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -155,7 +147,6 @@ class TranslationPage extends StatelessWidget {
                 ),
               );
             }
-
             return const Center(child: CircularProgressIndicator());
           },
         ),

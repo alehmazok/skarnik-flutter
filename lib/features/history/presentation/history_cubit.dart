@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart';
 import 'package:skarnik_flutter/logging.dart';
-
-import '../domain/use_case/load_history.dart';
 
 abstract class HistoryState extends Equatable {
   @override

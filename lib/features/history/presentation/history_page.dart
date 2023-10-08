@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
+import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart';
 
 import '../../app/presentation/skarnik_app_bloc.dart';
-import '../domain/use_case/load_history.dart';
 import 'history_cubit.dart';
 import 'widgets/history_list_view.dart';
 

@@ -11,7 +11,7 @@ import '../repository/favorites_repository.dart';
 class CheckInFavoritesUseCase {
   final _logger = getLogger(CheckInFavoritesUseCase);
 
-  final TranslationFavoritesRepository _repository;
+  final FavoritesRepository _repository;
 
   CheckInFavoritesUseCase(this._repository);
 
@@ -20,7 +20,7 @@ class CheckInFavoritesUseCase {
       final contains = await _repository.contains(word);
       return Success(contains);
     } catch (e, st) {
-      _logger.severe('Адбылася памылка пры праверцы слова ў закладках:', e, st);
+      _logger.severe('Адбылася памылка падчас пошуку слова ў закладках:', e, st);
       return Failure(e);
     }
   }

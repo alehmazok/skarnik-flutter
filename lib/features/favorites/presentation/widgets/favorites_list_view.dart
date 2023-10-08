@@ -18,26 +18,44 @@ class FavoritesListView extends StatelessWidget {
       builderDelegate: PagedChildBuilderDelegate<Word>(
         noItemsFoundIndicatorBuilder: (_) => const Center(
           child: Text(
-            'Пачніце ўводзіць слова ў пошук...',
+            'Пакуль ў закладках няма ніводнага слова',
             textAlign: TextAlign.center,
           ),
         ),
         itemBuilder: (context, word, index) {
-          return ListTile(
-            title: Text(word.word),
-            subtitle: Text(
-              word.dictName,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+          return Dismissible(
+            key: Key('word_${word.wordId}'),
+            onDismissed: (_) => context.read<FavoritesCubit>().removeFromFavorites(word),
+            direction: DismissDirection.endToStart,
+            background: ColoredBox(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 24),
+                  child: Icon(
+                    Icons.delete_rounded,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
               ),
             ),
-            onTap: () => context.go(
-              '/translate/word',
-              extra: {
-                'word': word,
-                // Не захоўваць у гісторыю, таму што пераход быў зроблены ўласна з экрана Гісторыі.
-                'save_to_favorites': false,
-              },
+            child: ListTile(
+              title: Text(word.word),
+              subtitle: Text(
+                word.dictName,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              onTap: () => context.go(
+                '/translate/word',
+                extra: {
+                  'word': word,
+                  // Не захоўваць у гісторыю, таму што слова ўжо захавана ў Гісторыі.
+                  'save_to_history': false,
+                },
+              ),
             ),
           );
         },

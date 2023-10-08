@@ -4,9 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart';
 import 'package:skarnik_flutter/logging.dart';
-
-import '../repository/favorites_repository.dart';
 
 @injectable
 class LoadFavoritesUseCase extends EitherUseCase1<Iterable<Word>, int> {

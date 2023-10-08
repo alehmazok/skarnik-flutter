@@ -1,4 +1,4 @@
-abstract class Word {
+abstract interface class Word {
   int get langId;
 
   String get letter;

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../domain/entity/translation.dart';
 import '../domain/use_case/add_to_favorites.dart';
@@ -10,6 +11,7 @@ import '../domain/use_case/get_translation.dart';
 import '../domain/use_case/get_word.dart';
 import '../domain/use_case/log_analytics_share.dart';
 import '../domain/use_case/log_analytics_translation.dart';
+import '../domain/use_case/remove_from_favorites.dart';
 import '../domain/use_case/save_to_history.dart';
 
 sealed class TranslationState extends Equatable {
@@ -34,25 +36,37 @@ class TranslationFailedState extends TranslationState {
 
 class TranslationLoadedState extends TranslationState {
   final Translation translation;
-  final bool inFavorites;
 
   @override
-  List<Object> get props => [
-        translation,
-        inFavorites,
-      ];
+  List<Object> get props => [translation];
 
   const TranslationLoadedState({
     required this.translation,
-    required this.inFavorites,
   });
 
   @override
   String toString() => 'TranslationLoadedState(uri=${translation.uri})';
 }
 
+class TranslationRemovedFromFavoritesState extends TranslationState {
+  const TranslationRemovedFromFavoritesState() : super();
+}
+
 class TranslationAddedToFavoritesState extends TranslationState {
   const TranslationAddedToFavoritesState();
+}
+
+class TranslationInFavoritesState extends TranslationState {
+  final Word word;
+  final bool inFavorites;
+
+  @override
+  List<Object> get props => [word, inFavorites];
+
+  const TranslationInFavoritesState({
+    required this.word,
+    required this.inFavorites,
+  });
 }
 
 class TranslationCubit extends Cubit<TranslationState> {
@@ -63,6 +77,7 @@ class TranslationCubit extends Cubit<TranslationState> {
   final GetTranslationUseCase getTranslationUseCase;
   final AddToFavoritesUseCase addToFavoritesUseCase;
   final CheckInFavoritesUseCase checkInFavoritesUseCase;
+  final RemoveFromFavoritesUseCase removeFromFavoritesUseCase;
   final SaveToHistoryUseCase saveToHistoryUseCase;
   final LogAnalyticsShareUseCase logAnalyticsShareUseCase;
   final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
@@ -75,6 +90,7 @@ class TranslationCubit extends Cubit<TranslationState> {
     required this.getTranslationUseCase,
     required this.addToFavoritesUseCase,
     required this.checkInFavoritesUseCase,
+    required this.removeFromFavoritesUseCase,
     required this.saveToHistoryUseCase,
     required this.logAnalyticsShareUseCase,
     required this.logAnalyticsTranslationUseCase,
@@ -115,9 +131,10 @@ class TranslationCubit extends Cubit<TranslationState> {
       case Failure(error: final error):
         emitGuarded(TranslationFailedState(error));
       case Success(result: (final translation, final inFavorites)):
+        emitGuarded(TranslationLoadedState(translation: translation));
         emitGuarded(
-          TranslationLoadedState(
-            translation: translation,
+          TranslationInFavoritesState(
+            word: translation.word,
             inFavorites: inFavorites,
           ),
         );
@@ -131,13 +148,35 @@ class TranslationCubit extends Cubit<TranslationState> {
     await logAnalyticsShareUseCase(translation);
   }
 
-  Future<void> addToFavorites(Translation translation) async {
-    final addToFavorites = await addToFavoritesUseCase(translation.word);
+  Future<void> addToFavorites(Word word) async {
+    final addToFavorites = await addToFavoritesUseCase(word);
     switch (addToFavorites) {
       case Failure(error: final error):
         emitGuarded(TranslationFailedState(error));
-      case Success(result: final inFavorites):
+      case Success():
         emitGuarded(const TranslationAddedToFavoritesState());
+        emitGuarded(
+          TranslationInFavoritesState(
+            word: word,
+            inFavorites: true,
+          ),
+        );
+    }
+  }
+
+  Future<void> removeFromFavorites(Word word) async {
+    final removeFromFavorites = await removeFromFavoritesUseCase(word);
+    switch (removeFromFavorites) {
+      case Failure(error: final error):
+        emitGuarded(TranslationFailedState(error));
+      case Success():
+        emitGuarded(const TranslationRemovedFromFavoritesState());
+        emitGuarded(
+          TranslationInFavoritesState(
+            word: word,
+            inFavorites: false,
+          ),
+        );
     }
   }
 
