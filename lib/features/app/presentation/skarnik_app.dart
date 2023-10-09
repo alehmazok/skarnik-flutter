@@ -9,7 +9,7 @@ import '../domain/use_case/init_database.dart';
 import '../domain/use_case/init_remote_config.dart';
 import '../domain/use_case/log_analytics_app_started.dart';
 import 'skarnik_app_bloc.dart';
-import 'skarnk_router.dart';
+import 'skarnik_router.dart';
 
 class SkarnikApp extends StatelessWidget {
   const SkarnikApp({Key? key}) : super(key: key);

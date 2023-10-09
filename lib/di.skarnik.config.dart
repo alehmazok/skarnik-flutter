@@ -55,9 +55,9 @@ import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
 import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository.dart'
     as _i30;
 import 'package:skarnik_flutter/features/translation/data/repository/dev_analytics_translation_repository.dart'
-    as _i7;
-import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
     as _i8;
+import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
+    as _i7;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_favorites_repository.dart'
     as _i16;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
@@ -124,12 +124,12 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i7.DevAnalyticsTranslationRepository(),
-      registerFor: {_dev},
+      () => _i7.FirebaseAnalyticsTranslationRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i8.FirebaseAnalyticsTranslationRepository(),
-      registerFor: {_prod},
+      () => _i8.DevAnalyticsTranslationRepository(),
+      registerFor: {_dev},
     );
     gh.factory<_i9.DatabaseRepository>(
         () => _i10.ObjectboxDatabaseRepository());
