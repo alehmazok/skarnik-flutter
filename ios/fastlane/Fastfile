@@ -13,13 +13,57 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+fastlane_require 'dotenv'
+
+before_all do
+  Dotenv.overload '.env.secret'
+end
+
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new release build to the App Store"
-  lane :release do
-    increment_build_number(xcodeproj: "Runner.xcodeproj")
+  desc "Runs flutter widget tests"
+  lane :test_flutter do
+    flutter(args: ["test", "../test"])
+  end
+
+  desc "Build flutter release ipa"
+  lane :build_flutter do
+    flutter(args: ["clean"])
+    flutter(args: [
+                  "build",
+                  "ios",
+                  "--release",
+                  "--no-codesign",
+                  "-t", "lib/main.dart"
+              ]
+           )
+  end
+
+  desc "Build and sign iOS Release app"
+  lane :build_ios_release do
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
-    upload_to_app_store(skip_metadata: true, skip_screenshots: true)
+  end
+
+  desc "Build and sign iOS AdHoc app"
+  lane :build_ios_adhoc do
+    build_app(workspace: "Runner.xcworkspace", scheme: "Runner_AdHoc")
+  end
+
+  desc "Deploy ipa to Firebase App Distribution"
+  lane :firebase do
+    firebase_app_distribution(
+      app: "#{ENV['FIREBASE_APP_ID']}",
+      groups: "ios-internal",
+      release_notes_file: "../release_notes.txt",
+    )
+  end
+
+  desc "Push a new build to TestFlight"
+  lane :beta do
+    upload_to_testflight(
+      skip_submission: true,
+      skip_waiting_for_build_processing: true
+    )
   end
 end
