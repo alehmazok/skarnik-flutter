@@ -27,6 +27,7 @@ class SkarnikApp extends StatelessWidget {
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
     ),
+    fontFamily: 'SF Pro',
   );
 
   static final darkTheme = ThemeData(
@@ -42,6 +43,7 @@ class SkarnikApp extends StatelessWidget {
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
     ),
+    fontFamily: 'SF Pro',
   );
 
   @override
