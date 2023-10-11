@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../../app/presentation/skarnik_app_bloc.dart';
 import 'history_cubit.dart';
@@ -35,9 +36,9 @@ class HistoryPage extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Icon(Icons.search, size: 24),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Icon(AdaptiveIcons.search, size: 24),
                     ),
                     Text(
                       'Пошук слоў',
@@ -56,7 +57,7 @@ class HistoryPage extends StatelessWidget {
                     '/settings',
                     extra: context.read<HistoryCubit>(),
                   ),
-                  icon: const Icon(Icons.settings_rounded),
+                  icon: Icon(AdaptiveIcons.settings),
                 );
               },
             ),

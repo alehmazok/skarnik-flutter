@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../translation_cubit.dart';
 
@@ -18,12 +19,10 @@ class ActionFavorites extends StatelessWidget {
             },
             icon: state.inFavorites
                 ? Icon(
-                    Icons.bookmark_added_rounded,
+                    AdaptiveIcons.bookmarkAdded,
                     color: Theme.of(context).colorScheme.primaryContainer,
                   )
-                : const Icon(
-                    Icons.bookmark_add_outlined,
-                  ),
+                : Icon(AdaptiveIcons.bookmarkAdd),
           );
         }
         return const SizedBox.shrink();

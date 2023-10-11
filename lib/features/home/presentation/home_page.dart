@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../../app/presentation/skarnik_app_bloc.dart';
 import '../../favorites/presentation/favorites_page.dart';
@@ -34,17 +35,17 @@ class _HomePageState extends State<HomePage> {
               onDestinationSelected: (index) => setState(() {
                 _selectedIndex = index;
               }),
-              destinations: const [
+              destinations: [
                 NavigationDestination(
-                  icon: Icon(Icons.search_rounded),
+                  icon: Icon(AdaptiveIcons.search),
                   label: 'Пошук',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.bookmark_outline_rounded),
+                  icon: Icon(AdaptiveIcons.bookmark),
                   label: 'Закладкі',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.menu_book_rounded),
+                  icon: Icon(AdaptiveIcons.book),
                   label: 'Слоўнік',
                 ),
               ],
