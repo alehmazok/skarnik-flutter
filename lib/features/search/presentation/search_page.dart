@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../domain/use_case/search_use_case.dart';
 import 'search_cubit.dart';
@@ -42,7 +43,7 @@ class SearchPage extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () => cubit.clearSearch(),
-                          icon: const Icon(Icons.close),
+                          icon: Icon(AdaptiveIcons.close),
                         ),
                       ],
                     ),

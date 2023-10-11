@@ -13,7 +13,6 @@ class ObjectboxHistoryWord implements Word {
   String letter;
 
   @override
-  @Unique()
   int wordId;
 
   @override

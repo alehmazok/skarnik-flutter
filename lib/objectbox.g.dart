@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'features/app/data/model/objectbox_favorite_word.dart';
 import 'features/app/data/model/objectbox_history_word.dart';
 import 'features/app/data/model/objectbox_search_word.dart';
 
@@ -90,8 +91,7 @@ final _entities = <ModelEntity>[
             id: const IdUid(4, 2168629768157903924),
             name: 'wordId',
             type: 6,
-            flags: 40,
-            indexId: const IdUid(2, 6767957250904925596)),
+            flags: 0),
         ModelProperty(
             id: const IdUid(5, 987607834441689594),
             name: 'word',
@@ -105,6 +105,40 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(7, 62019299264781155),
             name: 'lwordMask',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(4, 3),
+      name: 'ObjectboxFavoriteWord',
+      lastPropertyId: const IdUid(7, 3794220720396200128),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 4543241904431980795),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 1441095813867295227),
+            name: 'langId',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 4958884637484099258),
+            name: 'letter',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 1060321079331553370),
+            name: 'wordId',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 8268186311141102367),
+            name: 'word',
             type: 9,
             flags: 0)
       ],
@@ -139,12 +173,12 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(3, 2),
-      lastIndexId: const IdUid(2, 6767957250904925596),
+      lastEntityId: const IdUid(4, 3),
+      lastIndexId: const IdUid(3, 6668724822744587284),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [6340663483916346837],
-      retiredIndexUids: const [],
+      retiredIndexUids: const [6767957250904925596, 6668724822744587284],
       retiredPropertyUids: const [
         469393349394600467,
         6468022653824554886,
@@ -152,7 +186,9 @@ ModelDefinition getObjectBoxModel() {
         962416795588697287,
         1446233554302581116,
         6725053102633110456,
-        5056786493163352175
+        5056786493163352175,
+        4080064186539668059,
+        3794220720396200128
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -263,6 +299,46 @@ ModelDefinition getObjectBoxModel() {
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
+        }),
+    ObjectboxFavoriteWord: EntityDefinition<ObjectboxFavoriteWord>(
+        model: _entities[2],
+        toOneRelations: (ObjectboxFavoriteWord object) => [],
+        toManyRelations: (ObjectboxFavoriteWord object) => {},
+        getId: (ObjectboxFavoriteWord object) => object.id,
+        setId: (ObjectboxFavoriteWord object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ObjectboxFavoriteWord object, fb.Builder fbb) {
+          final letterOffset = fbb.writeString(object.letter);
+          final wordOffset = fbb.writeString(object.word);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.langId);
+          fbb.addOffset(2, letterOffset);
+          fbb.addInt64(3, object.wordId);
+          fbb.addOffset(4, wordOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final langIdParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
+          final letterParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final wordIdParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          final wordParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 12, '');
+          final object = ObjectboxFavoriteWord(
+              langId: langIdParam,
+              letter: letterParam,
+              wordId: wordIdParam,
+              word: wordParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+
+          return object;
         })
   };
 
@@ -329,4 +405,27 @@ class ObjectboxHistoryWord_ {
   /// see [ObjectboxHistoryWord.lwordMask]
   static final lwordMask =
       QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[6]);
+}
+
+/// [ObjectboxFavoriteWord] entity fields to define ObjectBox queries.
+class ObjectboxFavoriteWord_ {
+  /// see [ObjectboxFavoriteWord.id]
+  static final id =
+      QueryIntegerProperty<ObjectboxFavoriteWord>(_entities[2].properties[0]);
+
+  /// see [ObjectboxFavoriteWord.langId]
+  static final langId =
+      QueryIntegerProperty<ObjectboxFavoriteWord>(_entities[2].properties[1]);
+
+  /// see [ObjectboxFavoriteWord.letter]
+  static final letter =
+      QueryStringProperty<ObjectboxFavoriteWord>(_entities[2].properties[2]);
+
+  /// see [ObjectboxFavoriteWord.wordId]
+  static final wordId =
+      QueryIntegerProperty<ObjectboxFavoriteWord>(_entities[2].properties[3]);
+
+  /// see [ObjectboxFavoriteWord.word]
+  static final word =
+      QueryStringProperty<ObjectboxFavoriteWord>(_entities[2].properties[4]);
 }

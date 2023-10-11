@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
-import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
+
+import '../history_cubit.dart';
 
 class HistoryListView extends StatelessWidget {
   const HistoryListView({Key? key}) : super(key: key);

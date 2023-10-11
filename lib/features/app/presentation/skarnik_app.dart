@@ -9,7 +9,7 @@ import '../domain/use_case/init_database.dart';
 import '../domain/use_case/init_remote_config.dart';
 import '../domain/use_case/log_analytics_app_started.dart';
 import 'skarnik_app_bloc.dart';
-import 'skarnk_router.dart';
+import 'skarnik_router.dart';
 
 class SkarnikApp extends StatelessWidget {
   const SkarnikApp({Key? key}) : super(key: key);
@@ -18,17 +18,32 @@ class SkarnikApp extends StatelessWidget {
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.grey,
-      primaryContainer: Colors.red,
+      brightness: Brightness.light,
       onPrimaryContainer: Colors.white,
+      primary: Colors.red,
+      primaryContainer: Colors.red,
+      seedColor: Colors.grey,
     ),
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
     ),
+    fontFamily: 'SF Pro',
   );
 
-  static final darkTheme = lightTheme.copyWith(
+  static final darkTheme = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.dark,
+    colorScheme: ColorScheme.fromSeed(
+      brightness: Brightness.dark,
+      onPrimaryContainer: Colors.white,
+      primary: Colors.red,
+      primaryContainer: Colors.red,
+      seedColor: Colors.grey,
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
+    fontFamily: 'SF Pro',
   );
 
   @override

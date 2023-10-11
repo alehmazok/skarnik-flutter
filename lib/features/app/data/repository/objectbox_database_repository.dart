@@ -10,7 +10,7 @@ import 'package:skarnik_flutter/objectbox.g.dart';
 
 import '../../domain/repository/database_repository.dart';
 import '../model/objectbox_search_word.dart';
-import '../service/objectbox_service.dart';
+import '../service/objectbox_store_holder.dart';
 
 @Injectable(as: DatabaseRepository)
 class ObjectboxDatabaseRepository implements DatabaseRepository {
@@ -30,7 +30,7 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
     }
     final searchStore = await _openObjectboxStore();
     final historyStore = await _openHistoryObjectboxStore();
-    _registerService(
+    _registerStoreHolder(
       searchStore: searchStore,
       historyStore: historyStore,
     );
@@ -68,11 +68,14 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
         directory: await _getObjectBoxDir(_mdbHistoryDirectoryName),
       );
 
-  void _registerService({
+  void _registerStoreHolder({
     required Store searchStore,
     required Store historyStore,
   }) {
-    final service = ObjectboxService(searchStore: searchStore, historyStore: historyStore);
+    final service = ObjectboxStoreHolder(
+      searchStore: searchStore,
+      historyStore: historyStore,
+    );
     _logger.fine('Рэгіструем `${service.runtimeType}` залежнасць, як сінглтон.');
     getIt.registerSingleton(service);
   }

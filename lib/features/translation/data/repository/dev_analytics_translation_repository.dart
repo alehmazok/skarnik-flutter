@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../../domain/entity/translation.dart';
@@ -17,5 +18,10 @@ class DevAnalyticsTranslationRepository implements AnalyticsTranslationRepositor
   @override
   Future<void> logShare(Translation translation) async {
     _logger.info('Analytics event logged: share');
+  }
+
+  @override
+  Future<void> logAddToFavorites(Word word) async {
+    _logger.info('Analytics event logged: add_to_favorites');
   }
 }

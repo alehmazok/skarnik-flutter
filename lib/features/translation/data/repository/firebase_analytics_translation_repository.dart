@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../../domain/entity/translation.dart';
 import '../../domain/repository/analytics_translation_repository.dart';
@@ -33,6 +34,21 @@ class FirebaseAnalyticsTranslationRepository implements AnalyticsTranslationRepo
       contentType: ContentType.text.mimeType,
       itemId: translation.uri.toString(),
       method: 'system',
+    );
+  }
+
+  @override
+  Future<void> logAddToFavorites(Word word) async {
+    final analytics = FirebaseAnalytics.instance;
+    await analytics.logEvent(
+      name: 'add_to_favorites',
+      parameters: {
+        'word_id': word.wordId,
+        'lang_id': word.langId,
+        'word': word.word,
+        'dict_name': word.dictName,
+        'dict_path': word.dictPath,
+      },
     );
   }
 }

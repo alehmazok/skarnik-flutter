@@ -1,3 +1,4 @@
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 
 abstract class AnalyticsTranslationRepository {
@@ -6,4 +7,6 @@ abstract class AnalyticsTranslationRepository {
   Future<void> logTranslation(Translation translation);
 
   Future<void> logShare(Translation translation);
+
+  Future<void> logAddToFavorites(Word word);
 }

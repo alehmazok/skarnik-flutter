@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
-import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
+import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
-import '../domain/use_case/load_history.dart';
+import '../../app/presentation/skarnik_app_bloc.dart';
 import 'history_cubit.dart';
 import 'widgets/history_list_view.dart';
 
@@ -35,9 +36,9 @@ class HistoryPage extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Icon(Icons.search, size: 24),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Icon(AdaptiveIcons.search, size: 24),
                     ),
                     Text(
                       'Пошук слоў',
@@ -48,6 +49,19 @@ class HistoryPage extends StatelessWidget {
               ),
             ),
           ),
+          actions: [
+            Builder(
+              builder: (context) {
+                return IconButton(
+                  onPressed: () => context.go(
+                    '/settings',
+                    extra: context.read<HistoryCubit>(),
+                  ),
+                  icon: Icon(AdaptiveIcons.settings),
+                );
+              },
+            ),
+          ],
         ),
         body: BlocListener<SkarnikAppBloc, SkarnikAppState>(
           listener: (context, state) {
