@@ -1,28 +1,25 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/logging.dart';
 
-import '../entity/translation.dart';
 import '../repository/analytics_translation_repository.dart';
 
 @injectable
-class LogAnalyticsShareUseCase extends EitherUseCase1<bool, Translation> {
+class LogAnalyticsShareUseCase {
   final _logger = getLogger(LogAnalyticsShareUseCase);
 
   final AnalyticsTranslationRepository _analyticsTranslationRepository;
 
   LogAnalyticsShareUseCase(this._analyticsTranslationRepository);
 
-  @override
-  Future<Either<Object, bool>> call(Translation argument) async {
+  Future<UseCaseResult<bool>> call(String link) async {
     try {
-      _analyticsTranslationRepository.logShare(argument);
+      _analyticsTranslationRepository.logShare(link);
     } catch (e, st) {
-      _logger.warning('Адбылася памылка пры спробе залагіраваць падзею шарынга слова `${argument.word.word}`:', e, st);
+      _logger.warning('Адбылася памылка падчас лагавання падзеі шарынга спасылкі `$link`:', e, st);
     }
-    return const Right(true);
+    return const Success(true);
   }
 }

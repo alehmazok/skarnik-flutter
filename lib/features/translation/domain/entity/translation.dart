@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:skarnik_flutter/app_config.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 class Translation extends Equatable {
@@ -12,6 +14,8 @@ class Translation extends Equatable {
         uri,
         html,
       ];
+
+  Uri get shareUri => Uri.parse('https://${AppConfig.skarnikSiteHostName}/${word.dictPath}/${word.wordId}');
 
   const Translation._({
     required this.uri,

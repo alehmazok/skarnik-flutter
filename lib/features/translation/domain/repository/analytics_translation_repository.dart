@@ -6,7 +6,7 @@ abstract class AnalyticsTranslationRepository {
 
   Future<void> logTranslation(Translation translation);
 
-  Future<void> logShare(Translation translation);
+  Future<void> logShare(String itemId);
 
   Future<void> logAddToFavorites(Word word);
 }

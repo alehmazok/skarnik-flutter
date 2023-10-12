@@ -16,8 +16,8 @@ class DevAnalyticsTranslationRepository implements AnalyticsTranslationRepositor
   }
 
   @override
-  Future<void> logShare(Translation translation) async {
-    _logger.info('Analytics event logged: share');
+  Future<void> logShare(String itemId) async {
+    _logger.info('Analytics event logged: share {"item_id": "$itemId"}');
   }
 
   @override

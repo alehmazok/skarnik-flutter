@@ -28,11 +28,11 @@ class FirebaseAnalyticsTranslationRepository implements AnalyticsTranslationRepo
   }
 
   @override
-  Future<void> logShare(Translation translation) async {
+  Future<void> logShare(String itemId) async {
     final analytics = FirebaseAnalytics.instance;
     await analytics.logShare(
       contentType: ContentType.text.mimeType,
-      itemId: translation.uri.toString(),
+      itemId: itemId,
       method: 'system',
     );
   }
