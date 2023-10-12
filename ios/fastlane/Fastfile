@@ -35,7 +35,8 @@ platform :ios do
                   "ios",
                   "--release",
                   "--no-codesign",
-                  "-t", "lib/main.dart"
+                  "-t", "lib/main.dart",
+                  "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
               ]
            )
   end
