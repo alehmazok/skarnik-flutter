@@ -59,10 +59,10 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     loadFavorites.fold(
       (error) => emit(FavoritesFailedState(error)),
       (words) {
-        if (words.length < AppConfig.historyWordsPerPageLimit) {
+        if (words.length < AppConfig.wordsPerPage) {
           pagingController.appendLastPage(words.toList());
         } else {
-          final nextOffset = AppConfig.historyWordsPerPageLimit + offset;
+          final nextOffset = AppConfig.wordsPerPage + offset;
           pagingController.appendPage(words.toList(), nextOffset);
         }
       },

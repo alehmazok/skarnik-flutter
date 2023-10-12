@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +16,11 @@ import 'skarnik_router.dart';
 class SkarnikApp extends StatelessWidget {
   const SkarnikApp({Key? key}) : super(key: key);
 
+  static final fontFamily = Platform.isIOS ? 'SF Pro' : null;
+  static const snackBarTheme = SnackBarThemeData(
+    behavior: SnackBarBehavior.floating,
+  );
+
   static final lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
@@ -24,10 +31,8 @@ class SkarnikApp extends StatelessWidget {
       primaryContainer: Colors.red,
       seedColor: Colors.grey,
     ),
-    snackBarTheme: const SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-    ),
-    fontFamily: 'SF Pro',
+    snackBarTheme: snackBarTheme,
+    fontFamily: fontFamily,
   );
 
   static final darkTheme = ThemeData(
@@ -40,10 +45,8 @@ class SkarnikApp extends StatelessWidget {
       primaryContainer: Colors.red,
       seedColor: Colors.grey,
     ),
-    snackBarTheme: const SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-    ),
-    fontFamily: 'SF Pro',
+    snackBarTheme: snackBarTheme,
+    fontFamily: fontFamily,
   );
 
   @override

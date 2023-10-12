@@ -22,7 +22,7 @@ class ObjectboxFavoritesRepository implements FavoritesRepository {
           flags: Order.descending,
         )
         .build()
-      ..limit = AppConfig.historyWordsPerPageLimit
+      ..limit = AppConfig.wordsPerPage
       ..offset = offset;
     return query.findAsync();
   }

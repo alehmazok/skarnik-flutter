@@ -37,7 +37,8 @@ platform :android do
                "build",
                "appbundle",
                "--release",
-               "-t", "lib/main.dart"
+               "-t", "lib/main.dart",
+               "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
              ]
            )
   end
@@ -49,6 +50,7 @@ platform :android do
                "build",
                "apk",
                "--release",
+               "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
              ]
            )
   end

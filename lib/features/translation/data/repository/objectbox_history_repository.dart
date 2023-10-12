@@ -22,7 +22,7 @@ class ObjectboxHistoryRepository implements HistoryRepository {
           flags: Order.descending,
         )
         .build()
-      ..limit = AppConfig.historyWordsPerPageLimit
+      ..limit = AppConfig.wordsPerPage
       ..offset = offset;
     return query.find();
   }
