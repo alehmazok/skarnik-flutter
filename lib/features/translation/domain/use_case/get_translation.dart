@@ -25,7 +25,7 @@ class GetTranslationUseCase {
       final translation = await _primaryTranslationRepository.getTranslation(word);
       return Success(translation);
     } catch (e, st) {
-      _logger.severe('Адбылася памылка падчас запыту перакладу праз API:', e, st);
+      _logger.warning('Адбылася памылка падчас запыту перакладу праз API:', e, st);
       return _callFallback(word);
     }
   }
