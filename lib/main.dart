@@ -16,9 +16,9 @@ void main() async {
     recordError: !kDebugMode,
   );
 
-  configureDependencies(kDebugMode ? 'dev' : 'prod');
-
   WidgetsFlutterBinding.ensureInitialized();
+
+  configureDependencies(kDebugMode ? 'dev' : 'prod');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
