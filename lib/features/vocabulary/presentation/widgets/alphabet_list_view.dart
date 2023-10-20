@@ -156,6 +156,7 @@ class _SimpleListViewState extends State<SimpleListView> {
           child: IndexBar(
             data: alphabet,
             indexBarDragListener: _indexBarDragNotifier,
+            itemHeight: MediaQuery.of(context).size.height < 700 ? 14 : 16,
           ),
         ),
       ],
@@ -168,7 +169,7 @@ class _SimpleListViewState extends State<SimpleListView> {
     if (index > 0) {
       _wordScrollController.jumpTo(index: index);
       if (_hasVibration) {
-        Vibration.vibrate(duration: 25);
+        Vibration.vibrate(duration: 10);
       }
     }
   }
