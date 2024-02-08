@@ -20,19 +20,21 @@ class GetTranslationUseCase {
     this._fallbackTranslationRepository,
   );
 
-  Future<UseCaseResult<Translation>> call(Word word) async {
+  Future<UseCaseResult<Translation>> call(Word word) => _callFallback(word);
+
+  Future<UseCaseResult<Translation>> _callPrimary(Word word) async {
     try {
       final translation = await _primaryTranslationRepository.getTranslation(word);
       return Success(translation);
     } catch (e, st) {
       _logger.warning('Адбылася памылка падчас запыту перакладу праз API:', e, st);
-      return _callFallback(word);
+      return Failure(e);
     }
   }
 
-  Future<UseCaseResult<Translation>> _callFallback(Word argument) async {
+  Future<UseCaseResult<Translation>> _callFallback(Word word) async {
     try {
-      final translation = await _fallbackTranslationRepository.getTranslation(argument);
+      final translation = await _fallbackTranslationRepository.getTranslation(word);
       return Success(translation);
     } catch (e, st) {
       _logger.severe('Адбылася памылка падчас запыту перакладу праз сайт:', e, st);
