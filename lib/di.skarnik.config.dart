@@ -101,8 +101,8 @@ import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
     as _i47;
 
-const String _dev = 'dev';
 const String _prod = 'prod';
+const String _dev = 'dev';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt

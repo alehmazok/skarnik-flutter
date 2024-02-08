@@ -21,24 +21,35 @@ class ObjectboxSearchRepository implements SearchRepository {
   ObjectboxSearchRepository(this._objectboxService);
 
   @override
-  Future<Iterable<Word>> search(String query) async {
-    query = query.toLowerCase();
+  Future<Iterable<Word>> search(String searchQuery) async {
+    searchQuery = searchQuery.toLowerCase();
     final box = _objectboxService.searchStore.box<ObjectboxSearchWord>();
 
-    final queryWithSubstitutions = applySubstitutions(query);
+    final searchQueryWithSubstitutions = applySubstitutions(searchQuery);
 
-    final searchAll = box
+    final query = box
         .query(
           ObjectboxSearchWord_.lword
-              .startsWith(query)
-              .or(ObjectboxSearchWord_.lword.startsWith(queryWithSubstitutions))
-              .or(ObjectboxSearchWord_.lwordMask.startsWith(query))
-              .or(ObjectboxSearchWord_.lwordMask.startsWith(queryWithSubstitutions)),
+              .startsWith(searchQuery)
+              .or(ObjectboxSearchWord_.lword.startsWith(searchQueryWithSubstitutions)),
         )
         .order(ObjectboxSearchWord_.lword)
         .build();
 
-    return searchAll.find();
+    final queryByMask = box
+        .query(
+          ObjectboxSearchWord_.lwordMask
+              .startsWith(searchQuery)
+              .or(ObjectboxSearchWord_.lwordMask.startsWith(searchQueryWithSubstitutions)),
+        )
+        .order(ObjectboxSearchWord_.lwordMask)
+        .build();
+
+    // Рэзультаты абодвух запытаў складваем у LinkedHashSet, каб пазбегнуць дублікатаў
+    return <Word>{
+      ...query.find(),
+      ...queryByMask.find(),
+    };
   }
 
   bool isSearchByMaskApplicable(String query) => query.length >= 3;

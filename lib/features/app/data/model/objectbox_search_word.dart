@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:objectbox/objectbox.dart';
 
 import '../../domain/entity/word.dart';
 
 @Entity(uid: 1)
-class ObjectboxSearchWord implements Word {
+class ObjectboxSearchWord with EquatableMixin implements Word {
   @Id(assignable: false)
   int id = 0;
 
@@ -36,5 +37,8 @@ class ObjectboxSearchWord implements Word {
   });
 
   @override
-  String toString() => 'ObjectboxSearchWord(id: $id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
+  String toString() => 'ObjectboxSearchWord($id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
+
+  @override
+  List<Object?> get props => [id];
 }
