@@ -12,25 +12,13 @@ import '../repository/translation_repository.dart';
 class GetTranslationUseCase {
   final _logger = getLogger(GetTranslationUseCase);
 
-  final PrimaryTranslationRepository _primaryTranslationRepository;
   final FallbackTranslationRepository _fallbackTranslationRepository;
 
   GetTranslationUseCase(
-    this._primaryTranslationRepository,
     this._fallbackTranslationRepository,
   );
 
   Future<UseCaseResult<Translation>> call(Word word) => _callFallback(word);
-
-  Future<UseCaseResult<Translation>> _callPrimary(Word word) async {
-    try {
-      final translation = await _primaryTranslationRepository.getTranslation(word);
-      return Success(translation);
-    } catch (e, st) {
-      _logger.warning('Адбылася памылка падчас запыту перакладу праз API:', e, st);
-      return Failure(e);
-    }
-  }
 
   Future<UseCaseResult<Translation>> _callFallback(Word word) async {
     try {
