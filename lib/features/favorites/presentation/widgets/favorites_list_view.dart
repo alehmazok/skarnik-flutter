@@ -8,7 +8,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import '../favorites_cubit.dart';
 
 class FavoritesListView extends StatelessWidget {
-  const FavoritesListView({Key? key}) : super(key: key);
+  const FavoritesListView({super.key});
 
   @override
   Widget build(BuildContext context) {

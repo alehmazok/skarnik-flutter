@@ -26,12 +26,12 @@ class TranslationPage extends StatelessWidget {
   final bool saveToHistory;
 
   const TranslationPage({
-    Key? key,
+    super.key,
     this.word,
     required this.langId,
     required this.wordId,
     this.saveToHistory = true,
-  }) : super(key: key);
+  });
 
   factory TranslationPage.word({required Word word, required bool saveToHistory}) => TranslationPage(
         word: word,

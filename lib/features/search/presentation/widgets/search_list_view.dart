@@ -8,10 +8,10 @@ class SearchListView extends StatelessWidget {
   final Iterable<Word> words;
 
   const SearchListView({
-    Key? key,
+    super.key,
     required this.isNothingFound,
     required this.words,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

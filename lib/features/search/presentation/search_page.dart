@@ -9,7 +9,7 @@ import 'widgets/search_extra_buttons.dart';
 import 'widgets/search_list_view.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {

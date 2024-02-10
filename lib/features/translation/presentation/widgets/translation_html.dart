@@ -21,9 +21,9 @@ class TranslationHtml extends StatelessWidget {
   final String content;
 
   const TranslationHtml({
-    Key? key,
+    super.key,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

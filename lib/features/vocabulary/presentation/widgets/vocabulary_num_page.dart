@@ -8,9 +8,9 @@ class VocabularyNumPage extends StatelessWidget {
   final int langId;
 
   const VocabularyNumPage({
-    Key? key,
+    super.key,
     required this.langId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

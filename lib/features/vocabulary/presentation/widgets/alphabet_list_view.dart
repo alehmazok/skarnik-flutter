@@ -84,10 +84,10 @@ class SimpleListView extends StatefulWidget {
   final List<Word> words;
 
   const SimpleListView({
-    Key? key,
+    super.key,
     required this.langId,
     required this.words,
-  }) : super(key: key);
+  });
 
   @override
   State<SimpleListView> createState() => _SimpleListViewState();

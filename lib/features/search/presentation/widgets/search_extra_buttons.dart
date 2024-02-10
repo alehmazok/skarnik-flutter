@@ -6,7 +6,7 @@ class SearchExtraButtons extends StatelessWidget {
   // static const _margin = 16.0;
   static const _spacerWidth = 8.0;
 
-  const SearchExtraButtons({Key? key}) : super(key: key);
+  const SearchExtraButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

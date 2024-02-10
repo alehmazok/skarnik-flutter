@@ -8,7 +8,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import '../history_cubit.dart';
 
 class HistoryListView extends StatelessWidget {
-  const HistoryListView({Key? key}) : super(key: key);
+  const HistoryListView({super.key});
 
   @override
   Widget build(BuildContext context) {

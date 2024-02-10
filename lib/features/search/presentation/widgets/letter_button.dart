@@ -7,10 +7,9 @@ class LetterButton extends StatelessWidget {
   final String letter;
 
   const LetterButton({
-    Key? key,
+    super.key,
     required this.letter,
-  })  : assert(letter.length == 1),
-        super(key: key);
+  }) : assert(letter.length == 1);
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ import 'vocabulary_cubit.dart';
 import 'widgets/vocabulary_num_page.dart';
 
 class VocabularyPage extends StatefulWidget {
-  const VocabularyPage({Key? key}) : super(key: key);
+  const VocabularyPage({super.key});
 
   @override
   State<VocabularyPage> createState() => _VocabularyPageState();

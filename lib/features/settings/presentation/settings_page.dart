@@ -9,7 +9,7 @@ import '../domain/use_case/clear_history.dart';
 import 'settings_cubit.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

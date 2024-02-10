@@ -14,7 +14,7 @@ import 'skarnik_app_bloc.dart';
 import 'skarnik_router.dart';
 
 class SkarnikApp extends StatelessWidget {
-  const SkarnikApp({Key? key}) : super(key: key);
+  const SkarnikApp({super.key});
 
   static final fontFamily = Platform.isIOS ? 'SF Pro' : null;
   static const snackBarTheme = SnackBarThemeData(
