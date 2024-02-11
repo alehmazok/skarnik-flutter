@@ -51,5 +51,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions();
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBtOYnfrm2-Oht9riQfSJpwyzJGP8QZw5s',
+    appId: '1:690309283484:android:3c2521a8af9d651ad03759',
+    messagingSenderId: '690309283484',
+    projectId: 'skarnik-app',
+    storageBucket: 'skarnik-app.appspot.com',
+  );
 }
