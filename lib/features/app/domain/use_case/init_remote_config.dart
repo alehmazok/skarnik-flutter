@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
@@ -9,13 +8,12 @@ import 'package:skarnik_flutter/core/extensions.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 @injectable
-class InitRemoteConfigUseCase extends NoArgsEitherUseCase<bool> {
+class InitRemoteConfigUseCase {
   final _logger = getLogger(InitRemoteConfigUseCase);
 
   InitRemoteConfigUseCase();
 
-  @override
-  Future<Either<Object, bool>> call() async {
+  Future<UseCaseResult<bool>> call() async {
     try {
       final instance = FirebaseRemoteConfig.instance;
       instance.setConfigSettings(
@@ -32,11 +30,11 @@ class InitRemoteConfigUseCase extends NoArgsEitherUseCase<bool> {
       // Не чакаць рэзультат.
       _fetchAndActivate(instance);
 
-      return right(true);
+      return const Success(true);
     } catch (e, st) {
       _logger.severe('An error occurred:', e, st);
 
-      return left(e);
+      return Failure(e);
     }
   }
 

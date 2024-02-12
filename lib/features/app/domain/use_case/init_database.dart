@@ -1,29 +1,28 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
-import 'package:skarnik_flutter/features/app/domain/repository/database_repository.dart';
 import 'package:skarnik_flutter/logging.dart';
 
+import '../repository/database_repository.dart';
+
 @injectable
-class InitDatabaseUseCase extends NoArgsEitherUseCase<int> {
+class InitDatabaseUseCase {
   final _logger = getLogger(InitDatabaseUseCase);
 
   final DatabaseRepository _databaseRepository;
 
   InitDatabaseUseCase(this._databaseRepository);
 
-  @override
-  Future<Either<Object, int>> call() async {
+  Future<UseCaseResult<int>> call() async {
     try {
       final result = await _databaseRepository.createDatabase();
 
-      return right(result);
+      return Success(result);
     } catch (e, st) {
       _logger.severe('An error occurred:', e, st);
 
-      return left(e);
+      return Failure(e);
     }
   }
 }

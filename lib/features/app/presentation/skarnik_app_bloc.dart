@@ -122,37 +122,41 @@ class SkarnikAppBloc extends Bloc<SkarnikAppEvent, SkarnikAppState> {
         .flatMap(
           (rows) => logAnalyticsAppOpenUseCase().map((_) => rows),
         );
-    init.fold(
-      (error) => emit(SkarnikAppFailedState(error)),
-      (rows) {
+    switch (init) {
+      case Failure(error: final error):
+        emit(SkarnikAppFailedState(error));
+      case Success(result: final rows):
         _logger.fine('Remote config паспяхова ініцыялізаваны.');
         _logger.fine('База дадзеных паспяхова ініцыялізавана і змяшчае ў сабе $rows слоў.');
         emit(const SkarnikAppInitedState());
         _listenAppLinks();
-      },
-    );
+    }
   }
 
   Future<void> _listenAppLinks() async {
     final appLinks = await getAppLinkStreamUseCase();
-    appLinks.fold(
-      (error) => {}, // Ніяк не рэагуем на памылку, яна ўжо залагавана ў юскейсе.
-      (stream) => stream.listen((appLink) => add(SkarnikAppAppLinkReceived(appLink))).disposedBy(_disposeBag),
-    );
+    switch (appLinks) {
+      case Success(result: final stream):
+        stream.listen((appLink) => add(SkarnikAppAppLinkReceived(appLink))).disposedBy(_disposeBag);
+      case _:
+      // Ніяк не рэагуем на памылку, яна ўжо залагавана ў usecase.
+    }
   }
 
   Future<void> _handleAppLink(SkarnikAppAppLinkReceived event, Emitter<SkarnikAppState> emit) async {
     final appLink = event.appLink;
     final handle = await handleAppLinkUseCase(appLink);
-    handle.fold(
-      (error) => {}, // Ніяк не рэагуем на памылку, яна ўжо залагавана ў юскейсе.
-      (pair) => emit(
-        SkarnikAppAppLinkReceivedState(
-          langId: pair.first,
-          wordId: pair.second,
-        ),
-      ),
-    );
+    switch (handle) {
+      case Success(result: final pair):
+        emit(
+          SkarnikAppAppLinkReceivedState(
+            langId: pair.langId,
+            wordId: pair.wordId,
+          ),
+        );
+      case _:
+      // Ніяк не рэагуем на памылку, яна ўжо залагавана ў usecase.
+    }
   }
 
   void _updateHistory(SkarnikAppHistoryUpdated event, Emitter<SkarnikAppState> emit) =>
