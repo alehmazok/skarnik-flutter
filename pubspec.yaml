@@ -80,10 +80,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
+
+  bloc_test: ^9.1.6
   build_runner: ^2.4.8
-  objectbox_generator: any
-  injectable_generator: ^2.4.1
   built_value_generator: ^8.9.0
+  injectable_generator: ^2.4.1
+  mocktail: ^1.0.3
+  objectbox_generator: any
+  test: ^1.24.9
   #  dart_code_metrics: ^5.7.0
   #  dart_code_metrics_presets: ^1.5.0
 
