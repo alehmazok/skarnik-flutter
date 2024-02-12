@@ -56,17 +56,17 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   Future<void> _load(int offset) async {
     final loadFavorites = await loadFavoritesUseCase(offset);
-    loadFavorites.fold(
-      (error) => emit(FavoritesFailedState(error)),
-      (words) {
+    switch (loadFavorites) {
+      case Failure(error: final error):
+        emit(FavoritesFailedState(error));
+      case Success(result: final words):
         if (words.length < AppConfig.wordsPerPage) {
           pagingController.appendLastPage(words.toList());
         } else {
           final nextOffset = AppConfig.wordsPerPage + offset;
           pagingController.appendPage(words.toList(), nextOffset);
         }
-      },
-    );
+    }
   }
 
   void reload() => pagingController.refresh();
