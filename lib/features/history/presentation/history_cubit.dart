@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/app_config.dart';
+import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart';
 import 'package:skarnik_flutter/logging.dart';
@@ -41,17 +42,17 @@ class HistoryCubit extends Cubit<HistoryState> {
 
   Future<void> _load(int offset) async {
     final loadHistory = await loadHistoryUseCase(offset);
-    loadHistory.fold(
-      (error) => emit(HistoryFailedState(error)),
-      (words) {
+    switch (loadHistory) {
+      case Failure(error: final error):
+        emit(HistoryFailedState(error));
+      case Success(result: final words):
         if (words.length < AppConfig.wordsPerPage) {
           pagingController.appendLastPage(words.toList());
         } else {
           final nextOffset = AppConfig.wordsPerPage + offset;
           pagingController.appendPage(words.toList(), nextOffset);
         }
-      },
-    );
+    }
   }
 
   void reload() => pagingController.refresh();
