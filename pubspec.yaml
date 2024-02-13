@@ -39,7 +39,6 @@ dependencies:
   built_value: ^8.9.0
   collection: any
   cupertino_icons: ^1.0.6
-  dartz: ^0.10.1
   device_info_plus: ^9.1.2
   dio: ^4.0.6
   dio_http_cache_lts: ^0.4.1
