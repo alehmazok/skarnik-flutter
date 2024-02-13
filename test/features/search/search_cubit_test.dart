@@ -25,6 +25,9 @@ void main() {
         );
 
     group('_search()', () {
+      late final Word word1;
+      late final Word word2;
+
       blocTest(
         'emits failed state when failed to retrieve words from database',
         setUp: () {
@@ -40,10 +43,9 @@ void main() {
           );
         },
         build: () => newInstance(),
+        wait: const Duration(milliseconds: 100),
         act: (cubit) async {
-          cubit.searchTextController.text = 'abc';
-          await Future.delayed(const Duration(milliseconds: 100));
-          cubit.searchTextController.text = 'def';
+          cubit.searchTextController.text = 'іэя';
         },
         expect: () => [
           isA<SearchKeyboardChangedState>().having((state) => state.isVisible, 'isVisible', isTrue),
@@ -52,6 +54,44 @@ void main() {
             'message',
             equals('test search error'),
           ),
+        ],
+      );
+
+      blocTest(
+        'emits ok state when found words in database',
+        setUp: () {
+          word1 = MockWord();
+          word2 = MockWord();
+
+          when(
+            () => keyboardController.onChange,
+          ).thenAnswer(
+            (_) => Stream.value(true),
+          );
+          when(
+            () => searchRepository.search(any()),
+          ).thenAnswer(
+            (_) async => [word1, word2],
+          );
+        },
+        build: () => newInstance(),
+        wait: const Duration(milliseconds: 100),
+        act: (cubit) async {
+          cubit.searchTextController.text = 'аўы';
+        },
+        expect: () => [
+          isA<SearchKeyboardChangedState>().having((state) => state.isVisible, 'isVisible', isTrue),
+          isA<SearchLoadedState>()
+              .having(
+                (state) => state.items,
+                'items',
+                equals([word1, word2]),
+              )
+              .having(
+                (state) => state.query,
+                'query',
+                equals('аўы'),
+              ),
         ],
       );
     });
