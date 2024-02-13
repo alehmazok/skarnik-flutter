@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:rxdart/transformers.dart';
+import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
@@ -92,15 +93,17 @@ class SearchCubit extends Cubit<SearchState> {
     }
     query = query.trim();
     final search = await searchUseCase(query);
-    search.fold(
-      (error) => emit(SearchFailedState(error)),
-      (result) => emit(
-        SearchLoadedState(
-          query: query,
-          items: result.toBuiltList(),
-        ),
-      ),
-    );
+    switch (search) {
+      case Failure(error: final error):
+        emit(SearchFailedState(error));
+      case Success(result: final result):
+        emit(
+          SearchLoadedState(
+            query: query,
+            items: result.toBuiltList(),
+          ),
+        );
+    }
   }
 
   void appendLetter(String letter) {
