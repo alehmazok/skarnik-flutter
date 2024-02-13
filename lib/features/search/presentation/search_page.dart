@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
@@ -15,6 +16,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<SearchCubit>(
       create: (context) => SearchCubit(
+        keyboardVisibilityController: KeyboardVisibilityController(),
         searchUseCase: getIt<SearchUseCase>(),
       ),
       child: Scaffold(

@@ -67,18 +67,18 @@ class SearchKeyboardChangedState extends SearchState {
 class SearchCubit extends Cubit<SearchState> {
   final _logger = getLogger(SearchCubit);
 
+  final KeyboardVisibilityController keyboardVisibilityController;
   final SearchUseCase searchUseCase;
 
   final _bag = DisposeBag();
-  final keyboardVisibilityController = KeyboardVisibilityController();
   final searchTextController = TextEditingController();
   final _streamController = StreamController<String>();
 
   SearchCubit({
+    required this.keyboardVisibilityController,
     required this.searchUseCase,
   }) : super(const SearchInitedState()) {
     keyboardVisibilityController.onChange.listen(_toggleKeyboard).disposedBy(_bag);
-
     searchTextController.addListener(() => _streamController.add(searchTextController.text));
     _streamController.stream.debounceTime(const Duration(milliseconds: 50)).listen(_search).disposedBy(_bag);
   }
