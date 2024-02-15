@@ -114,7 +114,9 @@ class TranslationCubit extends Cubit<TranslationState> {
         .flatMap(
       (record) {
         final (word, translation) = record;
-        return checkInFavoritesUseCase(word).map((inFavorites) => (word, translation, inFavorites));
+        return checkInFavoritesUseCase(word).map(
+          (inFavorites) => (word, translation, inFavorites),
+        );
       },
     ).flatMap(
       (record) {
