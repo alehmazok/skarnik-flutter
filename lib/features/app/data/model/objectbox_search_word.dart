@@ -29,6 +29,7 @@ class ObjectboxSearchWord with EquatableMixin implements Word {
   String? lwordMask;
 
   @override
+  @Transient()
   Dictionary dictionary;
 
   ObjectboxSearchWord({

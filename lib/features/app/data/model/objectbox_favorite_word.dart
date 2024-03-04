@@ -28,6 +28,7 @@ class ObjectboxFavoriteWord implements Word {
   String? lwordMask;
 
   @override
+  @Transient()
   Dictionary dictionary;
 
   ObjectboxFavoriteWord({

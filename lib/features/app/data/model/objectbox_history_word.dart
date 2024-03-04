@@ -26,6 +26,7 @@ class ObjectboxHistoryWord implements Word {
   String? lwordMask;
 
   @override
+  @Transient()
   Dictionary dictionary;
 
   ObjectboxHistoryWord({
