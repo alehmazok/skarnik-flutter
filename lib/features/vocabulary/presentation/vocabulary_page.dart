@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 
 import '../domain/use_case/load_vocabulary.dart';
 import 'vocabulary_cubit.dart';

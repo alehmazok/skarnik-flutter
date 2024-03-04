@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:injectable/injectable.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../../domain/entity/translation.dart';
@@ -21,8 +20,8 @@ class FirebaseAnalyticsTranslationRepository implements AnalyticsTranslationRepo
         'word_id': translation.word.wordId,
         'lang_id': translation.word.langId,
         'word': translation.word.word,
-        'dict_name': translation.word.dictName,
-        'dict_path': translation.word.dictPath,
+        'dict_name': translation.word.dictionary.name,
+        'dict_path': translation.word.dictionary.path,
       },
     );
   }
@@ -46,8 +45,8 @@ class FirebaseAnalyticsTranslationRepository implements AnalyticsTranslationRepo
         'word_id': word.wordId,
         'lang_id': word.langId,
         'word': word.word,
-        'dict_name': word.dictName,
-        'dict_path': word.dictPath,
+        'dict_name': word.dictionary.name,
+        'dict_path': word.dictionary.path,
       },
     );
   }

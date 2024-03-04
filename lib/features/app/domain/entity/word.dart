@@ -1,3 +1,5 @@
+import 'dictionary.dart';
+
 abstract interface class Word {
   int get langId;
 
@@ -10,6 +12,8 @@ abstract interface class Word {
   String get lword;
 
   String? get lwordMask;
+
+  Dictionary get dictionary;
 
   @override
   String toString() => 'Word($langId, $letter, $wordId, $word, $lword, $lwordMask)';

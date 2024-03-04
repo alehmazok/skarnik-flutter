@@ -1,4 +1,5 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 @Entity(uid: 2)
@@ -24,6 +25,9 @@ class ObjectboxHistoryWord implements Word {
   @override
   String? lwordMask;
 
+  @override
+  Dictionary dictionary;
+
   ObjectboxHistoryWord({
     required this.langId,
     required this.letter,
@@ -31,7 +35,7 @@ class ObjectboxHistoryWord implements Word {
     required this.word,
     required this.lword,
     required this.lwordMask,
-  });
+  }) : dictionary = Dictionary.byLangId(langId);
 
   factory ObjectboxHistoryWord.fromWord(Word word) => ObjectboxHistoryWord(
         langId: word.langId,

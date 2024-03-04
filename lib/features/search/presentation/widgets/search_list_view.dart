@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 class SearchListView extends StatelessWidget {
@@ -33,7 +32,7 @@ class SearchListView extends StatelessWidget {
         return ListTile(
           title: Text(word.word),
           subtitle: Text(
-            word.dictName,
+            word.dictionary.name,
           ),
           onTap: () => context.push(
             '/translate/word',

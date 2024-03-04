@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../history_cubit.dart';
@@ -26,7 +25,7 @@ class HistoryListView extends StatelessWidget {
           return ListTile(
             title: Text(word.word),
             subtitle: Text(
-              word.dictName,
+              word.dictionary.name,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

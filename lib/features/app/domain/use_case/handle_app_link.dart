@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/logging.dart';
 
-import '../entity/skarnik_word_ext.dart';
+import '../entity/dictionary.dart';
 
 @injectable
 class HandleAppLinkUseCase {
@@ -21,11 +21,12 @@ class HandleAppLinkUseCase {
         throw ArgumentError('Не атрымалася распарсіць app link');
       }
       final matches = regex.allMatches(appLink);
-      final dictPath = matches.first.namedGroup('dictPath');
-      final wordId = matches.first.namedGroup('wordId');
+      final dictPath = matches.first.namedGroup('dictPath')!;
+      final wordId = matches.first.namedGroup('wordId')!;
+      final dictionary = Dictionary.byPath(dictPath);
       final pair = (
-        langId: SkarnikWordExt.getLangId(dictPath!),
-        wordId: int.parse(wordId!),
+        langId: dictionary.langId,
+        wordId: int.parse(wordId),
       );
       _logger.fine('langId, wordId: $pair');
       return Success(pair);

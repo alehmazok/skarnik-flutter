@@ -3,7 +3,6 @@ import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../../domain/entity/api_word.dart';
@@ -20,7 +19,7 @@ class ApiTranslationRepository implements PrimaryTranslationRepository {
   Future<Translation> getTranslation(Word word) async {
     final uri = Uri.https(
       AppConfig.apiHostName,
-      'api/words/${word.dictPath}/${word.wordId}/',
+      'api/words/${word.dictionary.path}/${word.wordId}/',
     );
 
     final res = await _dio.getUri(

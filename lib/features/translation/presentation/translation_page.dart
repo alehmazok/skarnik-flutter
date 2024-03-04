@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
 
@@ -137,7 +136,7 @@ class TranslationPage extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                          state.translation.word.translationDirection,
+                          state.translation.word.dictionary.translationName,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.labelMedium,
                         ),

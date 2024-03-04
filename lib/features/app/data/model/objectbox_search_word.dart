@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:objectbox/objectbox.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 
 import '../../domain/entity/word.dart';
 
@@ -27,6 +28,9 @@ class ObjectboxSearchWord with EquatableMixin implements Word {
   @override
   String? lwordMask;
 
+  @override
+  Dictionary dictionary;
+
   ObjectboxSearchWord({
     required this.langId,
     required this.letter,
@@ -34,7 +38,7 @@ class ObjectboxSearchWord with EquatableMixin implements Word {
     required this.word,
     required this.lword,
     required this.lwordMask,
-  });
+  }) : dictionary = Dictionary.byLangId(langId);
 
   @override
   String toString() => 'ObjectboxSearchWord($id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';

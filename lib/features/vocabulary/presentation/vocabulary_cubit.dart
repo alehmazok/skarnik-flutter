@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
@@ -53,10 +53,10 @@ class VocabularyStreamedState extends VocabularyState {
 }
 
 class VocabularyCubit extends Cubit<VocabularyState> {
-  static const langIdList = [
-    langIdTsbm,
-    langIdBelRus,
-    langIdRusBel,
+  static final langIdList = [
+    Dictionary.tsbm.langId,
+    Dictionary.belRus.langId,
+    Dictionary.rusBel.langId,
   ];
 
   final _logger = getLogger(VocabularyCubit);

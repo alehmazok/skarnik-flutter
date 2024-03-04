@@ -4,7 +4,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:html/parser.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
@@ -33,7 +32,7 @@ class SkarnikTranslationRepository implements FallbackTranslationRepository {
     _uri = Uri(
       scheme: 'https',
       host: AppConfig.skarnikSiteHostName,
-      pathSegments: [_word.dictPath, '$wordId'],
+      pathSegments: [_word.dictionary.path, '$wordId'],
     );
   }
 

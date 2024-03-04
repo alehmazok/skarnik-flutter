@@ -4,7 +4,7 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/skarnik_word_ext.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:vibration/vibration.dart';
 
@@ -74,10 +74,10 @@ class SimpleListView extends StatefulWidget {
     'Я',
   ];
 
-  static const alphabetsMap = {
-    langIdRusBel: rusBelAlphabet,
-    langIdBelRus: belRusAlphabet,
-    langIdTsbm: belRusAlphabet,
+  static final alphabetsMap = {
+    Dictionary.belRus.langId: belRusAlphabet,
+    Dictionary.tsbm.langId: belRusAlphabet,
+    Dictionary.rusBel.langId: rusBelAlphabet,
   };
 
   final int langId;
