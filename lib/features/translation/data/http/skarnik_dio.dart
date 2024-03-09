@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-@Singleton(as: Dio)
+@LazySingleton(as: Dio)
 class SkarnikDio extends DioForNative implements Dio {
   SkarnikDio() : super() {
     _overrideBadCertificateBehavior();
@@ -17,12 +17,12 @@ class SkarnikDio extends DioForNative implements Dio {
   }
 
   Future<void> _overrideBadCertificateBehavior() async {
-    if(!Platform.isAndroid){
+    if (!Platform.isAndroid) {
       return;
     }
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     final sdkInt = androidInfo.version.sdkInt;
-    if(sdkInt < 26){
+    if (sdkInt < 26) {
       (httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
         return client..badCertificateCallback = (cert, host, port) => true;
       };

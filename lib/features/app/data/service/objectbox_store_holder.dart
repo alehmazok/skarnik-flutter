@@ -4,6 +4,7 @@ import '../model/objectbox_favorite_word.dart';
 import '../model/objectbox_history_word.dart';
 import '../model/objectbox_search_word.dart';
 
+/// Manually registered as a dependency in [ObjectboxDatabaseRepository].
 class ObjectboxStoreHolder {
   final Store searchStore;
   final Store historyStore;
