@@ -10,8 +10,9 @@
 import 'dart:typed_data';
 
 import 'package:flat_buffers/flat_buffers.dart' as fb;
-import 'package:objectbox/internal.dart'; // generated code can access "internal" functionality
-import 'package:objectbox/objectbox.dart';
+import 'package:objectbox/internal.dart'
+    as obx_int; // generated code can access "internal" functionality
+import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'features/app/data/model/objectbox_favorite_word.dart';
@@ -20,130 +21,130 @@ import 'features/app/data/model/objectbox_search_word.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
-final _entities = <ModelEntity>[
-  ModelEntity(
-      id: const IdUid(2, 1),
+final _entities = <obx_int.ModelEntity>[
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(2, 1),
       name: 'ObjectboxSearchWord',
-      lastPropertyId: const IdUid(7, 7690913918601784105),
+      lastPropertyId: const obx_int.IdUid(7, 7690913918601784105),
       flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 8246024000468252730),
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 8246024000468252730),
             name: 'id',
             type: 6,
             flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 1933101338332134448),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 1933101338332134448),
             name: 'langId',
             type: 6,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 2245466148711448707),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 2245466148711448707),
             name: 'letter',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 4737207353756559193),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 4737207353756559193),
             name: 'wordId',
             type: 6,
             flags: 40,
-            indexId: const IdUid(1, 6950839157362923633)),
-        ModelProperty(
-            id: const IdUid(5, 7231270088001517744),
+            indexId: const obx_int.IdUid(1, 6950839157362923633)),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 7231270088001517744),
             name: 'word',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 6985924929833847872),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 6985924929833847872),
             name: 'lword',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 7690913918601784105),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 7690913918601784105),
             name: 'lwordMask',
             type: 9,
             flags: 0)
       ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(3, 2),
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(3, 2),
       name: 'ObjectboxHistoryWord',
-      lastPropertyId: const IdUid(7, 62019299264781155),
+      lastPropertyId: const obx_int.IdUid(7, 62019299264781155),
       flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 2210635481141394105),
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 2210635481141394105),
             name: 'id',
             type: 6,
             flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 3569231611713480762),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 3569231611713480762),
             name: 'langId',
             type: 6,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 8032261620738518603),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 8032261620738518603),
             name: 'letter',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 2168629768157903924),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 2168629768157903924),
             name: 'wordId',
             type: 6,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 987607834441689594),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 987607834441689594),
             name: 'word',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 6907252566274804777),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 6907252566274804777),
             name: 'lword',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 62019299264781155),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 62019299264781155),
             name: 'lwordMask',
             type: 9,
             flags: 0)
       ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(4, 3),
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(4, 3),
       name: 'ObjectboxFavoriteWord',
-      lastPropertyId: const IdUid(7, 3794220720396200128),
+      lastPropertyId: const obx_int.IdUid(7, 3794220720396200128),
       flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 4543241904431980795),
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 4543241904431980795),
             name: 'id',
             type: 6,
             flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 1441095813867295227),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 1441095813867295227),
             name: 'langId',
             type: 6,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 4958884637484099258),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 4958884637484099258),
             name: 'letter',
             type: 9,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 1060321079331553370),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 1060321079331553370),
             name: 'wordId',
             type: 6,
             flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 8268186311141102367),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 8268186311141102367),
             name: 'word',
             type: 9,
             flags: 0)
       ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[])
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[])
 ];
 
 /// Shortcut for [Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -153,30 +154,38 @@ final _entities = <ModelEntity>[
 /// Note: for desktop apps it is recommended to specify a unique [directory].
 ///
 /// See [Store.new] for an explanation of all parameters.
-Future<Store> openStore(
-        {String? directory,
-        int? maxDBSizeInKB,
-        int? fileMode,
-        int? maxReaders,
-        bool queriesCaseSensitiveDefault = true,
-        String? macosApplicationGroup}) async =>
-    Store(getObjectBoxModel(),
-        directory: directory ?? (await defaultStoreDirectory()).path,
-        maxDBSizeInKB: maxDBSizeInKB,
-        fileMode: fileMode,
-        maxReaders: maxReaders,
-        queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
-        macosApplicationGroup: macosApplicationGroup);
+///
+/// For Flutter apps, also calls `loadObjectBoxLibraryAndroidCompat()` from
+/// the ObjectBox Flutter library to fix loading the native ObjectBox library
+/// on Android 6 and older.
+Future<obx.Store> openStore(
+    {String? directory,
+    int? maxDBSizeInKB,
+    int? maxDataSizeInKB,
+    int? fileMode,
+    int? maxReaders,
+    bool queriesCaseSensitiveDefault = true,
+    String? macosApplicationGroup}) async {
+  await loadObjectBoxLibraryAndroidCompat();
+  return obx.Store(getObjectBoxModel(),
+      directory: directory ?? (await defaultStoreDirectory()).path,
+      maxDBSizeInKB: maxDBSizeInKB,
+      maxDataSizeInKB: maxDataSizeInKB,
+      fileMode: fileMode,
+      maxReaders: maxReaders,
+      queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
+      macosApplicationGroup: macosApplicationGroup);
+}
 
 /// Returns the ObjectBox model definition for this project for use with
 /// [Store.new].
-ModelDefinition getObjectBoxModel() {
-  final model = ModelInfo(
+obx_int.ModelDefinition getObjectBoxModel() {
+  final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(4, 3),
-      lastIndexId: const IdUid(3, 6668724822744587284),
-      lastRelationId: const IdUid(0, 0),
-      lastSequenceId: const IdUid(0, 0),
+      lastEntityId: const obx_int.IdUid(4, 3),
+      lastIndexId: const obx_int.IdUid(3, 6668724822744587284),
+      lastRelationId: const obx_int.IdUid(0, 0),
+      lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [6340663483916346837],
       retiredIndexUids: const [6767957250904925596, 6668724822744587284],
       retiredPropertyUids: const [
@@ -195,8 +204,8 @@ ModelDefinition getObjectBoxModel() {
       modelVersionParserMinimum: 5,
       version: 1);
 
-  final bindings = <Type, EntityDefinition>{
-    ObjectboxSearchWord: EntityDefinition<ObjectboxSearchWord>(
+  final bindings = <Type, obx_int.EntityDefinition>{
+    ObjectboxSearchWord: obx_int.EntityDefinition<ObjectboxSearchWord>(
         model: _entities[0],
         toOneRelations: (ObjectboxSearchWord object) => [],
         toManyRelations: (ObjectboxSearchWord object) => {},
@@ -222,7 +231,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.finish(fbb.endTable());
           return object.id;
         },
-        objectFromFB: (Store store, ByteData fbData) {
+        objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
           final langIdParam =
@@ -248,7 +257,7 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    ObjectboxHistoryWord: EntityDefinition<ObjectboxHistoryWord>(
+    ObjectboxHistoryWord: obx_int.EntityDefinition<ObjectboxHistoryWord>(
         model: _entities[1],
         toOneRelations: (ObjectboxHistoryWord object) => [],
         toManyRelations: (ObjectboxHistoryWord object) => {},
@@ -274,7 +283,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.finish(fbb.endTable());
           return object.id;
         },
-        objectFromFB: (Store store, ByteData fbData) {
+        objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
           final langIdParam =
@@ -300,7 +309,7 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    ObjectboxFavoriteWord: EntityDefinition<ObjectboxFavoriteWord>(
+    ObjectboxFavoriteWord: obx_int.EntityDefinition<ObjectboxFavoriteWord>(
         model: _entities[2],
         toOneRelations: (ObjectboxFavoriteWord object) => [],
         toManyRelations: (ObjectboxFavoriteWord object) => {},
@@ -320,7 +329,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.finish(fbb.endTable());
           return object.id;
         },
-        objectFromFB: (Store store, ByteData fbData) {
+        objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
           final langIdParam =
@@ -342,90 +351,90 @@ ModelDefinition getObjectBoxModel() {
         })
   };
 
-  return ModelDefinition(model, bindings);
+  return obx_int.ModelDefinition(model, bindings);
 }
 
 /// [ObjectboxSearchWord] entity fields to define ObjectBox queries.
 class ObjectboxSearchWord_ {
   /// see [ObjectboxSearchWord.id]
   static final id =
-      QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[0]);
+      obx.QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[0]);
 
   /// see [ObjectboxSearchWord.langId]
   static final langId =
-      QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[1]);
+      obx.QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[1]);
 
   /// see [ObjectboxSearchWord.letter]
   static final letter =
-      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[2]);
+      obx.QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[2]);
 
   /// see [ObjectboxSearchWord.wordId]
   static final wordId =
-      QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[3]);
+      obx.QueryIntegerProperty<ObjectboxSearchWord>(_entities[0].properties[3]);
 
   /// see [ObjectboxSearchWord.word]
   static final word =
-      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[4]);
+      obx.QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[4]);
 
   /// see [ObjectboxSearchWord.lword]
   static final lword =
-      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[5]);
+      obx.QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[5]);
 
   /// see [ObjectboxSearchWord.lwordMask]
   static final lwordMask =
-      QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[6]);
+      obx.QueryStringProperty<ObjectboxSearchWord>(_entities[0].properties[6]);
 }
 
 /// [ObjectboxHistoryWord] entity fields to define ObjectBox queries.
 class ObjectboxHistoryWord_ {
   /// see [ObjectboxHistoryWord.id]
-  static final id =
-      QueryIntegerProperty<ObjectboxHistoryWord>(_entities[1].properties[0]);
+  static final id = obx.QueryIntegerProperty<ObjectboxHistoryWord>(
+      _entities[1].properties[0]);
 
   /// see [ObjectboxHistoryWord.langId]
-  static final langId =
-      QueryIntegerProperty<ObjectboxHistoryWord>(_entities[1].properties[1]);
+  static final langId = obx.QueryIntegerProperty<ObjectboxHistoryWord>(
+      _entities[1].properties[1]);
 
   /// see [ObjectboxHistoryWord.letter]
   static final letter =
-      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[2]);
+      obx.QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[2]);
 
   /// see [ObjectboxHistoryWord.wordId]
-  static final wordId =
-      QueryIntegerProperty<ObjectboxHistoryWord>(_entities[1].properties[3]);
+  static final wordId = obx.QueryIntegerProperty<ObjectboxHistoryWord>(
+      _entities[1].properties[3]);
 
   /// see [ObjectboxHistoryWord.word]
   static final word =
-      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[4]);
+      obx.QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[4]);
 
   /// see [ObjectboxHistoryWord.lword]
   static final lword =
-      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[5]);
+      obx.QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[5]);
 
   /// see [ObjectboxHistoryWord.lwordMask]
   static final lwordMask =
-      QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[6]);
+      obx.QueryStringProperty<ObjectboxHistoryWord>(_entities[1].properties[6]);
 }
 
 /// [ObjectboxFavoriteWord] entity fields to define ObjectBox queries.
 class ObjectboxFavoriteWord_ {
   /// see [ObjectboxFavoriteWord.id]
-  static final id =
-      QueryIntegerProperty<ObjectboxFavoriteWord>(_entities[2].properties[0]);
+  static final id = obx.QueryIntegerProperty<ObjectboxFavoriteWord>(
+      _entities[2].properties[0]);
 
   /// see [ObjectboxFavoriteWord.langId]
-  static final langId =
-      QueryIntegerProperty<ObjectboxFavoriteWord>(_entities[2].properties[1]);
+  static final langId = obx.QueryIntegerProperty<ObjectboxFavoriteWord>(
+      _entities[2].properties[1]);
 
   /// see [ObjectboxFavoriteWord.letter]
-  static final letter =
-      QueryStringProperty<ObjectboxFavoriteWord>(_entities[2].properties[2]);
+  static final letter = obx.QueryStringProperty<ObjectboxFavoriteWord>(
+      _entities[2].properties[2]);
 
   /// see [ObjectboxFavoriteWord.wordId]
-  static final wordId =
-      QueryIntegerProperty<ObjectboxFavoriteWord>(_entities[2].properties[3]);
+  static final wordId = obx.QueryIntegerProperty<ObjectboxFavoriteWord>(
+      _entities[2].properties[3]);
 
   /// see [ObjectboxFavoriteWord.word]
-  static final word =
-      QueryStringProperty<ObjectboxFavoriteWord>(_entities[2].properties[4]);
+  static final word = obx.QueryStringProperty<ObjectboxFavoriteWord>(
+      _entities[2].properties[4]);
 }

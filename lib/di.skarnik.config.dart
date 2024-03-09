@@ -54,9 +54,9 @@ import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
 import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository.dart'
     as _i31;
 import 'package:skarnik_flutter/features/translation/data/repository/dev_analytics_translation_repository.dart'
-    as _i7;
-import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
     as _i8;
+import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
+    as _i7;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_favorites_repository.dart'
     as _i16;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
@@ -100,8 +100,8 @@ import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
     as _i47;
 
-const String _dev = 'dev';
 const String _prod = 'prod';
+const String _dev = 'dev';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -123,16 +123,16 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i7.DevAnalyticsTranslationRepository(),
-      registerFor: {_dev},
+      () => _i7.FirebaseAnalyticsTranslationRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i8.FirebaseAnalyticsTranslationRepository(),
-      registerFor: {_prod},
+      () => _i8.DevAnalyticsTranslationRepository(),
+      registerFor: {_dev},
     );
     gh.factory<_i9.DatabaseRepository>(
         () => _i10.ObjectboxDatabaseRepository());
-    gh.singleton<_i11.Dio>(_i12.SkarnikDio());
+    gh.lazySingleton<_i11.Dio>(() => _i12.SkarnikDio());
     gh.factory<_i13.FallbackTranslationRepository>(
         () => _i14.SkarnikTranslationRepository(gh<_i11.Dio>()));
     gh.factory<_i15.FavoritesRepository>(() =>
