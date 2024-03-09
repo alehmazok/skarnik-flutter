@@ -20,7 +20,7 @@ class InitDatabaseUseCase {
 
       return Success(result);
     } catch (e, st) {
-      _logger.severe('An error occurred:', e, st);
+      _logger.severe('An error occurred while initializing database:', e, st);
 
       return Failure(e);
     }

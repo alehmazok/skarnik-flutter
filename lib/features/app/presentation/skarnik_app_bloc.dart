@@ -120,7 +120,7 @@ class SkarnikAppBloc extends Bloc<SkarnikAppEvent, SkarnikAppState> {
           (_) => initDatabaseUseCase(),
         )
         .flatMap(
-          (rows) => logAnalyticsAppOpenUseCase().map((_) => rows),
+          (rowsCount) => logAnalyticsAppOpenUseCase().map((_) => rowsCount),
         );
     switch (init) {
       case Failure(error: final error):
