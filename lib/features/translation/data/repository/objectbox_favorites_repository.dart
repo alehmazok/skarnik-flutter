@@ -24,7 +24,8 @@ class ObjectboxFavoritesRepository implements FavoritesRepository {
         .build()
       ..limit = AppConfig.wordsPerPage
       ..offset = offset;
-    return query.findAsync();
+    final words = await query.findAsync();
+    return words.map((it) => it.toEntity());
   }
 
   @override

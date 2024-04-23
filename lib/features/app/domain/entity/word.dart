@@ -1,19 +1,37 @@
+import 'package:equatable/equatable.dart';
+
 import 'dictionary.dart';
 
-abstract interface class Word {
-  int get langId;
+class Word extends Equatable {
+  final int langId;
 
-  String get letter;
+  final String letter;
 
-  int get wordId;
+  final int wordId;
 
-  String get word;
+  final String word;
 
-  String get lword;
+  final String lword;
 
-  String? get lwordMask;
+  final String? lwordMask;
 
-  Dictionary get dictionary;
+  final Dictionary dictionary;
+
+  @override
+  List<Object?> get props => [
+        wordId,
+        langId,
+      ];
+
+  const Word({
+    required this.langId,
+    required this.letter,
+    required this.wordId,
+    required this.word,
+    required this.lword,
+    required this.lwordMask,
+    required this.dictionary,
+  });
 
   @override
   String toString() => 'Word($langId, $letter, $wordId, $word, $lword, $lwordMask)';
