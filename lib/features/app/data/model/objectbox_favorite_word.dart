@@ -3,33 +3,23 @@ import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 @Entity(uid: 3)
-class ObjectboxFavoriteWord implements Word {
+class ObjectboxFavoriteWord {
   @Id()
   int id = 0;
 
-  @override
   int langId;
 
-  @override
   String letter;
 
-  @override
   int wordId;
 
-  @override
   String word;
 
-  @override
   @Transient()
   String lword;
 
-  @override
   @Transient()
   String? lwordMask;
-
-  @override
-  @Transient()
-  Dictionary dictionary;
 
   ObjectboxFavoriteWord({
     required this.langId,
@@ -37,7 +27,7 @@ class ObjectboxFavoriteWord implements Word {
     required this.wordId,
     required this.word,
     this.lword = '',
-  }) : dictionary = Dictionary.byLangId(langId);
+  });
 
   factory ObjectboxFavoriteWord.fromWord(Word word) => ObjectboxFavoriteWord(
         langId: word.langId,
@@ -48,4 +38,16 @@ class ObjectboxFavoriteWord implements Word {
 
   @override
   String toString() => 'ObjectboxFavoriteWord(id: $id, $langId, $letter, $wordId, $word)';
+}
+
+extension ObjectboxFavoriteWordMapper on ObjectboxFavoriteWord {
+  Word toEntity() => Word(
+        langId: langId,
+        letter: letter,
+        wordId: wordId,
+        word: word,
+        lword: lword,
+        lwordMask: lwordMask,
+        dictionary: Dictionary.byLangId(langId),
+      );
 }
