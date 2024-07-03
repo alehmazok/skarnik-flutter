@@ -37,7 +37,7 @@ import 'package:skarnik_flutter/features/favorites/domain/use_case/load_favorite
     as _i25;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
     as _i26;
-import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
+import 'package:skarnik_flutter/features/search/data/repository/typesense_search_repository.dart'
     as _i35;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
     as _i34;
@@ -54,9 +54,9 @@ import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
 import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository.dart'
     as _i31;
 import 'package:skarnik_flutter/features/translation/data/repository/dev_analytics_translation_repository.dart'
-    as _i8;
-import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
     as _i7;
+import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
+    as _i8;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_favorites_repository.dart'
     as _i16;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
@@ -100,8 +100,8 @@ import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
     as _i47;
 
-const String _prod = 'prod';
 const String _dev = 'dev';
+const String _prod = 'prod';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -123,12 +123,12 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_prod},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i7.FirebaseAnalyticsTranslationRepository(),
-      registerFor: {_prod},
+      () => _i7.DevAnalyticsTranslationRepository(),
+      registerFor: {_dev},
     );
     gh.factory<_i6.AnalyticsTranslationRepository>(
-      () => _i8.DevAnalyticsTranslationRepository(),
-      registerFor: {_dev},
+      () => _i8.FirebaseAnalyticsTranslationRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i9.DatabaseRepository>(
         () => _i10.ObjectboxDatabaseRepository());
@@ -169,8 +169,8 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i32.RemoveFromFavoritesUseCase(gh<_i15.FavoritesRepository>()));
     gh.factory<_i33.SaveToHistoryUseCase>(
         () => _i33.SaveToHistoryUseCase(gh<_i21.HistoryRepository>()));
-    gh.factory<_i34.SearchRepository>(
-        () => _i35.ObjectboxSearchRepository(gh<_i17.ObjectboxStoreHolder>()));
+    gh.lazySingleton<_i34.SearchRepository>(
+        () => _i35.TypesenseSearchRepository());
     gh.factory<_i36.SearchUseCase>(
         () => _i36.SearchUseCase(gh<_i34.SearchRepository>()));
     gh.factory<_i37.SettingsHistoryRepository>(() =>

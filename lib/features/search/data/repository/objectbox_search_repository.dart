@@ -6,7 +6,7 @@ import 'package:skarnik_flutter/objectbox.g.dart';
 
 import '../../domain/repository/search_repository.dart';
 
-@Injectable(as: SearchRepository)
+// @Injectable(as: SearchRepository)
 class ObjectboxSearchRepository implements SearchRepository {
   static const letterSubstitutions = {
     'и': 'і',

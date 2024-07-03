@@ -8,4 +8,8 @@ abstract class AppConfig {
   static const skarnikSiteHostName = 'skarnik.by';
 
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
+
+  static const typesenseHostName = String.fromEnvironment('TYPESENSE_HOSTNAME');
+
+  static const typesenseApiKey = String.fromEnvironment('TYPESENSE_API_KEY');
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
+import '../../app/domain/entity/word.dart';
 import '../domain/use_case/search_use_case.dart';
 import 'search_cubit.dart';
 import 'widgets/search_extra_buttons.dart';
@@ -59,9 +61,24 @@ class SearchPage extends StatelessWidget {
           buildWhen: (_, current) => current is SearchLoadedState,
           builder: (context, state) {
             if (state is SearchLoadedState) {
-              return SearchListView(
+              return SearchListView<Word>(
                 isNothingFound: state.isNothingFound,
-                words: state.items,
+                items: state.items,
+                itemBuilder: (item) {
+                  return ListTile(
+                    title: Text(item.word),
+                    subtitle: Text(
+                      item.dictionary.name,
+                    ),
+                    onTap: () => context.push(
+                      '/translate/word',
+                      extra: {
+                        'word': item,
+                        'save_to_history': true,
+                      },
+                    ),
+                  );
+                },
               );
             }
             return const SizedBox.shrink();

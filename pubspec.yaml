@@ -67,6 +67,7 @@ dependencies:
   rxdart: ^0.27.7
   scrollable_positioned_list: ^0.2.3
   share_plus: ^7.2.2
+  typesense: ^0.4.0
   vibration: ^1.8.4
 
 dev_dependencies:
