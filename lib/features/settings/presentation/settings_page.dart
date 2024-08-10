@@ -74,7 +74,7 @@ class SettingsPage extends StatelessWidget {
     final result = await showOkCancelAlertDialog(
       context: context,
       title: 'Увага',
-      message: 'Вы сапраўды жадаеце ачысціць гісторыю пошука?',
+      message: 'Вы сапраўды жадаеце ачысціць гісторыю пошуку?',
       cancelLabel: 'Не',
       okLabel: 'Так',
     );
