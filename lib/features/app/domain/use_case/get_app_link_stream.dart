@@ -14,7 +14,7 @@ class GetAppLinkStreamUseCase {
   Future<UseCaseResult<Stream<String>>> call() async {
     try {
       final appLinks = AppLinks();
-      return Success(appLinks.allStringLinkStream);
+      return Success(appLinks.stringLinkStream);
     } catch (e, st) {
       _logger.severe('Адбылася памылка атрымання стрыму app links:', e, st);
       return Failure(e);
