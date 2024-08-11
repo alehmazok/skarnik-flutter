@@ -35,4 +35,5 @@ Runner/GeneratedPluginRegistrant.*
 
 firebase_app_id_file.json
 Runner/GoogleService-Info.plist
+fastlane/report.xml
 *.secret

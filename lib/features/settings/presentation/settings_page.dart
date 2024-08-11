@@ -1,14 +1,20 @@
+import 'dart:convert';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../domain/use_case/clear_history.dart';
 import 'settings_cubit.dart';
 
 class SettingsPage extends StatelessWidget {
+  static final _devsMail = 'mailto:${utf8.decode(base64.decode(AppConfig.devs))}';
+
   const SettingsPage({super.key});
 
   @override
@@ -45,6 +51,10 @@ class SettingsPage extends StatelessWidget {
                     enabled: enabled,
                   );
                 },
+              ),
+              ListTile(
+                title: const Text('Даслаць ліст распакоўшчыкам'),
+                onTap: () => launchUrlString(_devsMail),
               ),
               FutureBuilder<PackageInfo>(
                 future: PackageInfo.fromPlatform(),

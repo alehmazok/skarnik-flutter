@@ -8,4 +8,6 @@ abstract class AppConfig {
   static const skarnikSiteHostName = 'skarnik.by';
 
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
+
+  static const devs = 'c2thcm5pa2FwcEBnbWFpbC5jb20=';
 }
