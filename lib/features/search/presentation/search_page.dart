@@ -37,6 +37,7 @@ class SearchPage extends StatelessWidget {
                 return TextField(
                   controller: cubit.searchTextController,
                   autofocus: true,
+                  textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     hintText: 'Пошук слоў',
                     border: InputBorder.none,
