@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:vibration/vibration.dart';
+
+import '../vocabulary_cubit.dart';
 
 class SimpleListView extends StatefulWidget {
   static const rusBelAlphabet = [
@@ -139,13 +142,16 @@ class _SimpleListViewState extends State<SimpleListView> {
               final word = widget.words[index];
               return ListTile(
                 title: Text(word.word),
-                onTap: () => context.go(
-                  '/translate/word',
-                  extra: {
-                    'word': word,
-                    'save_to_history': true,
-                  },
-                ),
+                onTap: () {
+                  context.go(
+                    '/translate/word',
+                    extra: {
+                      'word': word,
+                      'save_to_history': true,
+                    },
+                  );
+                  context.read<VocabularyCubit>().logAnalyticsWord(word);
+                },
               );
             },
             itemCount: widget.words.length,

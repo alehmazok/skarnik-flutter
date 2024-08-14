@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../domain/use_case/load_vocabulary.dart';
+import '../domain/use_case/log_analytics_vocabulary_word.dart';
 
 abstract class VocabularyState extends Equatable {
   @override
@@ -61,12 +64,14 @@ class VocabularyCubit extends Cubit<VocabularyState> {
 
   final _logger = getLogger(VocabularyCubit);
   final LoadVocabularyUseCase loadVocabularyUseCase;
+  final LogAnalyticsVocabularyWordUseCase logAnalyticsVocabularyWordUseCase;
   final TickerProvider tickerProvider;
   final TabController tabController;
   Map<int, BuiltList<Word>>? _cache;
 
   VocabularyCubit({
     required this.loadVocabularyUseCase,
+    required this.logAnalyticsVocabularyWordUseCase,
     required this.tickerProvider,
   })  : tabController = TabController(
           length: 3,
@@ -104,6 +109,8 @@ class VocabularyCubit extends Cubit<VocabularyState> {
         );
     }
   }
+
+  void logAnalyticsWord(Word word) => unawaited(logAnalyticsVocabularyWordUseCase(word));
 
   @override
   Future<void> close() {

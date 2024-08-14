@@ -16,7 +16,7 @@ class LogAnalyticsShareUseCase {
 
   Future<UseCaseResult<bool>> call(String link) async {
     try {
-      _analyticsTranslationRepository.logShare(link);
+      await _analyticsTranslationRepository.logShare(link);
     } catch (e, st) {
       _logger.warning('Адбылася памылка падчас лагавання падзеі шарынга спасылкі `$link`:', e, st);
     }

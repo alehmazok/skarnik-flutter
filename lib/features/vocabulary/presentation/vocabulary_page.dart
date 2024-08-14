@@ -4,6 +4,7 @@ import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 
 import '../domain/use_case/load_vocabulary.dart';
+import '../domain/use_case/log_analytics_vocabulary_word.dart';
 import 'vocabulary_cubit.dart';
 import 'widgets/vocabulary_num_page.dart';
 
@@ -20,6 +21,7 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
     return BlocProvider(
       create: (context) => VocabularyCubit(
         loadVocabularyUseCase: getIt<LoadVocabularyUseCase>(),
+        logAnalyticsVocabularyWordUseCase: getIt<LogAnalyticsVocabularyWordUseCase>(),
         tickerProvider: this,
       )..loadWords(langIdTsbm),
       child: Builder(

@@ -93,12 +93,20 @@ import 'package:skarnik_flutter/features/translation/domain/use_case/remove_from
     as _i235;
 import 'package:skarnik_flutter/features/translation/domain/use_case/save_to_history.dart'
     as _i276;
+import 'package:skarnik_flutter/features/vocabulary/data/repository/dev_analytics_vocabulary_repository.dart'
+    as _i989;
+import 'package:skarnik_flutter/features/vocabulary/data/repository/firebase_analytics_vocabulary_repository.dart'
+    as _i20;
 import 'package:skarnik_flutter/features/vocabulary/data/repository/vocabulary_repository.dart'
     as _i609;
+import 'package:skarnik_flutter/features/vocabulary/domain/repository/analytics_vocabulary_repository.dart'
+    as _i267;
 import 'package:skarnik_flutter/features/vocabulary/domain/repository/vocabulary_repository.dart'
     as _i587;
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabulary.dart'
     as _i741;
+import 'package:skarnik_flutter/features/vocabulary/domain/use_case/log_analytics_vocabulary_word.dart'
+    as _i616;
 
 const String _dev = 'dev';
 const String _prod = 'prod';
@@ -119,6 +127,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
     gh.factory<_i525.InitRemoteConfigUseCase>(
         () => _i525.InitRemoteConfigUseCase());
+    gh.factory<_i267.AnalyticsVocabularyRepository>(
+      () => _i989.DevAnalyticsVocabularyRepository(),
+      registerFor: {_dev},
+    );
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i805.DevAnalyticsAppRepository(),
@@ -148,6 +160,9 @@ extension GetItInjectableX on _i174.GetIt {
         _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()));
     gh.factory<_i146.InitDatabaseUseCase>(
         () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()));
+    gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(() =>
+        _i616.LogAnalyticsVocabularyWordUseCase(
+            gh<_i267.AnalyticsVocabularyRepository>()));
     gh.factory<_i223.AnalyticsTranslationRepository>(
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
@@ -157,6 +172,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i531.SettingsHistoryRepository>(() =>
         _i252.ObjectboxSettingsHistoryRepository(
             gh<_i522.ObjectboxStoreHolder>()));
+    gh.factory<_i267.AnalyticsVocabularyRepository>(
+      () => _i20.FirebaseAnalyticsVocabularyRepository(),
+      registerFor: {_prod},
+    );
     gh.factory<_i741.LoadVocabularyUseCase>(
         () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()));
     gh.factory<_i507.PrimaryTranslationRepository>(
