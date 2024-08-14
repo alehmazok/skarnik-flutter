@@ -23,6 +23,8 @@ class MockWordRepository extends Mock implements WordRepository {}
 
 class MockFallbackTranslationRepository extends Mock implements FallbackTranslationRepository {}
 
+class MockPrimaryTranslationRepository extends Mock implements PrimaryTranslationRepository {}
+
 class MockFavoritesRepository extends Mock implements FavoritesRepository {}
 
 class MockHistoryRepository extends Mock implements HistoryRepository {}
@@ -34,7 +36,8 @@ class MockWord extends Mock implements Word {}
 void main() {
   group('TranslationCubit', () {
     final wordRepository = MockWordRepository();
-    final translationRepository = MockFallbackTranslationRepository();
+    final fallbackTranslationRepository = MockFallbackTranslationRepository();
+    final primaryTranslationRepository = MockPrimaryTranslationRepository();
     final favoritesRepository = MockFavoritesRepository();
     final historyRepository = MockHistoryRepository();
     final analyticsTranslationRepository = MockAnalyticsTranslationRepository();
@@ -44,7 +47,10 @@ void main() {
           wordId: 1,
           saveToHistory: saveToHistory,
           getWordUseCase: GetWordUseCase(wordRepository),
-          getTranslationUseCase: GetTranslationUseCase(translationRepository),
+          getTranslationUseCase: GetTranslationUseCase(
+            primaryTranslationRepository: primaryTranslationRepository,
+            fallbackTranslationRepository: fallbackTranslationRepository,
+          ),
           addToFavoritesUseCase: AddToFavoritesUseCase(favoritesRepository),
           checkInFavoritesUseCase: CheckInFavoritesUseCase(favoritesRepository),
           removeFromFavoritesUseCase: RemoveFromFavoritesUseCase(favoritesRepository),
@@ -76,7 +82,7 @@ void main() {
       );
 
       blocTest(
-        'emits failed state when failed to get translation',
+        'emits error state when failed to get translation from both primary and fallback data sources',
         setUp: () {
           final word = MockWord();
 
@@ -87,9 +93,15 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => primaryTranslationRepository.getTranslation(word),
           ).thenThrow(
-            UnimplementedError('test translation error'),
+            UnimplementedError('test primary translation error'),
+          );
+
+          when(
+            () => fallbackTranslationRepository.getTranslation(word),
+          ).thenThrow(
+            UnimplementedError('test fallback translation error'),
           );
         },
         build: () => newInstance(),
@@ -97,7 +109,7 @@ void main() {
           isA<TranslationFailedState>().having(
             (state) => (state.error as UnimplementedError).message,
             'message',
-            equals('test translation error'),
+            equals('test fallback translation error'),
           ),
         ],
       );
@@ -114,7 +126,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => Translation.build(
               word: word,
@@ -151,7 +163,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => Translation.build(
               word: word,
@@ -201,7 +213,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -254,7 +266,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -314,7 +326,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -389,7 +401,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -469,7 +481,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -544,7 +556,7 @@ void main() {
           );
 
           when(
-            () => translationRepository.getTranslation(word),
+            () => fallbackTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );

@@ -154,8 +154,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i124.SearchRepository>(() =>
         _i578.ObjectboxSearchRepository(gh<_i522.ObjectboxStoreHolder>()));
-    gh.factory<_i803.GetTranslationUseCase>(() =>
-        _i803.GetTranslationUseCase(gh<_i507.FallbackTranslationRepository>()));
     gh.factory<_i531.SettingsHistoryRepository>(() =>
         _i252.ObjectboxSettingsHistoryRepository(
             gh<_i522.ObjectboxStoreHolder>()));
@@ -190,6 +188,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(() =>
         _i135.LogAnalyticsAddToFavoritesUseCase(
             gh<_i223.AnalyticsTranslationRepository>()));
+    gh.factory<_i803.GetTranslationUseCase>(() => _i803.GetTranslationUseCase(
+          primaryTranslationRepository:
+              gh<_i507.PrimaryTranslationRepository>(),
+          fallbackTranslationRepository:
+              gh<_i507.FallbackTranslationRepository>(),
+        ));
     return this;
   }
 }
