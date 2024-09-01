@@ -53,5 +53,10 @@ release_notes.txt
 android/skarnik_private_key
 android/*.pem
 
+# iOS
+ios/Runner*.zip
+ios/Runner*.ipa
+
 # Logo pictures
 skarnik_logo*.png
+Screenshot*.png
