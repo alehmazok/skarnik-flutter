@@ -48,3 +48,10 @@ release_notes.txt
 
 # FVM
 .fvm/flutter_sdk
+
+# Android
+android/skarnik_private_key
+android/*.pem
+
+# Logo pictures
+skarnik_logo*.png
