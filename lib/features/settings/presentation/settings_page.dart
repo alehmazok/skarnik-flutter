@@ -25,7 +25,7 @@ class SettingsPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Наладкі'),
+          title: const Text('Налады'),
         ),
         body: BlocListener<SettingsCubit, SettingsState>(
           listener: (context, state) {
@@ -53,7 +53,7 @@ class SettingsPage extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text('Даслаць ліст распакоўшчыкам'),
+                title: const Text('Даслаць ліст распрацоўшчыкам'),
                 onTap: () => launchUrlString(_devsMail),
               ),
               FutureBuilder<PackageInfo>(
