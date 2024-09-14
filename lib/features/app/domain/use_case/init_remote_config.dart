@@ -17,7 +17,7 @@ class InitRemoteConfigUseCase {
     try {
       final instance = FirebaseRemoteConfig.instance;
       instance.setConfigSettings(
-        // Дэфолтныя вялiчынi.
+        // Дэфолтныя значэнні.
         RemoteConfigSettings(
           fetchTimeout: const Duration(minutes: 1),
           minimumFetchInterval: const Duration(hours: 12),
@@ -27,7 +27,7 @@ class InitRemoteConfigUseCase {
         AppConfig.httpCacheDurationInHours: 24,
       });
 
-      // Не чакаць рэзультат.
+      // Не чакаць вынік.
       _fetchAndActivate(instance);
 
       return const Success(true);
