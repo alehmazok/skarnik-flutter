@@ -20,9 +20,8 @@ class ApiTranslationRepository implements PrimaryTranslationRepository {
 
   @override
   Future<Translation> getTranslation(Word word) async {
-    final uri = Uri.https(
-      AppConfig.apiHostName,
-      'api/words/${word.dictionary.path}/${word.wordId}/',
+    final uri = Uri.parse(
+      '${AppConfig.apiHostName}/api/words/${word.dictionary.path}/${word.wordId}/',
     );
     _logger.fine('Робім запыт на: ${uri.toString()}');
 
