@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skarnik_flutter/strings.dart';
 import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../../app/presentation/skarnik_app_bloc.dart';
@@ -38,15 +39,15 @@ class _HomePageState extends State<HomePage> {
               destinations: [
                 NavigationDestination(
                   icon: Icon(AdaptiveIcons.search),
-                  label: 'Пошук',
+                  label: Strings.search,
                 ),
                 NavigationDestination(
                   icon: Icon(AdaptiveIcons.bookmark),
-                  label: 'Закладкі',
+                  label: Strings.bookmarks,
                 ),
                 NavigationDestination(
                   icon: Icon(AdaptiveIcons.book),
-                  label: 'Слоўнік',
+                  label: Strings.dictionary,
                 ),
               ],
             ),

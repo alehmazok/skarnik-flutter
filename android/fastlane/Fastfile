@@ -39,6 +39,7 @@ platform :android do
                "--release",
                "-t", "lib/main.dart",
                "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
+               "--dart-define=DEV_EMAIL_ADDRESS=#{ENV['DEV_EMAIL_ADDRESS']}",
              ]
            )
   end
@@ -51,6 +52,7 @@ platform :android do
                "apk",
                "--release",
                "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
+               "--dart-define=DEV_EMAIL_ADDRESS=#{ENV['DEV_EMAIL_ADDRESS']}",
              ]
            )
   end

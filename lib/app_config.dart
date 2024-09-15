@@ -9,5 +9,5 @@ abstract class AppConfig {
 
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
 
-  static const devs = 'c2thcm5pa2FwcEBnbWFpbC5jb20=';
+  static const devEmailAddress = String.fromEnvironment('DEV_EMAIL_ADDRESS');
 }

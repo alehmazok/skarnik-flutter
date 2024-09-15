@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/strings.dart';
 
 class SearchListView extends StatelessWidget {
   final bool isNothingFound;
@@ -16,11 +17,11 @@ class SearchListView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isNothingFound) {
       return const Center(
-        child: Text('Па запыце нічога не знойдзена'),
+        child: Text(Strings.nothingFound),
       );
     } else if (words.isEmpty) {
       return const Center(
-        child: Text('Пошук з аўтаматычнай падменай і|и, ў|щ, \'|ь|ъ, е|ё'),
+        child: Text(Strings.searchNote),
       );
     }
 

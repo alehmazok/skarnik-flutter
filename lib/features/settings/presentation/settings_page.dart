@@ -1,9 +1,9 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
+import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/clear_history.dart';
 import 'settings_cubit.dart';
@@ -20,7 +20,7 @@ class SettingsPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Налады'),
+          title: const Text(Strings.preferences),
         ),
         body: BlocListener<SettingsCubit, SettingsState>(
           listener: (context, state) {
@@ -30,55 +30,62 @@ class SettingsPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(
                   const SnackBar(
-                    content: Text('Гісторыя паспяхова ачышчана.'),
+                    content: Text(Strings.historyCleared),
                   ),
                 );
             }
           },
-          child: ListView(
-            children: [
-              BlocBuilder<SettingsCubit, SettingsState>(
-                builder: (context, state) {
-                  final enabled = state is! SettingsInProgressState;
-                  return ListTile(
-                    title: const Text('Ачысціць гісторыю пошуку'),
-                    onTap: () => _showClearHistoryConfirmation(context),
-                    enabled: enabled,
-                  );
-                },
-              ),
-              Builder(
-                builder: (context) {
-                  return ListTile(
-                    title: const Text('Аб праграме'),
+          child: Builder(
+            builder: (context) {
+              final cubit = context.read<SettingsCubit>();
+              return ListView(
+                children: [
+                  BlocBuilder<SettingsCubit, SettingsState>(
+                    builder: (context, state) {
+                      final enabled = state is! SettingsInProgressState;
+                      return ListTile(
+                        title: const Text(Strings.clearHistory),
+                        onTap: () => _showClearHistoryConfirmation(context),
+                        enabled: enabled,
+                      );
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    title: const Text(Strings.writeToDevs),
+                    onTap: cubit.mailToDevs,
+                  ),
+                  ListTile(
+                    title: const Text(Strings.aboutSkarnik),
                     onTap: () => showModalBottomSheet(
                       context: context,
                       useSafeArea: true,
                       showDragHandle: true,
                       isScrollControlled: true,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                      builder: (context) => const AboutBottomSheet(),
+                      builder: (context) => BlocProvider.value(
+                        value: cubit,
+                        child: const AboutBottomSheet(),
+                      ),
                     ),
-                  );
-                },
-              ),
-              FutureBuilder<PackageInfo>(
-                future: PackageInfo.fromPlatform(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final data = snapshot.data;
-                    if (data != null) {
-                      return ListTile(
-                        subtitle: Text(
-                          '${data.appName} ${data.version} (${data.buildNumber})',
-                        ),
-                      );
-                    }
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            ],
+                  ),
+                  FutureBuilder<String>(
+                    future: cubit.getAppNameAndVersion(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final data = snapshot.data;
+                        if (data != null) {
+                          return ListTile(
+                            subtitle: Text(data),
+                          );
+                        }
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -89,10 +96,10 @@ class SettingsPage extends StatelessWidget {
     final cubit = context.read<SettingsCubit>();
     final result = await showOkCancelAlertDialog(
       context: context,
-      title: 'Увага',
-      message: 'Вы сапраўды жадаеце ачысціць гісторыю пошуку?',
-      cancelLabel: 'Не',
-      okLabel: 'Так',
+      title: Strings.attention,
+      message: Strings.clearHistoryConfirmation,
+      cancelLabel: Strings.no,
+      okLabel: Strings.yes,
     );
     if (result == OkCancelResult.ok) {
       await cubit.clearHistory();

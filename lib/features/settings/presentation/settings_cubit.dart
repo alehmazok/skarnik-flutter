@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../domain/use_case/clear_history.dart';
 
@@ -48,5 +53,18 @@ class SettingsCubit extends Cubit<SettingsState> {
       case Success():
         emit(const SettingsClearedState());
     }
+  }
+
+  Future<String> getAppNameAndVersion() async {
+    final data = await PackageInfo.fromPlatform();
+    return '${data.appName} ${data.version} (${data.buildNumber})';
+  }
+
+  Future<void> mailToDevs() async {
+    final appNameVersioned = await getAppNameAndVersion();
+    final devMailTo = Uri.encodeFull(
+      'mailto:${AppConfig.devEmailAddress}?subject=$appNameVersioned, ${Platform.operatingSystem}',
+    );
+    launchUrlString(devMailTo);
   }
 }

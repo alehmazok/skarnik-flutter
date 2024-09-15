@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/remove_from_favorites.dart';
+import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/load_favorites.dart';
 import 'favorites_cubit.dart';
@@ -19,7 +20,7 @@ class FavoritesPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Закладкі'),
+          title: const Text(Strings.bookmarks),
         ),
         body: BlocListener<FavoritesCubit, FavoritesState>(
           listener: (context, state) {
@@ -28,11 +29,9 @@ class FavoritesPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(
                   SnackBar(
-                    content: const Text(
-                      'Выдалена з закладак.',
-                    ),
+                    content: const Text(Strings.removedFromBookmarks),
                     action: SnackBarAction(
-                      label: 'Вярнуць',
+                      label: Strings.revert,
                       onPressed: () => context.read<FavoritesCubit>().cancelRemoval(state.word),
                     ),
                   ),

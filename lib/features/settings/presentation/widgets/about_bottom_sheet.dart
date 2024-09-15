@@ -1,14 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:skarnik_flutter/app_config.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skarnik_flutter/strings.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class AboutBottomSheet extends StatelessWidget {
-  static final _devsMail = 'mailto:${utf8.decode(base64.decode(AppConfig.devs))}';
+import '../settings_cubit.dart';
 
+class AboutBottomSheet extends StatelessWidget {
   const AboutBottomSheet({super.key});
 
   @override
@@ -98,8 +98,8 @@ class AboutBottomSheet extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                     child: TextButton(
-                      onPressed: () => launchUrlString(_devsMail),
-                      child: const Text('Напісаць распрацоўшчыкам'),
+                      onPressed: context.read<SettingsCubit>().mailToDevs,
+                      child: const Text(Strings.writeToDevs),
                     ),
                   ),
                 ),

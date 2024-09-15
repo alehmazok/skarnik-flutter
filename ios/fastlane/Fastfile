@@ -37,6 +37,7 @@ platform :ios do
                   "--no-codesign",
                   "-t", "lib/main.dart",
                   "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
+                  "--dart-define=DEV_EMAIL_ADDRESS=#{ENV['DEV_EMAIL_ADDRESS']}",
               ]
            )
   end

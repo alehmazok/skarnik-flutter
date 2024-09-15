@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
+import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/load_vocabulary.dart';
 import '../domain/use_case/log_analytics_vocabulary_word.dart';
@@ -33,9 +34,9 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
               bottom: TabBar(
                 controller: cubit.tabController,
                 tabs: const [
-                  Tab(text: 'Тлумачальны'),
-                  Tab(text: 'Бел-Рус'),
-                  Tab(text: 'Рус-Бел'),
+                  Tab(text: Strings.dictTsbm),
+                  Tab(text: Strings.dictBelRus),
+                  Tab(text: Strings.dictRusBel),
                 ],
               ),
             ),
