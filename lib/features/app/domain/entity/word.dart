@@ -29,8 +29,8 @@ class Word extends Equatable {
     required this.wordId,
     required this.word,
     required this.lword,
-    required this.lwordMask,
     required this.dictionary,
+    this.lwordMask,
   });
 
   @override

@@ -23,9 +23,9 @@ class TypesenseSearchRepository implements SearchRepository {
     nodes: {
       Node.withUri(
         Uri(
-          scheme: 'https',
+          scheme: 'http',
           host: AppConfig.typesenseHostName,
-          port: 443,
+          port: 8108,
         ),
       ),
     },
@@ -42,15 +42,19 @@ class TypesenseSearchRepository implements SearchRepository {
     debugPrint('Searching for `$q`...');
     final searchParameters = {
       'q': q.toLowerCase(),
-      'query_by': 'lword,lwordMask',
+      'query_by': 'text,translation',
+      'query_by_weights': '2,1',
+      'text_match_type': 'max_weight',
+      // 'prioritize_exact_match': false,
+      // 'prioritize_token_position': true,
       // 'filter_by': 'num_employees:>100',
-      // 'sort_by': 'word:desc'
+      // 'sort_by': 'text:asc',
       'limit': '20',
     };
     final result = await collection.documents.search(searchParameters);
     debugPrint('=== Results ===');
-    debugPrint(result.toString());
     final hits = result['hits'] as List;
+    debugPrint(hits.toString());
     final words = hits.map((it) => SearchHitWord.fromMap(it).toEntity());
     return words;
   }
