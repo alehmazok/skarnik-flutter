@@ -3,42 +3,44 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 class SearchHitWord {
   final String id;
-  final int wordId;
-  final int langId;
-  final String word;
-  final String lword;
-  final String lwordMask;
+  final int externalId;
+  final String direction;
+  final String letter;
+  final String text;
+  final String translation;
 
   SearchHitWord({
     required this.id,
-    required this.wordId,
-    required this.langId,
-    required this.word,
-    required this.lword,
-    required this.lwordMask,
+    required this.externalId,
+    required this.direction,
+    required this.letter,
+    required this.text,
+    required this.translation,
   });
 
   factory SearchHitWord.fromMap(Map<String, dynamic> data) {
     final document = data['document'];
     return SearchHitWord(
       id: document['id'],
-      wordId: int.parse(document['wordId']),
-      word: document['word'],
-      lword: document['lword'],
-      lwordMask: document['lwordMask'],
-      langId: document['langId'],
+      externalId: document['external_id'],
+      direction: document['direction'],
+      letter: document['letter'],
+      text: document['text'],
+      translation: document['translation'],
     );
   }
 }
 
 extension SearchHitWordMapper on SearchHitWord {
-  Word toEntity() => Word(
-        langId: langId,
-        letter: '',
-        wordId: wordId,
-        word: word,
-        lword: lword,
-        lwordMask: lwordMask,
-        dictionary: Dictionary.byLangId(langId),
-      );
+  Word toEntity() {
+    final dictionary = Dictionary.byPath(direction);
+    return Word(
+      wordId: externalId,
+      langId: dictionary.langId,
+      letter: letter,
+      word: text,
+      lword: text.toLowerCase(),
+      dictionary: dictionary,
+    );
+  }
 }
