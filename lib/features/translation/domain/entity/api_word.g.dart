@@ -25,7 +25,14 @@ class _$ApiWordSerializer implements StructuredSerializer<ApiWord> {
       serializers.serialize(object.translation,
           specifiedType: const FullType(String)),
     ];
-
+    Object? value;
+    value = object.redirectTo;
+    if (value != null) {
+      result
+        ..add('redirect_to')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -48,6 +55,10 @@ class _$ApiWordSerializer implements StructuredSerializer<ApiWord> {
           result.translation = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
+        case 'redirect_to':
+          result.redirectTo = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
       }
     }
 
@@ -60,11 +71,14 @@ class _$ApiWord extends ApiWord {
   final int externalId;
   @override
   final String translation;
+  @override
+  final String? redirectTo;
 
   factory _$ApiWord([void Function(ApiWordBuilder)? updates]) =>
       (new ApiWordBuilder()..update(updates))._build();
 
-  _$ApiWord._({required this.externalId, required this.translation})
+  _$ApiWord._(
+      {required this.externalId, required this.translation, this.redirectTo})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(externalId, r'ApiWord', 'externalId');
     BuiltValueNullFieldError.checkNotNull(
@@ -83,7 +97,8 @@ class _$ApiWord extends ApiWord {
     if (identical(other, this)) return true;
     return other is ApiWord &&
         externalId == other.externalId &&
-        translation == other.translation;
+        translation == other.translation &&
+        redirectTo == other.redirectTo;
   }
 
   @override
@@ -91,6 +106,7 @@ class _$ApiWord extends ApiWord {
     var _$hash = 0;
     _$hash = $jc(_$hash, externalId.hashCode);
     _$hash = $jc(_$hash, translation.hashCode);
+    _$hash = $jc(_$hash, redirectTo.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -99,7 +115,8 @@ class _$ApiWord extends ApiWord {
   String toString() {
     return (newBuiltValueToStringHelper(r'ApiWord')
           ..add('externalId', externalId)
-          ..add('translation', translation))
+          ..add('translation', translation)
+          ..add('redirectTo', redirectTo))
         .toString();
   }
 }
@@ -115,6 +132,10 @@ class ApiWordBuilder implements Builder<ApiWord, ApiWordBuilder> {
   String? get translation => _$this._translation;
   set translation(String? translation) => _$this._translation = translation;
 
+  String? _redirectTo;
+  String? get redirectTo => _$this._redirectTo;
+  set redirectTo(String? redirectTo) => _$this._redirectTo = redirectTo;
+
   ApiWordBuilder();
 
   ApiWordBuilder get _$this {
@@ -122,6 +143,7 @@ class ApiWordBuilder implements Builder<ApiWord, ApiWordBuilder> {
     if ($v != null) {
       _externalId = $v.externalId;
       _translation = $v.translation;
+      _redirectTo = $v.redirectTo;
       _$v = null;
     }
     return this;
@@ -147,7 +169,8 @@ class ApiWordBuilder implements Builder<ApiWord, ApiWordBuilder> {
             externalId: BuiltValueNullFieldError.checkNotNull(
                 externalId, r'ApiWord', 'externalId'),
             translation: BuiltValueNullFieldError.checkNotNull(
-                translation, r'ApiWord', 'translation'));
+                translation, r'ApiWord', 'translation'),
+            redirectTo: redirectTo);
     replace(_$result);
     return _$result;
   }

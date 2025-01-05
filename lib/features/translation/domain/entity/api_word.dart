@@ -10,6 +10,9 @@ abstract class ApiWord implements Built<ApiWord, ApiWordBuilder> {
 
   String get translation;
 
+  @BuiltValueField(wireName: 'redirect_to')
+  String? get redirectTo;
+
   ApiWord._();
 
   factory ApiWord([void Function(ApiWordBuilder) updates]) = _$ApiWord;
