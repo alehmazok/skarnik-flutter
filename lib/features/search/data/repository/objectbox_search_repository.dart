@@ -46,10 +46,12 @@ class ObjectboxSearchRepository implements SearchRepository {
         .build();
 
     // Рэзультаты абодвух запытаў складваем у LinkedHashSet, каб пазбегнуць дублікатаў
-    return <Word>{
+    return {
       ...query.find(),
       ...queryByMask.find(),
-    };
+    }.map(
+      (it) => it.toEntity(),
+    );
   }
 
   bool isSearchByMaskApplicable(String query) => query.length >= 3;

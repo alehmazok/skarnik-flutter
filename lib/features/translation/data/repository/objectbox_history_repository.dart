@@ -24,7 +24,8 @@ class ObjectboxHistoryRepository implements HistoryRepository {
         .build()
       ..limit = AppConfig.wordsPerPage
       ..offset = offset;
-    return query.find();
+    final words = query.find();
+    return words.map((it) => it.toEntity());
   }
 
   @override
