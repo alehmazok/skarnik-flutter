@@ -60,3 +60,6 @@ ios/Runner*.ipa
 # Logo pictures
 skarnik_logo*.png
 Screenshot*.png
+
+# Database dumps
+database.zip
