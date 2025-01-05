@@ -1,21 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'api_word.dart';
+part of 'api_word_model.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<ApiWord> _$apiWordSerializer = new _$ApiWordSerializer();
+Serializer<ApiWordModel> _$apiWordModelSerializer =
+    new _$ApiWordModelSerializer();
 
-class _$ApiWordSerializer implements StructuredSerializer<ApiWord> {
+class _$ApiWordModelSerializer implements StructuredSerializer<ApiWordModel> {
   @override
-  final Iterable<Type> types = const [ApiWord, _$ApiWord];
+  final Iterable<Type> types = const [ApiWordModel, _$ApiWordModel];
   @override
-  final String wireName = 'ApiWord';
+  final String wireName = 'ApiWordModel';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, ApiWord object,
+  Iterable<Object?> serialize(Serializers serializers, ApiWordModel object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       'external_id',
@@ -37,9 +38,10 @@ class _$ApiWordSerializer implements StructuredSerializer<ApiWord> {
   }
 
   @override
-  ApiWord deserialize(Serializers serializers, Iterable<Object?> serialized,
+  ApiWordModel deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new ApiWordBuilder();
+    final result = new ApiWordModelBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -66,7 +68,7 @@ class _$ApiWordSerializer implements StructuredSerializer<ApiWord> {
   }
 }
 
-class _$ApiWord extends ApiWord {
+class _$ApiWordModel extends ApiWordModel {
   @override
   final int externalId;
   @override
@@ -74,28 +76,29 @@ class _$ApiWord extends ApiWord {
   @override
   final String? redirectTo;
 
-  factory _$ApiWord([void Function(ApiWordBuilder)? updates]) =>
-      (new ApiWordBuilder()..update(updates))._build();
+  factory _$ApiWordModel([void Function(ApiWordModelBuilder)? updates]) =>
+      (new ApiWordModelBuilder()..update(updates))._build();
 
-  _$ApiWord._(
+  _$ApiWordModel._(
       {required this.externalId, required this.translation, this.redirectTo})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(externalId, r'ApiWord', 'externalId');
     BuiltValueNullFieldError.checkNotNull(
-        translation, r'ApiWord', 'translation');
+        externalId, r'ApiWordModel', 'externalId');
+    BuiltValueNullFieldError.checkNotNull(
+        translation, r'ApiWordModel', 'translation');
   }
 
   @override
-  ApiWord rebuild(void Function(ApiWordBuilder) updates) =>
+  ApiWordModel rebuild(void Function(ApiWordModelBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ApiWordBuilder toBuilder() => new ApiWordBuilder()..replace(this);
+  ApiWordModelBuilder toBuilder() => new ApiWordModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ApiWord &&
+    return other is ApiWordModel &&
         externalId == other.externalId &&
         translation == other.translation &&
         redirectTo == other.redirectTo;
@@ -113,7 +116,7 @@ class _$ApiWord extends ApiWord {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'ApiWord')
+    return (newBuiltValueToStringHelper(r'ApiWordModel')
           ..add('externalId', externalId)
           ..add('translation', translation)
           ..add('redirectTo', redirectTo))
@@ -121,8 +124,9 @@ class _$ApiWord extends ApiWord {
   }
 }
 
-class ApiWordBuilder implements Builder<ApiWord, ApiWordBuilder> {
-  _$ApiWord? _$v;
+class ApiWordModelBuilder
+    implements Builder<ApiWordModel, ApiWordModelBuilder> {
+  _$ApiWordModel? _$v;
 
   int? _externalId;
   int? get externalId => _$this._externalId;
@@ -136,9 +140,9 @@ class ApiWordBuilder implements Builder<ApiWord, ApiWordBuilder> {
   String? get redirectTo => _$this._redirectTo;
   set redirectTo(String? redirectTo) => _$this._redirectTo = redirectTo;
 
-  ApiWordBuilder();
+  ApiWordModelBuilder();
 
-  ApiWordBuilder get _$this {
+  ApiWordModelBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _externalId = $v.externalId;
@@ -150,26 +154,26 @@ class ApiWordBuilder implements Builder<ApiWord, ApiWordBuilder> {
   }
 
   @override
-  void replace(ApiWord other) {
+  void replace(ApiWordModel other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$ApiWord;
+    _$v = other as _$ApiWordModel;
   }
 
   @override
-  void update(void Function(ApiWordBuilder)? updates) {
+  void update(void Function(ApiWordModelBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  ApiWord build() => _build();
+  ApiWordModel build() => _build();
 
-  _$ApiWord _build() {
+  _$ApiWordModel _build() {
     final _$result = _$v ??
-        new _$ApiWord._(
+        new _$ApiWordModel._(
             externalId: BuiltValueNullFieldError.checkNotNull(
-                externalId, r'ApiWord', 'externalId'),
+                externalId, r'ApiWordModel', 'externalId'),
             translation: BuiltValueNullFieldError.checkNotNull(
-                translation, r'ApiWord', 'translation'),
+                translation, r'ApiWordModel', 'translation'),
             redirectTo: redirectTo);
     replace(_$result);
     return _$result;

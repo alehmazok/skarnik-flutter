@@ -91,6 +91,19 @@ class TranslationPage extends StatelessWidget {
                   ),
                 );
             }
+            if (state is TranslationRedirectState) {
+              ScaffoldMessenger.of(context)
+                ..clearSnackBars()
+                ..showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 15),
+                    content: Text(
+                      'Перанакіравана з «${state.word.word}»',
+                    ),
+                  ),
+                );
+              context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(state.redirectTo));
+            }
             if (state is TranslationFailedState) {
               // TODO: зрабіць больш дакладную і прыгожую апрацоўку памылак.
               ScaffoldMessenger.of(context)

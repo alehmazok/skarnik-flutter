@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:skarnik_flutter/app_config.dart';
 
 import 'dictionary.dart';
 
@@ -29,6 +30,10 @@ class Word extends Equatable {
     required this.lword,
     required this.lwordMask,
   });
+
+  Uri buildApiUri() => Uri.parse(
+        '${AppConfig.apiHostName}/api/words/${dictionary.path}/$wordId/',
+      );
 
   @override
   String toString() => 'Word($langId, $letter, $wordId, $word, $lword, $lwordMask)';

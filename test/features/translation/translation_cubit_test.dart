@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart';
@@ -23,7 +24,7 @@ class MockWordRepository extends Mock implements WordRepository {}
 
 class MockFallbackTranslationRepository extends Mock implements FallbackTranslationRepository {}
 
-class MockPrimaryTranslationRepository extends Mock implements PrimaryTranslationRepository {}
+class MockApiWordRepository extends Mock implements ApiTranslationRepository {}
 
 class MockFavoritesRepository extends Mock implements FavoritesRepository {}
 
@@ -37,7 +38,7 @@ void main() {
   group('TranslationCubit', () {
     final wordRepository = MockWordRepository();
     final fallbackTranslationRepository = MockFallbackTranslationRepository();
-    final primaryTranslationRepository = MockPrimaryTranslationRepository();
+    final primaryTranslationRepository = MockApiWordRepository();
     final favoritesRepository = MockFavoritesRepository();
     final historyRepository = MockHistoryRepository();
     final analyticsTranslationRepository = MockAnalyticsTranslationRepository();
@@ -48,7 +49,7 @@ void main() {
           saveToHistory: saveToHistory,
           getWordUseCase: GetWordUseCase(wordRepository),
           getTranslationUseCase: GetTranslationUseCase(
-            primaryTranslationRepository: primaryTranslationRepository,
+            apiWordRepository: primaryTranslationRepository,
             fallbackTranslationRepository: fallbackTranslationRepository,
           ),
           addToFavoritesUseCase: AddToFavoritesUseCase(favoritesRepository),
@@ -62,6 +63,7 @@ void main() {
 
     group('_getWord()', () {
       late final Word word;
+
       blocTest(
         'emits failed state when failed to retrieve the word from database',
         setUp: () {
@@ -118,6 +120,7 @@ void main() {
         'emits failed state when failed to check the word is in favorites',
         setUp: () {
           final word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
 
           when(
             () => wordRepository.getWord(langId: 1, wordId: 1),
@@ -131,7 +134,7 @@ void main() {
             (_) async => Translation.build(
               word: word,
               html: '<div>test</div>',
-              uri: Uri.parse('https://skarnik.by/word/test'),
+              uri: uri,
             ),
           );
 
@@ -155,6 +158,7 @@ void main() {
         'emits failed state when failed to save the word in history',
         setUp: () {
           final word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
 
           when(
             () => wordRepository.getWord(langId: 1, wordId: 1),
@@ -168,7 +172,7 @@ void main() {
             (_) async => Translation.build(
               word: word,
               html: '<div>test</div>',
-              uri: Uri.parse('https://skarnik.by/word/test'),
+              uri: uri,
             ),
           );
 
@@ -198,10 +202,12 @@ void main() {
         'emits ok state when failed to log analytics event',
         setUp: () {
           final word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
+
           final translation = Translation.build(
             word: word,
             html: '<div>test</div>',
-            uri: Uri.parse('https://skarnik.by/word/test'),
+            uri: uri,
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -251,10 +257,12 @@ void main() {
         'not saving to history when saveToHistory=false passed',
         setUp: () {
           word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
+
           final translation = Translation.build(
             word: word,
             html: '<div>test</div>',
-            uri: Uri.parse('https://skarnik.by/word/test'),
+            uri: uri,
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -311,10 +319,12 @@ void main() {
         'emits failed state when saving to favorites',
         setUp: () {
           word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
+
           final translation = Translation.build(
             word: word,
             html: '<div>test</div>',
-            uri: Uri.parse('https://skarnik.by/word/test'),
+            uri: uri,
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -386,10 +396,12 @@ void main() {
         'emits ok state when saving to favorites',
         setUp: () {
           word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
+
           final translation = Translation.build(
             word: word,
             html: '<div>test</div>',
-            uri: Uri.parse('https://skarnik.by/word/test'),
+            uri: uri,
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -461,15 +473,19 @@ void main() {
 
     group('removeFromFavorites()', () {
       late Word word;
+      late Uri uri;
 
       blocTest(
         'emits failed state when removing from favorites',
         setUp: () {
           word = MockWord();
+
+          uri = Uri.parse('https://skarnik.by/word/test');
+
           final translation = Translation.build(
             word: word,
             html: '<div>test</div>',
-            uri: Uri.parse('https://skarnik.by/word/test'),
+            uri: uri,
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -541,10 +557,11 @@ void main() {
         'emits ok state when removing from favorites',
         setUp: () {
           word = MockWord();
+
           final translation = Translation.build(
             word: word,
             html: '<div>test</div>',
-            uri: Uri.parse('https://skarnik.by/word/test'),
+            uri: uri,
           );
 
           when(() => word.word).thenReturn('word 1');

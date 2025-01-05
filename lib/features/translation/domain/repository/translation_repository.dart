@@ -6,6 +6,4 @@ abstract interface class TranslationRepository {
   Future<Translation> getTranslation(Word word);
 }
 
-abstract interface class PrimaryTranslationRepository implements TranslationRepository {}
-
 abstract interface class FallbackTranslationRepository implements TranslationRepository {}

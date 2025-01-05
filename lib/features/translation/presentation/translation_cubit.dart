@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
+import 'package:skarnik_flutter/core/exceptions.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../domain/entity/translation.dart';
@@ -33,6 +34,22 @@ class TranslationFailedState extends TranslationState {
   List<Object> get props => [error];
 
   const TranslationFailedState(this.error);
+}
+
+class TranslationRedirectState extends TranslationState {
+  final Word word;
+  final String redirectTo;
+
+  @override
+  List<Object> get props => [
+        word,
+        redirectTo,
+      ];
+
+  const TranslationRedirectState({
+    required this.word,
+    required this.redirectTo,
+  });
 }
 
 class TranslationLoadedState extends TranslationState {
@@ -134,6 +151,15 @@ class TranslationCubit extends Cubit<TranslationState> {
     );
     switch (getTranslation) {
       case Failure(error: final error):
+        if (error is TranslationRedirectError) {
+          emitGuarded(
+            TranslationRedirectState(
+              word: error.word,
+              redirectTo: error.redirectTo,
+            ),
+          );
+          return;
+        }
         emitGuarded(TranslationFailedState(error));
       case Success(result: (final translation, final inFavorites)):
         emitGuarded(TranslationLoadedState(translation: translation));

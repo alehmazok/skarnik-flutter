@@ -7,6 +7,6 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers =
-    (new Serializers().toBuilder()..add(ApiWord.serializer)).build();
+    (new Serializers().toBuilder()..add(ApiWordModel.serializer)).build();
 
 // ignore_for_file: deprecated_member_use_from_same_package,type=lint
