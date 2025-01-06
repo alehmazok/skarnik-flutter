@@ -39,6 +39,10 @@ import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
     as _i522;
 import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
     as _i578;
+import 'package:skarnik_flutter/features/search/data/repository/query_repository_impl.dart'
+    as _i613;
+import 'package:skarnik_flutter/features/search/domain/repository/query_repository.dart'
+    as _i264;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
     as _i124;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
@@ -167,6 +171,10 @@ extension GetItInjectableX on _i174.GetIt {
         _i556.ObjectboxHistoryRepository(gh<_i522.ObjectboxStoreHolder>()));
     gh.factory<_i361.FavoritesRepository>(() =>
         _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()));
+    gh.lazySingleton<_i264.QueryRepository>(
+        () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()));
+    gh.lazySingleton<_i124.SearchRepository>(
+        () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()));
     gh.factory<_i146.InitDatabaseUseCase>(
         () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()));
     gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(() =>
@@ -176,8 +184,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i124.SearchRepository>(() =>
-        _i578.ObjectboxSearchRepository(gh<_i522.ObjectboxStoreHolder>()));
     gh.factory<_i531.SettingsHistoryRepository>(() =>
         _i252.ObjectboxSettingsHistoryRepository(
             gh<_i522.ObjectboxStoreHolder>()));

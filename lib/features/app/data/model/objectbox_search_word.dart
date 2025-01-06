@@ -1,24 +1,30 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 
-import '../../domain/entity/word.dart';
+import '../../domain/entity/search_word.dart';
 
 @Entity(uid: 1)
-class ObjectboxSearchWord {
+class ObjectboxSearchWord implements SearchWord {
+  @override
   @Id(assignable: false)
   int id = 0;
 
+  @override
   int langId;
 
+  @override
   String letter;
 
+  @override
   @Unique()
   int wordId;
 
+  @override
   String word;
 
+  @override
   String lword;
 
+  @override
   String? lwordMask;
 
   ObjectboxSearchWord({
@@ -32,16 +38,4 @@ class ObjectboxSearchWord {
 
   @override
   String toString() => 'ObjectboxSearchWord($id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
-}
-
-extension ObjectboxSearchWordExt on ObjectboxSearchWord {
-  Word toEntity() => Word(
-        langId: langId,
-        letter: letter,
-        wordId: wordId,
-        word: word,
-        dictionary: Dictionary.byLangId(langId),
-        lword: lword,
-        lwordMask: lwordMask,
-      );
 }

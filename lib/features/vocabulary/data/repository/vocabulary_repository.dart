@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/transformers.dart';
-import 'package:skarnik_flutter/features/app/data/model/objectbox_search_word.dart';
 import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
