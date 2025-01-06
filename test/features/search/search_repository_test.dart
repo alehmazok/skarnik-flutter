@@ -32,12 +32,19 @@ void main() {
 
       final queryRepository = MockQueryRepository();
       when(
-        () => queryRepository.queryByWord(searchQuery: 'test', searchQueryWithSubstitutions: 'test'),
+        () => queryRepository.queryByWord(
+          searchQuery: 'test',
+          searchQueryWithSubstitutions: 'test',
+        ),
       ).thenReturn(
         [word1],
       );
       when(
-        () => queryRepository.queryByWordMask(searchQuery: 'test', searchQueryWithSubstitutions: 'test'),
+        () => queryRepository.queryByWordMask(
+          searchQuery: 'test',
+          searchQueryWithSubstitutions: 'test',
+          excluded: [word1],
+        ),
       ).thenReturn(
         [word2],
       );

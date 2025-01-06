@@ -34,9 +34,12 @@ class ObjectboxSearchRepository implements SearchRepository {
     final resultsByWordMask = _queryRepository.queryByWordMask(
       searchQuery: searchQuery,
       searchQueryWithSubstitutions: searchQueryWithSubstitutions,
+      excluded: resultsByWord,
     );
 
-    // Рэзультаты абодвух запытаў складваем у LinkedHashSet, каб пазбегнуць дублікатаў
+    /// Рэзультаты абодвух запытаў складваем у LinkedHashSet, на ўсялякі выпадак, каб пазбегнуць дублікатаў.
+    /// Але насамрэч дублікатаў не павінна быць яшчэ на ўзроўні запыту да БД.
+    /// Глядзі параметр [excluded] ў [QueryRepository.queryByWordMask].
     return <Word>{
       ...resultsByWord.map((it) => it.toEntity()),
       ...resultsByWordMask.map((it) => it.toEntity()),

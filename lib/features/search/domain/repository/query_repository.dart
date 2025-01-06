@@ -9,5 +9,6 @@ abstract interface class QueryRepository {
   Iterable<SearchWord> queryByWordMask({
     required String searchQuery,
     required String searchQueryWithSubstitutions,
+    required Iterable<SearchWord> excluded,
   });
 }
