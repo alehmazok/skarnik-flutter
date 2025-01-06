@@ -20,15 +20,15 @@ void main() {
         word: 'aaa',
         lword: 'aaa',
         lwordMask: 'aaa',
-      );
-      final word2 = ObjectboxSearchWord(
-        langId: 1,
-        letter: 'a',
-        wordId: 1,
-        word: 'aaa',
-        lword: 'aaa',
-        lwordMask: 'aaa',
-      );
+      )..id = 1;
+      // final word2 = ObjectboxSearchWord(
+      //   langId: 1,
+      //   letter: 'a',
+      //   wordId: 1,
+      //   word: 'aaa',
+      //   lword: 'aaa',
+      //   lwordMask: 'aaa',
+      // )..id = 1;
 
       final queryRepository = MockQueryRepository();
       when(
@@ -46,7 +46,7 @@ void main() {
           excluded: [word1],
         ),
       ).thenReturn(
-        [word2],
+        [],
       );
 
       final searchRepository = ObjectboxSearchRepository(queryRepository);

@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:rxdart/transformers.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../domain/use_case/search_use_case.dart';
@@ -35,7 +35,7 @@ class SearchFailedState extends SearchState {
 
 class SearchLoadedState extends SearchState {
   final String query;
-  final BuiltList<Word> items;
+  final BuiltList<SearchWord> items;
 
   @override
   List<Object> get props => [query, items];

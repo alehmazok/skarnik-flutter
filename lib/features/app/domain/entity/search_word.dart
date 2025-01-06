@@ -16,6 +16,8 @@ abstract interface class SearchWord {
   String get lword;
 
   String? get lwordMask;
+
+  Dictionary get dictionary;
 }
 
 extension SearchWordExt on SearchWord {
@@ -24,7 +26,7 @@ extension SearchWordExt on SearchWord {
         letter: letter,
         wordId: wordId,
         word: word,
-        dictionary: Dictionary.byLangId(langId),
+        dictionary: dictionary,
         lword: lword,
         lwordMask: lwordMask,
       );

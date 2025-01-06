@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/strings.dart';
 
 class SearchListView extends StatelessWidget {
   final bool isNothingFound;
-  final Iterable<Word> words;
+  final Iterable<SearchWord> words;
 
   const SearchListView({
     super.key,
@@ -38,7 +38,7 @@ class SearchListView extends StatelessWidget {
           onTap: () => context.push(
             '/translate/word',
             extra: {
-              'word': word,
+              'word': word.toEntity(),
               'save_to_history': true,
             },
           ),

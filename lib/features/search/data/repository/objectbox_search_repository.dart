@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../../domain/repository/query_repository.dart';
 import '../../domain/repository/search_repository.dart';
@@ -22,7 +21,7 @@ class ObjectboxSearchRepository implements SearchRepository {
   );
 
   @override
-  Future<Iterable<Word>> search(String searchQuery) async {
+  Future<Iterable<SearchWord>> search(String searchQuery) async {
     searchQuery = searchQuery.toLowerCase();
     final searchQueryWithSubstitutions = applySubstitutions(searchQuery);
 
@@ -40,9 +39,9 @@ class ObjectboxSearchRepository implements SearchRepository {
     /// Рэзультаты абодвух запытаў складваем у LinkedHashSet, на ўсялякі выпадак, каб пазбегнуць дублікатаў.
     /// Але насамрэч дублікатаў не павінна быць яшчэ на ўзроўні запыту да БД.
     /// Глядзі параметр [excluded] ў [QueryRepository.queryByWordMask].
-    return <Word>{
-      ...resultsByWord.map((it) => it.toEntity()),
-      ...resultsByWordMask.map((it) => it.toEntity()),
+    return <SearchWord>{
+      ...resultsByWord,
+      ...resultsByWordMask,
     };
   }
 
