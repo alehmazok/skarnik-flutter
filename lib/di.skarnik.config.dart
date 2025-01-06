@@ -130,9 +130,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i519.GetAppLinkStreamUseCase>(
         () => _i519.GetAppLinkStreamUseCase());
-    gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
     gh.factory<_i525.InitRemoteConfigUseCase>(
         () => _i525.InitRemoteConfigUseCase());
+    gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i989.DevAnalyticsVocabularyRepository(),
       registerFor: {_dev},
@@ -193,18 +193,18 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i741.LoadVocabularyUseCase>(
         () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()));
-    gh.factory<_i522.LoadHistoryUseCase>(
-        () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()));
     gh.factory<_i276.SaveToHistoryUseCase>(
         () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()));
+    gh.factory<_i522.LoadHistoryUseCase>(
+        () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()));
     gh.factory<_i958.LogAnalyticsAppOpenUseCase>(() =>
         _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()));
     gh.factory<_i915.SearchUseCase>(
         () => _i915.SearchUseCase(gh<_i124.SearchRepository>()));
-    gh.factory<_i135.CheckInFavoritesUseCase>(
-        () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()));
     gh.factory<_i311.AddToFavoritesUseCase>(
         () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()));
+    gh.factory<_i135.CheckInFavoritesUseCase>(
+        () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()));
     gh.factory<_i235.RemoveFromFavoritesUseCase>(() =>
         _i235.RemoveFromFavoritesUseCase(gh<_i361.FavoritesRepository>()));
     gh.factory<_i978.LoadFavoritesUseCase>(
@@ -214,11 +214,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i501.LogAnalyticsTranslationUseCase>(() =>
         _i501.LogAnalyticsTranslationUseCase(
             gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i888.LogAnalyticsShareUseCase>(() =>
-        _i888.LogAnalyticsShareUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
     gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(() =>
         _i135.LogAnalyticsAddToFavoritesUseCase(
+            gh<_i223.AnalyticsTranslationRepository>()));
+    gh.factory<_i888.LogAnalyticsShareUseCase>(() =>
+        _i888.LogAnalyticsShareUseCase(
             gh<_i223.AnalyticsTranslationRepository>()));
     return this;
   }
