@@ -22,6 +22,11 @@ end
 default_platform(:ios)
 
 platform :ios do
+  desc "Runs analyzer"
+  lane :analyze_flutter do
+    flutter(args: ["analyze"])
+  end
+
   desc "Runs flutter widget tests"
   lane :test_flutter do
     flutter(args: ["test", "../test"])
