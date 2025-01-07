@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios analyze_flutter
+
+```sh
+[bundle exec] fastlane ios analyze_flutter
+```
+
+Runs analyzer
+
 ### ios test_flutter
 
 ```sh

@@ -3,7 +3,9 @@ abstract class AppConfig {
 
   static const httpCacheDurationInHours = 'http_cache_duration_in_hours';
 
-  static const wordsPerPage = 50;
+  static const wordsPerPage = 25;
+
+  static const wordsSearchLimit = 15;
 
   static const skarnikSiteHostName = 'skarnik.by';
 
