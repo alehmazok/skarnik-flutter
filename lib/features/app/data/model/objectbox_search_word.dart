@@ -23,9 +23,11 @@ class ObjectboxSearchWord implements SearchWord {
   String word;
 
   @override
+  @Index(type: IndexType.value)
   String lword;
 
   @override
+  @Index(type: IndexType.value)
   String? lwordMask;
 
   @override

@@ -57,12 +57,14 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(6, 6985924929833847872),
             name: 'lword',
             type: 9,
-            flags: 0),
+            flags: 8,
+            indexId: const obx_int.IdUid(4, 3193867819270619828)),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(7, 7690913918601784105),
             name: 'lwordMask',
             type: 9,
-            flags: 0)
+            flags: 8,
+            indexId: const obx_int.IdUid(5, 4510498492143232374))
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
@@ -182,7 +184,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(4, 3),
-      lastIndexId: const obx_int.IdUid(3, 6668724822744587284),
+      lastIndexId: const obx_int.IdUid(5, 4510498492143232374),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [6340663483916346837],

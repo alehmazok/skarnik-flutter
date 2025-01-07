@@ -39,12 +39,16 @@
         {
           "id": "6:6985924929833847872",
           "name": "lword",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "4:3193867819270619828"
         },
         {
           "id": "7:7690913918601784105",
           "name": "lwordMask",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "5:4510498492143232374"
         }
       ],
       "relations": []
@@ -129,7 +133,7 @@
     }
   ],
   "lastEntityId": "4:3",
-  "lastIndexId": "3:6668724822744587284",
+  "lastIndexId": "5:4510498492143232374",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
