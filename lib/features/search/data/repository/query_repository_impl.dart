@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/data/model/objectbox_search_word.dart';
 import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
@@ -26,7 +27,8 @@ class QueryRepositoryImpl implements QueryRepository {
               .or(ObjectboxSearchWord_.lword.startsWith('', alias: _aliasSearchQueryWithSubstitutions)),
         )
         .order(ObjectboxSearchWord_.lword)
-        .build();
+        .build()
+      ..limit = AppConfig.wordsSearchLimit;
 
     _queryByWordMask = box
         .query(
@@ -40,7 +42,8 @@ class QueryRepositoryImpl implements QueryRepository {
               ),
         )
         .order(ObjectboxSearchWord_.lwordMask)
-        .build();
+        .build()
+      ..limit = AppConfig.wordsSearchLimit;
   }
 
   @override
