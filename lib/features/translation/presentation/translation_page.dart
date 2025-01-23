@@ -124,10 +124,10 @@ class TranslationPage extends StatelessWidget {
           buildWhen: (_, current) => current is TranslationLoadedState,
           builder: (context, state) {
             final String wordText;
-            if (word != null) {
+            if (state is TranslationLoadedState) {
+              wordText = state.translation.maybeStressedWord;
+            } else if (word != null) {
               wordText = word.word;
-            } else if (state is TranslationLoadedState) {
-              wordText = state.translation.word.word;
             } else {
               wordText = '';
             }

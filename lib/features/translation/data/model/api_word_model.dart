@@ -10,6 +10,8 @@ abstract class ApiWordModel implements Built<ApiWordModel, ApiWordModelBuilder> 
   @BuiltValueField(wireName: 'external_id')
   int get externalId;
 
+  String? get stress;
+
   String get translation;
 
   @BuiltValueField(wireName: 'redirect_to')
@@ -29,6 +31,7 @@ abstract class ApiWordModel implements Built<ApiWordModel, ApiWordModelBuilder> 
 extension ApiWordModelExt on ApiWordModel {
   ApiWord toEntity() => ApiWord(
         externalId: externalId,
+        stress: stress,
         translation: translation,
         redirectTo: redirectTo,
       );

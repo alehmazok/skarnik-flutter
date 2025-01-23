@@ -40,6 +40,7 @@ class GetTranslationUseCase {
       final translation = Translation.build(
         uri: word.buildApiUri(),
         word: word,
+        stress: apiWord.stress,
         html: apiWord.translation,
       );
       return Success(translation);

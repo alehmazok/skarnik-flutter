@@ -27,6 +27,13 @@ class _$ApiWordModelSerializer implements StructuredSerializer<ApiWordModel> {
           specifiedType: const FullType(String)),
     ];
     Object? value;
+    value = object.stress;
+    if (value != null) {
+      result
+        ..add('stress')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     value = object.redirectTo;
     if (value != null) {
       result
@@ -53,6 +60,10 @@ class _$ApiWordModelSerializer implements StructuredSerializer<ApiWordModel> {
           result.externalId = serializers.deserialize(value,
               specifiedType: const FullType(int))! as int;
           break;
+        case 'stress':
+          result.stress = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
         case 'translation':
           result.translation = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
@@ -72,6 +83,8 @@ class _$ApiWordModel extends ApiWordModel {
   @override
   final int externalId;
   @override
+  final String? stress;
+  @override
   final String translation;
   @override
   final String? redirectTo;
@@ -80,7 +93,10 @@ class _$ApiWordModel extends ApiWordModel {
       (new ApiWordModelBuilder()..update(updates))._build();
 
   _$ApiWordModel._(
-      {required this.externalId, required this.translation, this.redirectTo})
+      {required this.externalId,
+      this.stress,
+      required this.translation,
+      this.redirectTo})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         externalId, r'ApiWordModel', 'externalId');
@@ -100,6 +116,7 @@ class _$ApiWordModel extends ApiWordModel {
     if (identical(other, this)) return true;
     return other is ApiWordModel &&
         externalId == other.externalId &&
+        stress == other.stress &&
         translation == other.translation &&
         redirectTo == other.redirectTo;
   }
@@ -108,6 +125,7 @@ class _$ApiWordModel extends ApiWordModel {
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, externalId.hashCode);
+    _$hash = $jc(_$hash, stress.hashCode);
     _$hash = $jc(_$hash, translation.hashCode);
     _$hash = $jc(_$hash, redirectTo.hashCode);
     _$hash = $jf(_$hash);
@@ -118,6 +136,7 @@ class _$ApiWordModel extends ApiWordModel {
   String toString() {
     return (newBuiltValueToStringHelper(r'ApiWordModel')
           ..add('externalId', externalId)
+          ..add('stress', stress)
           ..add('translation', translation)
           ..add('redirectTo', redirectTo))
         .toString();
@@ -131,6 +150,10 @@ class ApiWordModelBuilder
   int? _externalId;
   int? get externalId => _$this._externalId;
   set externalId(int? externalId) => _$this._externalId = externalId;
+
+  String? _stress;
+  String? get stress => _$this._stress;
+  set stress(String? stress) => _$this._stress = stress;
 
   String? _translation;
   String? get translation => _$this._translation;
@@ -146,6 +169,7 @@ class ApiWordModelBuilder
     final $v = _$v;
     if ($v != null) {
       _externalId = $v.externalId;
+      _stress = $v.stress;
       _translation = $v.translation;
       _redirectTo = $v.redirectTo;
       _$v = null;
@@ -172,6 +196,7 @@ class ApiWordModelBuilder
         new _$ApiWordModel._(
             externalId: BuiltValueNullFieldError.checkNotNull(
                 externalId, r'ApiWordModel', 'externalId'),
+            stress: stress,
             translation: BuiltValueNullFieldError.checkNotNull(
                 translation, r'ApiWordModel', 'translation'),
             redirectTo: redirectTo);
