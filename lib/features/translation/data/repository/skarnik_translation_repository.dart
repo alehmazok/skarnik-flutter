@@ -28,7 +28,7 @@ class SkarnikTranslationRepository implements FallbackTranslationRepository {
     return _fetch();
   }
 
-  _setUri(int wordId) {
+  void _setUri(int wordId) {
     _uri = Uri(
       scheme: 'https',
       host: AppConfig.skarnikSiteHostName,
@@ -36,11 +36,8 @@ class SkarnikTranslationRepository implements FallbackTranslationRepository {
     );
   }
 
-  Translation _buildTranslation(String html) => Translation.build(
-        uri: _uri,
-        word: _word,
-        html: html,
-      );
+  Translation _buildTranslation(String html) =>
+      Translation.build(uri: _uri, word: _word, html: html);
 
   Future<Translation> _fetch() async {
     _logger.fine('Робім запыт на: ${_uri.toString()}');
