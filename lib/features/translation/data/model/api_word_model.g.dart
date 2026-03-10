@@ -6,8 +6,7 @@ part of 'api_word_model.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<ApiWordModel> _$apiWordModelSerializer =
-    new _$ApiWordModelSerializer();
+Serializer<ApiWordModel> _$apiWordModelSerializer = _$ApiWordModelSerializer();
 
 class _$ApiWordModelSerializer implements StructuredSerializer<ApiWordModel> {
   @override
@@ -16,39 +15,50 @@ class _$ApiWordModelSerializer implements StructuredSerializer<ApiWordModel> {
   final String wireName = 'ApiWordModel';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, ApiWordModel object,
-      {FullType specifiedType = FullType.unspecified}) {
+  Iterable<Object?> serialize(
+    Serializers serializers,
+    ApiWordModel object, {
+    FullType specifiedType = FullType.unspecified,
+  }) {
     final result = <Object?>[
       'external_id',
-      serializers.serialize(object.externalId,
-          specifiedType: const FullType(int)),
+      serializers.serialize(
+        object.externalId,
+        specifiedType: const FullType(int),
+      ),
       'translation',
-      serializers.serialize(object.translation,
-          specifiedType: const FullType(String)),
+      serializers.serialize(
+        object.translation,
+        specifiedType: const FullType(String),
+      ),
     ];
     Object? value;
     value = object.stress;
     if (value != null) {
       result
         ..add('stress')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+        ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)),
+        );
     }
     value = object.redirectTo;
     if (value != null) {
       result
         ..add('redirect_to')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
+        ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)),
+        );
     }
     return result;
   }
 
   @override
   ApiWordModel deserialize(
-      Serializers serializers, Iterable<Object?> serialized,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = new ApiWordModelBuilder();
+    Serializers serializers,
+    Iterable<Object?> serialized, {
+    FullType specifiedType = FullType.unspecified,
+  }) {
+    final result = ApiWordModelBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -57,20 +67,36 @@ class _$ApiWordModelSerializer implements StructuredSerializer<ApiWordModel> {
       final Object? value = iterator.current;
       switch (key) {
         case 'external_id':
-          result.externalId = serializers.deserialize(value,
-              specifiedType: const FullType(int))! as int;
+          result.externalId =
+              serializers.deserialize(
+                    value,
+                    specifiedType: const FullType(int),
+                  )!
+                  as int;
           break;
         case 'stress':
-          result.stress = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+          result.stress =
+              serializers.deserialize(
+                    value,
+                    specifiedType: const FullType(String),
+                  )
+                  as String?;
           break;
         case 'translation':
-          result.translation = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+          result.translation =
+              serializers.deserialize(
+                    value,
+                    specifiedType: const FullType(String),
+                  )!
+                  as String;
           break;
         case 'redirect_to':
-          result.redirectTo = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+          result.redirectTo =
+              serializers.deserialize(
+                    value,
+                    specifiedType: const FullType(String),
+                  )
+                  as String?;
           break;
       }
     }
@@ -90,26 +116,20 @@ class _$ApiWordModel extends ApiWordModel {
   final String? redirectTo;
 
   factory _$ApiWordModel([void Function(ApiWordModelBuilder)? updates]) =>
-      (new ApiWordModelBuilder()..update(updates))._build();
+      (ApiWordModelBuilder()..update(updates))._build();
 
-  _$ApiWordModel._(
-      {required this.externalId,
-      this.stress,
-      required this.translation,
-      this.redirectTo})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        externalId, r'ApiWordModel', 'externalId');
-    BuiltValueNullFieldError.checkNotNull(
-        translation, r'ApiWordModel', 'translation');
-  }
-
+  _$ApiWordModel._({
+    required this.externalId,
+    this.stress,
+    required this.translation,
+    this.redirectTo,
+  }) : super._();
   @override
   ApiWordModel rebuild(void Function(ApiWordModelBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ApiWordModelBuilder toBuilder() => new ApiWordModelBuilder()..replace(this);
+  ApiWordModelBuilder toBuilder() => ApiWordModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -179,7 +199,6 @@ class ApiWordModelBuilder
 
   @override
   void replace(ApiWordModel other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ApiWordModel;
   }
 
@@ -192,14 +211,22 @@ class ApiWordModelBuilder
   ApiWordModel build() => _build();
 
   _$ApiWordModel _build() {
-    final _$result = _$v ??
-        new _$ApiWordModel._(
-            externalId: BuiltValueNullFieldError.checkNotNull(
-                externalId, r'ApiWordModel', 'externalId'),
-            stress: stress,
-            translation: BuiltValueNullFieldError.checkNotNull(
-                translation, r'ApiWordModel', 'translation'),
-            redirectTo: redirectTo);
+    final _$result =
+        _$v ??
+        _$ApiWordModel._(
+          externalId: BuiltValueNullFieldError.checkNotNull(
+            externalId,
+            r'ApiWordModel',
+            'externalId',
+          ),
+          stress: stress,
+          translation: BuiltValueNullFieldError.checkNotNull(
+            translation,
+            r'ApiWordModel',
+            'translation',
+          ),
+          redirectTo: redirectTo,
+        );
     replace(_$result);
     return _$result;
   }

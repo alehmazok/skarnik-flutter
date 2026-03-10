@@ -31,6 +31,7 @@ class ObjectboxSearchWord implements SearchWord {
   String? lwordMask;
 
   @override
+  @Transient()
   Dictionary dictionary;
 
   ObjectboxSearchWord({
@@ -43,5 +44,6 @@ class ObjectboxSearchWord implements SearchWord {
   }) : dictionary = Dictionary.byLangId(langId);
 
   @override
-  String toString() => 'ObjectboxSearchWord($id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
+  String toString() =>
+      'ObjectboxSearchWord($id, $langId, $letter, $wordId, $word, $lword, $lwordMask)';
 }
