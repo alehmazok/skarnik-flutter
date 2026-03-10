@@ -68,3 +68,6 @@ Screenshot*.png
 
 # Database dumps
 database.zip
+
+# dev folder
+dev/
