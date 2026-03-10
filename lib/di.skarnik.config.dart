@@ -1,4 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -118,21 +119,19 @@ const String _dev = 'dev';
 const String _prod = 'prod';
 
 extension GetItInjectableX on _i174.GetIt {
-// initializes the registration of main-scope dependencies inside of GetIt
+  // initializes the registration of main-scope dependencies inside of GetIt
   _i174.GetIt init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i526.GetItHelper(
-      this,
-      environment,
-      environmentFilter,
-    );
+    final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i519.GetAppLinkStreamUseCase>(
-        () => _i519.GetAppLinkStreamUseCase());
-    gh.factory<_i525.InitRemoteConfigUseCase>(
-        () => _i525.InitRemoteConfigUseCase());
+      () => _i519.GetAppLinkStreamUseCase(),
+    );
     gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
+    gh.factory<_i525.InitRemoteConfigUseCase>(
+      () => _i525.InitRemoteConfigUseCase(),
+    );
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i989.DevAnalyticsVocabularyRepository(),
       registerFor: {_dev},
@@ -142,84 +141,119 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i805.DevAnalyticsAppRepository(),
       registerFor: {_dev},
     );
-    gh.lazySingleton<_i138.ApiTranslationRepository>(
-        () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()));
-    gh.factory<_i147.WordRepository>(
-        () => _i326.ObjectboxWordRepository(gh<_i522.ObjectboxStoreHolder>()));
+    gh.factory<_i531.SettingsHistoryRepository>(
+      () => _i252.ObjectboxSettingsHistoryRepository(
+        gh<_i522.ObjectboxStoreHolder>(),
+      ),
+    );
     gh.factory<_i763.DatabaseRepository>(
-        () => _i226.ObjectboxDatabaseRepository());
+      () => _i226.ObjectboxDatabaseRepository(),
+    );
     gh.factory<_i223.AnalyticsTranslationRepository>(
       () => _i336.DevAnalyticsTranslationRepository(),
       registerFor: {_dev},
     );
+    gh.factory<_i587.VocabularyRepository>(
+      () =>
+          _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
     gh.factory<_i507.FallbackTranslationRepository>(
-        () => _i779.SkarnikTranslationRepository(gh<_i361.Dio>()));
-    gh.factory<_i914.GetWordUseCase>(
-        () => _i914.GetWordUseCase(gh<_i147.WordRepository>()));
-    gh.factory<_i587.VocabularyRepository>(() =>
-        _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()));
-    gh.factory<_i803.GetTranslationUseCase>(() => _i803.GetTranslationUseCase(
-          apiWordRepository: gh<_i138.ApiTranslationRepository>(),
-          fallbackTranslationRepository:
-              gh<_i507.FallbackTranslationRepository>(),
-        ));
+      () => _i779.SkarnikTranslationRepository(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i264.QueryRepository>(
+      () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),
+    );
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i1004.FirebaseAnalyticsAppRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i788.HistoryRepository>(() =>
-        _i556.ObjectboxHistoryRepository(gh<_i522.ObjectboxStoreHolder>()));
-    gh.factory<_i361.FavoritesRepository>(() =>
-        _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()));
-    gh.lazySingleton<_i264.QueryRepository>(
-        () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()));
-    gh.lazySingleton<_i124.SearchRepository>(
-        () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()));
+    gh.factory<_i741.LoadVocabularyUseCase>(
+      () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()),
+    );
+    gh.factory<_i958.LogAnalyticsAppOpenUseCase>(
+      () => _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()),
+    );
+    gh.factory<_i788.HistoryRepository>(
+      () => _i556.ObjectboxHistoryRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.factory<_i861.ClearHistoryUseCase>(
+      () => _i861.ClearHistoryUseCase(gh<_i531.SettingsHistoryRepository>()),
+    );
+    gh.factory<_i361.FavoritesRepository>(
+      () =>
+          _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
     gh.factory<_i146.InitDatabaseUseCase>(
-        () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()));
-    gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(() =>
-        _i616.LogAnalyticsVocabularyWordUseCase(
-            gh<_i267.AnalyticsVocabularyRepository>()));
+      () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()),
+    );
     gh.factory<_i223.AnalyticsTranslationRepository>(
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i531.SettingsHistoryRepository>(() =>
-        _i252.ObjectboxSettingsHistoryRepository(
-            gh<_i522.ObjectboxStoreHolder>()));
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i20.FirebaseAnalyticsVocabularyRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i741.LoadVocabularyUseCase>(
-        () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()));
-    gh.factory<_i276.SaveToHistoryUseCase>(
-        () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()));
+    gh.factory<_i147.WordRepository>(
+      () => _i326.ObjectboxWordRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
     gh.factory<_i522.LoadHistoryUseCase>(
-        () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()));
-    gh.factory<_i958.LogAnalyticsAppOpenUseCase>(() =>
-        _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()));
-    gh.factory<_i915.SearchUseCase>(
-        () => _i915.SearchUseCase(gh<_i124.SearchRepository>()));
-    gh.factory<_i311.AddToFavoritesUseCase>(
-        () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()));
-    gh.factory<_i135.CheckInFavoritesUseCase>(
-        () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()));
-    gh.factory<_i235.RemoveFromFavoritesUseCase>(() =>
-        _i235.RemoveFromFavoritesUseCase(gh<_i361.FavoritesRepository>()));
+      () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()),
+    );
+    gh.factory<_i276.SaveToHistoryUseCase>(
+      () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()),
+    );
+    gh.lazySingleton<_i138.ApiTranslationRepository>(
+      () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
+    );
     gh.factory<_i978.LoadFavoritesUseCase>(
-        () => _i978.LoadFavoritesUseCase(gh<_i361.FavoritesRepository>()));
-    gh.factory<_i861.ClearHistoryUseCase>(
-        () => _i861.ClearHistoryUseCase(gh<_i531.SettingsHistoryRepository>()));
-    gh.factory<_i501.LogAnalyticsTranslationUseCase>(() =>
-        _i501.LogAnalyticsTranslationUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(() =>
-        _i135.LogAnalyticsAddToFavoritesUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i888.LogAnalyticsShareUseCase>(() =>
-        _i888.LogAnalyticsShareUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
+      () => _i978.LoadFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i311.AddToFavoritesUseCase>(
+      () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i135.CheckInFavoritesUseCase>(
+      () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i235.RemoveFromFavoritesUseCase>(
+      () => _i235.RemoveFromFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i914.GetWordUseCase>(
+      () => _i914.GetWordUseCase(gh<_i147.WordRepository>()),
+    );
+    gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(
+      () => _i616.LogAnalyticsVocabularyWordUseCase(
+        gh<_i267.AnalyticsVocabularyRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i124.SearchRepository>(
+      () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()),
+    );
+    gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(
+      () => _i135.LogAnalyticsAddToFavoritesUseCase(
+        gh<_i223.AnalyticsTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i888.LogAnalyticsShareUseCase>(
+      () => _i888.LogAnalyticsShareUseCase(
+        gh<_i223.AnalyticsTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i501.LogAnalyticsTranslationUseCase>(
+      () => _i501.LogAnalyticsTranslationUseCase(
+        gh<_i223.AnalyticsTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i915.SearchUseCase>(
+      () => _i915.SearchUseCase(gh<_i124.SearchRepository>()),
+    );
+    gh.factory<_i803.GetTranslationUseCase>(
+      () => _i803.GetTranslationUseCase(
+        apiWordRepository: gh<_i138.ApiTranslationRepository>(),
+        fallbackTranslationRepository:
+            gh<_i507.FallbackTranslationRepository>(),
+      ),
+    );
     return this;
   }
 }
