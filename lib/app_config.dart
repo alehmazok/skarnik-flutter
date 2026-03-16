@@ -12,4 +12,8 @@ abstract class AppConfig {
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
 
   static const devEmailAddress = String.fromEnvironment('DEV_EMAIL_ADDRESS');
+
+  static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+
+  static const supabaseAnonKey = String.fromEnvironment('SUPABASE_KEY');
 }
