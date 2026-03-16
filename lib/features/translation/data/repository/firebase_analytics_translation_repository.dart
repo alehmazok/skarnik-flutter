@@ -22,6 +22,7 @@ class FirebaseAnalyticsTranslationRepository implements AnalyticsTranslationRepo
         'word': translation.word.word,
         'dict_name': translation.word.dictionary.name,
         'dict_path': translation.word.dictionary.path,
+        'source': translation.source,
       },
     );
   }

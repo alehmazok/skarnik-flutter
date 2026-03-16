@@ -42,9 +42,9 @@ class TranslationRedirectState extends TranslationState {
 
   @override
   List<Object> get props => [
-        word,
-        redirectTo,
-      ];
+    word,
+    redirectTo,
+  ];
 
   const TranslationRedirectState({
     required this.word,
@@ -119,36 +119,41 @@ class TranslationCubit extends Cubit<TranslationState> {
   }
 
   Future<void> _getWord() async {
-    final getTranslation = await getWordUseCase(
-      langId: langId,
-      wordId: wordId,
-    )
-        .flatMap(
-      (word) => getTranslationUseCase(word).map(
-        (translation) => (word, translation),
-      ),
-    )
-        .flatMap(
-      (record) {
-        final (word, translation) = record;
-        return checkInFavoritesUseCase(word).map(
-          (inFavorites) => (word, translation, inFavorites),
-        );
-      },
-    ).flatMap(
-      (record) {
-        final (word, translation, inFavorites) = record;
-        if (saveToHistory) {
-          return saveToHistoryUseCase(word).map((_) => (translation, inFavorites));
-        }
-        return Future.value(Success((translation, inFavorites)));
-      },
-    ).flatMap(
-      (record) {
-        final (translation, inFavorites) = record;
-        return logAnalyticsTranslationUseCase(translation).map((_) => (translation, inFavorites));
-      },
-    );
+    final getTranslation =
+        await getWordUseCase(
+              langId: langId,
+              wordId: wordId,
+            )
+            .flatMap(
+              (word) => getTranslationUseCase(word).map(
+                (translation) => (word, translation),
+              ),
+            )
+            .flatMap(
+              (record) {
+                final (word, translation) = record;
+                return checkInFavoritesUseCase(word).map(
+                  (inFavorites) => (word, translation, inFavorites),
+                );
+              },
+            )
+            .flatMap(
+              (record) {
+                final (word, translation, inFavorites) = record;
+                if (saveToHistory) {
+                  return saveToHistoryUseCase(word).map((_) => (translation, inFavorites));
+                }
+                return Future.value(Success((translation, inFavorites)));
+              },
+            )
+            .flatMap(
+              (record) {
+                final (translation, inFavorites) = record;
+                return logAnalyticsTranslationUseCase(translation).map(
+                  (_) => (translation, inFavorites),
+                );
+              },
+            );
     switch (getTranslation) {
       case Failure(error: final error):
         if (error is TranslationRedirectError) {

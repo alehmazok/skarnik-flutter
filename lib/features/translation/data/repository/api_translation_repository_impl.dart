@@ -4,6 +4,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../../domain/entity/api_word.dart';
@@ -19,7 +20,7 @@ class ApiTranslationRepositoryImpl implements ApiTranslationRepository {
   ApiTranslationRepositoryImpl(this._dio);
 
   @override
-  Future<ApiWord> getTranslation(Word word) async {
+  Future<ApiWord> getWord(Word word) async {
     final uri = word.buildApiUri();
 
     _logger.fine('Робім запыт на: ${uri.toString()}');
@@ -35,5 +36,10 @@ class ApiTranslationRepositoryImpl implements ApiTranslationRepository {
     final model = ApiWordModel.fromJson(data);
 
     return model.toEntity();
+  }
+
+  @override
+  Future<Translation> getTranslation(Word word) {
+    throw UnimplementedError();
   }
 }

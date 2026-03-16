@@ -5,26 +5,32 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/translation/data/model/api_word_model.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart';
-import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart';
 
 class MockApiWordRepository extends Mock implements ApiTranslationRepository {}
 
-class MockFallbackTranslationRepository extends Mock implements FallbackTranslationRepository {}
+class MockCloudTranslationRepository extends Mock implements CloudTranslationRepository {}
+
+class MockWebsiteTranslationRepository extends Mock implements WebsiteTranslationRepository {}
 
 class MockWord extends Mock implements Word {}
 
 void main() {
   late GetTranslationUseCase useCase;
   late MockApiWordRepository mockApiWordRepository;
-  late MockFallbackTranslationRepository mockFallbackTranslationRepository;
+  late MockCloudTranslationRepository mockCloudTranslationRepository;
+  late MockWebsiteTranslationRepository mockWebsiteTranslationRepository;
 
   setUp(() {
     mockApiWordRepository = MockApiWordRepository();
-    mockFallbackTranslationRepository = MockFallbackTranslationRepository();
+    mockCloudTranslationRepository = MockCloudTranslationRepository();
+    mockWebsiteTranslationRepository = MockWebsiteTranslationRepository();
     useCase = GetTranslationUseCase(
       apiWordRepository: mockApiWordRepository,
-      fallbackTranslationRepository: mockFallbackTranslationRepository,
+      cloudTranslationRepository: mockCloudTranslationRepository,
+      websiteTranslationRepository: mockWebsiteTranslationRepository,
     );
   });
 
@@ -45,18 +51,19 @@ void main() {
       ).thenReturn(
         Uri.parse('https://skarnik.by/belrus/1'),
       );
+    });
 
+    test('should return ApiWord from the API repository when successful', () async {
       translation = Translation.build(
         uri: word.buildApiUri(),
         html: '<div></div>',
         word: word,
+        source: 'api',
       );
-    });
 
-    test('should return ApiWord from the API repository when successful', () async {
       // Arrange
       when(
-        () => mockApiWordRepository.getTranslation(word),
+        () => mockApiWordRepository.getWord(word),
       ).thenAnswer(
         (_) async => apiWord.toEntity(),
       );
@@ -67,14 +74,24 @@ void main() {
       // Assert
       expect(result, isA<Success<Translation>>());
       expect((result as Success).result, translation);
-      verify(() => mockApiWordRepository.getTranslation(word)).called(1);
-      verifyNever(() => mockFallbackTranslationRepository.getTranslation(word));
+      verify(() => mockApiWordRepository.getWord(word)).called(1);
+      verifyNever(() => mockCloudTranslationRepository.getWord(word));
+      verifyNever(() => mockWebsiteTranslationRepository.getTranslation(word));
     });
 
-    test('should fallback to secondary repository when primary fails', () async {
+    test('should fallback to Cloud repository when API fails', () async {
+      translation = Translation.build(
+        uri: word.buildApiUri(),
+        html: '<div></div>',
+        word: word,
+        source: 'cloud',
+      );
+
       // Arrange
-      when(() => mockApiWordRepository.getTranslation(word)).thenThrow(Exception('Primary failed'));
-      when(() => mockFallbackTranslationRepository.getTranslation(word)).thenAnswer((_) async => translation);
+      when(() => mockApiWordRepository.getWord(word)).thenThrow(Exception('API failed'));
+      when(
+        () => mockCloudTranslationRepository.getWord(word),
+      ).thenAnswer((_) async => apiWord.toEntity());
 
       // Act
       final result = await useCase.call(word);
@@ -82,15 +99,45 @@ void main() {
       // Assert
       expect(result, isA<Success<Translation>>());
       expect((result as Success).result, translation);
-      verify(() => mockApiWordRepository.getTranslation(word)).called(1);
-      verify(() => mockFallbackTranslationRepository.getTranslation(word)).called(1);
+      verify(() => mockApiWordRepository.getWord(word)).called(1);
+      verify(() => mockCloudTranslationRepository.getWord(word)).called(1);
+      verifyNever(() => mockWebsiteTranslationRepository.getTranslation(word));
+    });
+
+    test('should fallback to Websote repository when API and Cloud fail', () async {
+      translation = Translation.build(
+        uri: word.buildApiUri(),
+        html: '<div></div>',
+        word: word,
+        source: 'cloud',
+      );
+
+      // Arrange
+      when(() => mockApiWordRepository.getWord(word)).thenThrow(Exception('API failed'));
+      when(() => mockCloudTranslationRepository.getWord(word)).thenThrow(Exception('Cloud failed'));
+      when(
+        () => mockWebsiteTranslationRepository.getTranslation(word),
+      ).thenAnswer((_) async => translation);
+
+      // Act
+      final result = await useCase.call(word);
+
+      // Assert
+      expect(result, isA<Success<Translation>>());
+      expect((result as Success).result, translation);
+      verify(() => mockApiWordRepository.getWord(word)).called(1);
+      verify(() => mockCloudTranslationRepository.getWord(word)).called(1);
+      verify(() => mockWebsiteTranslationRepository.getTranslation(word)).called(1);
     });
 
     test('should return failure when both primary and fallback repositories fail', () async {
       // Arrange
-      final exception = Exception('Both failed');
-      when(() => mockApiWordRepository.getTranslation(word)).thenThrow(Exception('Primary failed'));
-      when(() => mockFallbackTranslationRepository.getTranslation(word)).thenThrow(exception);
+      final exception = Exception('All failed');
+      when(() => mockApiWordRepository.getWord(word)).thenThrow(Exception('API failed'));
+      when(
+        () => mockCloudTranslationRepository.getWord(word),
+      ).thenThrow(Exception('Cloud failed'));
+      when(() => mockWebsiteTranslationRepository.getTranslation(word)).thenThrow(exception);
 
       // Act
       final result = await useCase.call(word);
@@ -98,8 +145,9 @@ void main() {
       // Assert
       expect(result, isA<Failure>());
       expect((result as Failure).error, exception);
-      verify(() => mockApiWordRepository.getTranslation(word)).called(1);
-      verify(() => mockFallbackTranslationRepository.getTranslation(word)).called(1);
+      verify(() => mockApiWordRepository.getWord(word)).called(1);
+      verify(() => mockCloudTranslationRepository.getWord(word)).called(1);
+      verify(() => mockWebsiteTranslationRepository.getTranslation(word)).called(1);
     });
   });
 }

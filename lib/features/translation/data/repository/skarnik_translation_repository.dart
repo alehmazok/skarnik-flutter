@@ -5,13 +5,14 @@ import 'package:html/parser.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/translation/domain/entity/api_word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../../domain/entity/translation.dart';
-import '../../domain/repository/translation_repository.dart';
+import '../../domain/repository/website_translation_repository.dart';
 
-@Injectable(as: FallbackTranslationRepository)
-class SkarnikTranslationRepository implements FallbackTranslationRepository {
+@Injectable(as: WebsiteTranslationRepository)
+class SkarnikTranslationRepository implements WebsiteTranslationRepository {
   final _logger = getLogger(SkarnikTranslationRepository);
   final Dio _dio;
 
@@ -36,8 +37,12 @@ class SkarnikTranslationRepository implements FallbackTranslationRepository {
     );
   }
 
-  Translation _buildTranslation(String html) =>
-      Translation.build(uri: _uri, word: _word, html: html);
+  Translation _buildTranslation(String html) => Translation.build(
+    uri: _uri,
+    word: _word,
+    html: html,
+    source: 'website',
+  );
 
   Future<Translation> _fetch() async {
     _logger.fine('Робім запыт на: ${_uri.toString()}');
@@ -71,5 +76,10 @@ class SkarnikTranslationRepository implements FallbackTranslationRepository {
     }
 
     throw StateError('Памылка перакладу слова (id=${_word.wordId}).');
+  }
+
+  @override
+  Future<ApiWord> getWord(Word word) {
+    throw UnimplementedError();
   }
 }

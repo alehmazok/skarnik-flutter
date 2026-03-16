@@ -70,16 +70,20 @@ import 'package:skarnik_flutter/features/translation/data/repository/objectbox_w
     as _i326;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
     as _i779;
+import 'package:skarnik_flutter/features/translation/data/repository/supabase_api_translation_repository_impl.dart'
+    as _i1072;
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart'
     as _i223;
 import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart'
     as _i138;
+import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart'
+    as _i361;
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart'
     as _i361;
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart'
     as _i788;
-import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart'
-    as _i507;
+import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart'
+    as _i317;
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart'
     as _i147;
 import 'package:skarnik_flutter/features/translation/domain/use_case/add_to_favorites.dart'
@@ -136,6 +140,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i989.DevAnalyticsVocabularyRepository(),
       registerFor: {_dev},
     );
+    gh.lazySingleton<_i361.CloudTranslationRepository>(
+      () => _i1072.SupabaseTranslationRepositoryImpl(),
+    );
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i805.DevAnalyticsAppRepository(),
@@ -156,9 +163,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i587.VocabularyRepository>(
       () =>
           _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()),
-    );
-    gh.factory<_i507.FallbackTranslationRepository>(
-      () => _i779.SkarnikTranslationRepository(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i264.QueryRepository>(
       () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),
@@ -196,6 +200,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i147.WordRepository>(
       () => _i326.ObjectboxWordRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.factory<_i317.WebsiteTranslationRepository>(
+      () => _i779.SkarnikTranslationRepository(gh<_i361.Dio>()),
     );
     gh.factory<_i522.LoadHistoryUseCase>(
       () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()),
@@ -244,15 +251,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i223.AnalyticsTranslationRepository>(),
       ),
     );
-    gh.factory<_i915.SearchUseCase>(
-      () => _i915.SearchUseCase(gh<_i124.SearchRepository>()),
-    );
     gh.factory<_i803.GetTranslationUseCase>(
       () => _i803.GetTranslationUseCase(
         apiWordRepository: gh<_i138.ApiTranslationRepository>(),
-        fallbackTranslationRepository:
-            gh<_i507.FallbackTranslationRepository>(),
+        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
+        websiteTranslationRepository: gh<_i317.WebsiteTranslationRepository>(),
       ),
+    );
+    gh.factory<_i915.SearchUseCase>(
+      () => _i915.SearchUseCase(gh<_i124.SearchRepository>()),
     );
     return this;
   }

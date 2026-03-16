@@ -5,9 +5,10 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart';
-import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/add_to_favorites.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/check_in_favorites.dart';
@@ -22,7 +23,9 @@ import 'package:skarnik_flutter/features/translation/presentation/translation_cu
 
 class MockWordRepository extends Mock implements WordRepository {}
 
-class MockFallbackTranslationRepository extends Mock implements FallbackTranslationRepository {}
+class MockCloudTranslationRepository extends Mock implements CloudTranslationRepository {}
+
+class MockWebsiteTranslationRepository extends Mock implements WebsiteTranslationRepository {}
 
 class MockApiWordRepository extends Mock implements ApiTranslationRepository {}
 
@@ -37,29 +40,35 @@ class MockWord extends Mock implements Word {}
 void main() {
   group('TranslationCubit', () {
     final wordRepository = MockWordRepository();
-    final fallbackTranslationRepository = MockFallbackTranslationRepository();
-    final primaryTranslationRepository = MockApiWordRepository();
+    final apiTranslationRepository = MockApiWordRepository();
+    final cloudTranslationRepository = MockCloudTranslationRepository();
+    final websiteTranslationRepository = MockWebsiteTranslationRepository();
     final favoritesRepository = MockFavoritesRepository();
     final historyRepository = MockHistoryRepository();
     final analyticsTranslationRepository = MockAnalyticsTranslationRepository();
 
     TranslationCubit newInstance({bool saveToHistory = true}) => TranslationCubit(
-          langId: 1,
-          wordId: 1,
-          saveToHistory: saveToHistory,
-          getWordUseCase: GetWordUseCase(wordRepository),
-          getTranslationUseCase: GetTranslationUseCase(
-            apiWordRepository: primaryTranslationRepository,
-            fallbackTranslationRepository: fallbackTranslationRepository,
-          ),
-          addToFavoritesUseCase: AddToFavoritesUseCase(favoritesRepository),
-          checkInFavoritesUseCase: CheckInFavoritesUseCase(favoritesRepository),
-          removeFromFavoritesUseCase: RemoveFromFavoritesUseCase(favoritesRepository),
-          saveToHistoryUseCase: SaveToHistoryUseCase(historyRepository),
-          logAnalyticsTranslationUseCase: LogAnalyticsTranslationUseCase(analyticsTranslationRepository),
-          logAnalyticsAddToFavoritesUseCase: LogAnalyticsAddToFavoritesUseCase(analyticsTranslationRepository),
-          logAnalyticsShareUseCase: LogAnalyticsShareUseCase(analyticsTranslationRepository),
-        );
+      langId: 1,
+      wordId: 1,
+      saveToHistory: saveToHistory,
+      getWordUseCase: GetWordUseCase(wordRepository),
+      getTranslationUseCase: GetTranslationUseCase(
+        apiWordRepository: apiTranslationRepository,
+        cloudTranslationRepository: cloudTranslationRepository,
+        websiteTranslationRepository: websiteTranslationRepository,
+      ),
+      addToFavoritesUseCase: AddToFavoritesUseCase(favoritesRepository),
+      checkInFavoritesUseCase: CheckInFavoritesUseCase(favoritesRepository),
+      removeFromFavoritesUseCase: RemoveFromFavoritesUseCase(favoritesRepository),
+      saveToHistoryUseCase: SaveToHistoryUseCase(historyRepository),
+      logAnalyticsTranslationUseCase: LogAnalyticsTranslationUseCase(
+        analyticsTranslationRepository,
+      ),
+      logAnalyticsAddToFavoritesUseCase: LogAnalyticsAddToFavoritesUseCase(
+        analyticsTranslationRepository,
+      ),
+      logAnalyticsShareUseCase: LogAnalyticsShareUseCase(analyticsTranslationRepository),
+    );
 
     group('_getWord()', () {
       late final Word word;
@@ -95,13 +104,13 @@ void main() {
           );
 
           when(
-            () => primaryTranslationRepository.getTranslation(word),
+            () => apiTranslationRepository.getTranslation(word),
           ).thenThrow(
             UnimplementedError('test primary translation error'),
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenThrow(
             UnimplementedError('test fallback translation error'),
           );
@@ -129,12 +138,13 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => Translation.build(
               word: word,
               html: '<div>test</div>',
               uri: uri,
+              source: 'website',
             ),
           );
 
@@ -167,12 +177,13 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => Translation.build(
               word: word,
               html: '<div>test</div>',
               uri: uri,
+              source: 'website',
             ),
           );
 
@@ -208,6 +219,7 @@ void main() {
             word: word,
             html: '<div>test</div>',
             uri: uri,
+            source: 'website',
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -219,7 +231,7 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -263,6 +275,7 @@ void main() {
             word: word,
             html: '<div>test</div>',
             uri: uri,
+            source: 'website',
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -274,7 +287,7 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -325,6 +338,7 @@ void main() {
             word: word,
             html: '<div>test</div>',
             uri: uri,
+            source: 'website',
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -336,7 +350,7 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -402,6 +416,7 @@ void main() {
             word: word,
             html: '<div>test</div>',
             uri: uri,
+            source: 'website',
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -413,7 +428,7 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -486,6 +501,7 @@ void main() {
             word: word,
             html: '<div>test</div>',
             uri: uri,
+            source: 'website',
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -497,7 +513,7 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
@@ -562,6 +578,7 @@ void main() {
             word: word,
             html: '<div>test</div>',
             uri: uri,
+            source: 'website',
           );
 
           when(() => word.word).thenReturn('word 1');
@@ -573,7 +590,7 @@ void main() {
           );
 
           when(
-            () => fallbackTranslationRepository.getTranslation(word),
+            () => websiteTranslationRepository.getTranslation(word),
           ).thenAnswer(
             (_) async => translation,
           );
