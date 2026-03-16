@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
+import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/add_to_favorites.dart';
 import '../domain/use_case/check_in_favorites.dart';
@@ -32,7 +33,8 @@ class TranslationPage extends StatelessWidget {
     this.saveToHistory = true,
   });
 
-  factory TranslationPage.word({required Word word, required bool saveToHistory}) => TranslationPage(
+  factory TranslationPage.word({required Word word, required bool saveToHistory}) =>
+      TranslationPage(
         word: word,
         langId: word.langId,
         wordId: word.wordId,
@@ -74,9 +76,7 @@ class TranslationPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      'Дададзена ў закладкі.',
-                    ),
+                    content: Text(Strings.addedToBookmarks),
                   ),
                 );
             }
@@ -85,9 +85,7 @@ class TranslationPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      'Выдалена з закладак.',
-                    ),
+                    content: Text(Strings.removedFromBookmarks),
                   ),
                 );
             }
@@ -98,7 +96,7 @@ class TranslationPage extends StatelessWidget {
                   SnackBar(
                     duration: const Duration(seconds: 15),
                     content: Text(
-                      'Перанакіравана з «${state.word.word}»',
+                      Strings.redirectedFromWord.replaceFirst('{}', state.word.word),
                     ),
                   ),
                 );
@@ -112,7 +110,7 @@ class TranslationPage extends StatelessWidget {
                   SnackBar(
                     duration: const Duration(seconds: 15),
                     content: Text(
-                      'Прабачце, адбылася памылка перакладу слова.',
+                      Strings.sorryTranslationError,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.errorContainer,
                       ),
