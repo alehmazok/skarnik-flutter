@@ -7,23 +7,27 @@ class Translation extends Equatable {
   final Uri uri;
   final String? stress;
   final String html;
+  final String source;
 
   String get maybeStressedWord => stress ?? word.word;
 
   @override
   List<Object?> get props => [
-        word,
-        uri,
-        html,
-      ];
+    word,
+    uri,
+    html,
+    source,
+  ];
 
-  Uri get shareUri => Uri.parse('https://${AppConfig.skarnikSiteHostName}/${word.dictionary.path}/${word.wordId}');
+  Uri get shareUri =>
+      Uri.parse('https://${AppConfig.skarnikSiteHostName}/${word.dictionary.path}/${word.wordId}');
 
   const Translation._({
     required this.uri,
     required this.word,
     this.stress,
     required this.html,
+    required this.source,
   });
 
   factory Translation.build({
@@ -31,12 +35,14 @@ class Translation extends Equatable {
     required Word word,
     required String html,
     String? stress,
+    required String source,
   }) {
     return Translation._(
       uri: uri,
       word: word,
       stress: stress,
       html: _modifyHtml(html),
+      source: source,
     );
   }
 
