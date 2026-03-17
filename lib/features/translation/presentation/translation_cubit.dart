@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
@@ -179,9 +181,11 @@ class TranslationCubit extends Cubit<TranslationState> {
 
   Future<void> share(Translation translation) async {
     final link = translation.shareUri.toString();
-    await Share.share(link, subject: translation.word.word);
+
     // Не апрацоўваць вынік выканання usecase-а.
-    await logAnalyticsShareUseCase(link);
+    unawaited(logAnalyticsShareUseCase(link));
+
+    await Share.share(link, subject: translation.word.word);
   }
 
   Future<void> addToFavorites(Word word) async {
