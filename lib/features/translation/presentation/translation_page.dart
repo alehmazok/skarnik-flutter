@@ -25,13 +25,45 @@ class TranslationPage extends StatelessWidget {
   final int wordId;
   final bool saveToHistory;
 
-  const TranslationPage({
+  final AddToFavoritesUseCase addToFavoritesUseCase;
+  final CheckInFavoritesUseCase checkInFavoritesUseCase;
+  final GetTranslationUseCase getTranslationUseCase;
+  final GetWordUseCase getWordUseCase;
+  final LogAnalyticsAddToFavoritesUseCase logAnalyticsAddToFavoritesUseCase;
+  final LogAnalyticsShareUseCase logAnalyticsShareUseCase;
+  final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
+  final RemoveFromFavoritesUseCase removeFromFavoritesUseCase;
+  final SaveToHistoryUseCase saveToHistoryUseCase;
+
+  TranslationPage({
     super.key,
     this.word,
     required this.langId,
     required this.wordId,
     this.saveToHistory = true,
-  });
+
+    // Dependencies
+    AddToFavoritesUseCase? addToFavoritesUseCase,
+    CheckInFavoritesUseCase? checkInFavoritesUseCase,
+    GetTranslationUseCase? getTranslationUseCase,
+    GetWordUseCase? getWordUseCase,
+    LogAnalyticsAddToFavoritesUseCase? logAnalyticsAddToFavoritesUseCase,
+    LogAnalyticsShareUseCase? logAnalyticsShareUseCase,
+    LogAnalyticsTranslationUseCase? logAnalyticsTranslationUseCase,
+    RemoveFromFavoritesUseCase? removeFromFavoritesUseCase,
+    SaveToHistoryUseCase? saveToHistoryUseCase,
+  }) : addToFavoritesUseCase = addToFavoritesUseCase ?? getIt<AddToFavoritesUseCase>(),
+       checkInFavoritesUseCase = checkInFavoritesUseCase ?? getIt<CheckInFavoritesUseCase>(),
+       getTranslationUseCase = getTranslationUseCase ?? getIt<GetTranslationUseCase>(),
+       getWordUseCase = getWordUseCase ?? getIt<GetWordUseCase>(),
+       logAnalyticsAddToFavoritesUseCase =
+           logAnalyticsAddToFavoritesUseCase ?? getIt<LogAnalyticsAddToFavoritesUseCase>(),
+       logAnalyticsShareUseCase = logAnalyticsShareUseCase ?? getIt<LogAnalyticsShareUseCase>(),
+       logAnalyticsTranslationUseCase =
+           logAnalyticsTranslationUseCase ?? getIt<LogAnalyticsTranslationUseCase>(),
+       removeFromFavoritesUseCase =
+           removeFromFavoritesUseCase ?? getIt<RemoveFromFavoritesUseCase>(),
+       saveToHistoryUseCase = saveToHistoryUseCase ?? getIt<SaveToHistoryUseCase>();
 
   factory TranslationPage.word({required Word word, required bool saveToHistory}) =>
       TranslationPage(
@@ -49,15 +81,15 @@ class TranslationPage extends StatelessWidget {
         langId: langId,
         wordId: wordId,
         saveToHistory: saveToHistory,
-        getWordUseCase: getIt<GetWordUseCase>(),
-        getTranslationUseCase: getIt<GetTranslationUseCase>(),
-        addToFavoritesUseCase: getIt<AddToFavoritesUseCase>(),
-        checkInFavoritesUseCase: getIt<CheckInFavoritesUseCase>(),
-        removeFromFavoritesUseCase: getIt<RemoveFromFavoritesUseCase>(),
-        saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
-        logAnalyticsShareUseCase: getIt<LogAnalyticsShareUseCase>(),
-        logAnalyticsTranslationUseCase: getIt<LogAnalyticsTranslationUseCase>(),
-        logAnalyticsAddToFavoritesUseCase: getIt<LogAnalyticsAddToFavoritesUseCase>(),
+        getWordUseCase: getWordUseCase,
+        getTranslationUseCase: getTranslationUseCase,
+        addToFavoritesUseCase: addToFavoritesUseCase,
+        checkInFavoritesUseCase: checkInFavoritesUseCase,
+        removeFromFavoritesUseCase: removeFromFavoritesUseCase,
+        saveToHistoryUseCase: saveToHistoryUseCase,
+        logAnalyticsShareUseCase: logAnalyticsShareUseCase,
+        logAnalyticsTranslationUseCase: logAnalyticsTranslationUseCase,
+        logAnalyticsAddToFavoritesUseCase: logAnalyticsAddToFavoritesUseCase,
       ),
       child: Scaffold(
         appBar: AppBar(
