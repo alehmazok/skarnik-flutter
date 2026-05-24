@@ -37,8 +37,8 @@ import 'package:skarnik_flutter/features/favorites/domain/use_case/load_favorite
     as _i978;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
     as _i522;
-import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
-    as _i578;
+import 'package:skarnik_flutter/features/search/data/repository/typesense_search_repository.dart'
+    as _i863;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
     as _i124;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
@@ -127,11 +127,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i525.InitRemoteConfigUseCase>(
         () => _i525.InitRemoteConfigUseCase());
     gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
+    gh.factory<_i525.InitRemoteConfigUseCase>(
+        () => _i525.InitRemoteConfigUseCase());
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i989.DevAnalyticsVocabularyRepository(),
       registerFor: {_dev},
     );
+    gh.lazySingleton<_i124.SearchRepository>(
+        () => _i863.TypesenseSearchRepository());
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
+    gh.factory<_i915.SearchUseCase>(
+        () => _i915.SearchUseCase(gh<_i124.SearchRepository>()));
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i805.DevAnalyticsAppRepository(),
       registerFor: {_dev},
@@ -167,8 +173,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i124.SearchRepository>(() =>
-        _i578.ObjectboxSearchRepository(gh<_i522.ObjectboxStoreHolder>()));
     gh.factory<_i531.SettingsHistoryRepository>(() =>
         _i252.ObjectboxSettingsHistoryRepository(
             gh<_i522.ObjectboxStoreHolder>()));
@@ -180,18 +184,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()));
     gh.factory<_i507.PrimaryTranslationRepository>(
         () => _i191.ApiTranslationRepository(gh<_i361.Dio>()));
-    gh.factory<_i276.SaveToHistoryUseCase>(
-        () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()));
     gh.factory<_i522.LoadHistoryUseCase>(
         () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()));
+    gh.factory<_i276.SaveToHistoryUseCase>(
+        () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()));
     gh.factory<_i958.LogAnalyticsAppOpenUseCase>(() =>
         _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()));
-    gh.factory<_i915.SearchUseCase>(
-        () => _i915.SearchUseCase(gh<_i124.SearchRepository>()));
-    gh.factory<_i311.AddToFavoritesUseCase>(
-        () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()));
     gh.factory<_i135.CheckInFavoritesUseCase>(
         () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()));
+    gh.factory<_i311.AddToFavoritesUseCase>(
+        () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()));
     gh.factory<_i235.RemoveFromFavoritesUseCase>(() =>
         _i235.RemoveFromFavoritesUseCase(gh<_i361.FavoritesRepository>()));
     gh.factory<_i978.LoadFavoritesUseCase>(
@@ -201,11 +203,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i501.LogAnalyticsTranslationUseCase>(() =>
         _i501.LogAnalyticsTranslationUseCase(
             gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(() =>
-        _i135.LogAnalyticsAddToFavoritesUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
     gh.factory<_i888.LogAnalyticsShareUseCase>(() =>
         _i888.LogAnalyticsShareUseCase(
+            gh<_i223.AnalyticsTranslationRepository>()));
+    gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(() =>
+        _i135.LogAnalyticsAddToFavoritesUseCase(
             gh<_i223.AnalyticsTranslationRepository>()));
     gh.factory<_i803.GetTranslationUseCase>(() => _i803.GetTranslationUseCase(
           primaryTranslationRepository:

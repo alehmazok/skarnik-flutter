@@ -1,18 +1,27 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:equatable/equatable.dart';
+
 import 'dictionary.dart';
 
 class Word extends Equatable {
   final int langId;
+class Word extends Equatable {
+  final int langId;
 
+  final String letter;
   final String letter;
 
   final int wordId;
+  final int wordId;
 
+  final String word;
   final String word;
 
   final String lword;
+  final String lword;
 
+  final String? lwordMask;
   final String? lwordMask;
 
   final Dictionary dictionary;

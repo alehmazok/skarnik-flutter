@@ -4,6 +4,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 @Entity(uid: 2)
 class ObjectboxHistoryWord {
+class ObjectboxHistoryWord {
   @Id()
   int id = 0;
 
@@ -26,6 +27,7 @@ class ObjectboxHistoryWord {
     required this.word,
     required this.lword,
     required this.lwordMask,
+  });
   });
 
   factory ObjectboxHistoryWord.fromWord(Word word) => ObjectboxHistoryWord(

@@ -1,7 +1,6 @@
 import 'package:objectbox/objectbox.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
-
-import '../../domain/entity/word.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 @Entity(uid: 1)
 class ObjectboxSearchWord {
@@ -28,6 +27,7 @@ class ObjectboxSearchWord {
     required this.word,
     required this.lword,
     required this.lwordMask,
+  });
   });
 
   @override

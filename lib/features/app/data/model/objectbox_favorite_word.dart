@@ -4,6 +4,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 @Entity(uid: 3)
 class ObjectboxFavoriteWord {
+class ObjectboxFavoriteWord {
   @Id()
   int id = 0;
 

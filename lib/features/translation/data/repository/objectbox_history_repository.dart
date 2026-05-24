@@ -15,15 +15,13 @@ class ObjectboxHistoryRepository implements HistoryRepository {
 
   @override
   Future<Iterable<Word>> getAll(int offset) async {
-    final query = _objectboxStoreHolder.historyBox
-        .query()
-        .order(
-          ObjectboxHistoryWord_.id,
-          flags: Order.descending,
-        )
-        .build()
-      ..limit = AppConfig.wordsPerPage
-      ..offset = offset;
+    final query =
+        _objectboxStoreHolder.historyBox
+            .query()
+            .order(ObjectboxHistoryWord_.id, flags: Order.descending)
+            .build()
+          ..limit = AppConfig.wordsPerPage
+          ..offset = offset;
     final words = query.find();
     return words.map((it) => it.toEntity());
   }
@@ -34,14 +32,8 @@ class ObjectboxHistoryRepository implements HistoryRepository {
     final query = box
         .query(
           ObjectboxHistoryWord_.wordId
-              .equals(
-                word.wordId,
-              )
-              .and(
-                ObjectboxHistoryWord_.langId.equals(
-                  word.langId,
-                ),
-              ),
+              .equals(word.wordId)
+              .and(ObjectboxHistoryWord_.langId.equals(word.langId)),
         )
         .build();
     final alreadyExist = query.count() > 0;
