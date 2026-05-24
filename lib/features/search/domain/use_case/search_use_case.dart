@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../repository/search_repository.dart';
@@ -15,7 +15,7 @@ class SearchUseCase {
 
   SearchUseCase(this._searchRepository);
 
-  Future<UseCaseResult<Iterable<Word>>> call(String argument) async {
+  Future<UseCaseResult<Iterable<SearchWord>>> call(String argument) async {
     try {
       final results = await _searchRepository.search(argument);
       _logger.fine('For query `$argument` found ${results.length} results');

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart';
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart';
 import 'package:skarnik_flutter/features/search/presentation/search_cubit.dart';
@@ -12,7 +12,7 @@ class MockKeyboardVisibilityController extends Mock implements KeyboardVisibilit
 
 class MockSearchRepository extends Mock implements SearchRepository {}
 
-class MockWord extends Mock implements Word {}
+class MockWord extends Mock implements SearchWord {}
 
 void main() {
   group('SearchCubit', () {
@@ -25,8 +25,8 @@ void main() {
         );
 
     group('_search()', () {
-      late final Word word1;
-      late final Word word2;
+      late final SearchWord word1;
+      late final SearchWord word2;
 
       blocTest(
         'emits failed state when failed to retrieve words from database',

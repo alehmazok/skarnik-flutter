@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/strings.dart';
 
 class SearchListView<I> extends StatelessWidget {
   final bool isNothingFound;
-  final Iterable<I> items;
-  final Widget Function(I item) itemBuilder;
+  final Iterable<SearchWord> words;
 
   const SearchListView({
     super.key,
@@ -28,8 +29,21 @@ class SearchListView<I> extends StatelessWidget {
     final items = this.items.toList();
     return ListView.builder(
       itemBuilder: (context, index) {
-        final item = items[index];
-        return itemBuilder(item);
+        final word = items[index];
+
+        return ListTile(
+          title: Text(word.word),
+          subtitle: Text(
+            word.dictionary.name,
+          ),
+          onTap: () => context.push(
+            '/translate/word',
+            extra: {
+              'word': word.toEntity(),
+              'save_to_history': true,
+            },
+          ),
+        );
       },
       itemCount: items.length,
     );

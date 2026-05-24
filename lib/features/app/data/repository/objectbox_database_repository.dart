@@ -39,7 +39,8 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
     return box.count();
   }
 
-  Future<File> _getSearchMdbCopyFile() async => File(join(await _getSearchObjectBoxDir(), _mdbFileName));
+  Future<File> _getSearchMdbCopyFile() async =>
+      File(join(await _getSearchObjectBoxDir(), _mdbFileName));
 
   Future<String> _getSearchObjectBoxDir() => _getObjectBoxDir(_mdbSearchDirectoryName);
 
@@ -61,12 +62,12 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
   }
 
   Future<Store> _openObjectboxStore() async => openStore(
-        directory: await _getSearchObjectBoxDir(),
-      );
+    directory: await _getSearchObjectBoxDir(),
+  );
 
   Future<Store> _openHistoryObjectboxStore() async => openStore(
-        directory: await _getObjectBoxDir(_mdbHistoryDirectoryName),
-      );
+    directory: await _getObjectBoxDir(_mdbHistoryDirectoryName),
+  );
 
   void _registerStoreHolder({
     required Store searchStore,

@@ -1,4 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -37,8 +38,12 @@ import 'package:skarnik_flutter/features/favorites/domain/use_case/load_favorite
     as _i978;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
     as _i522;
-import 'package:skarnik_flutter/features/search/data/repository/typesense_search_repository.dart'
-    as _i863;
+import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
+    as _i578;
+import 'package:skarnik_flutter/features/search/data/repository/query_repository_impl.dart'
+    as _i613;
+import 'package:skarnik_flutter/features/search/domain/repository/query_repository.dart'
+    as _i264;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
     as _i124;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
@@ -51,8 +56,8 @@ import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.
     as _i861;
 import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
     as _i485;
-import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository.dart'
-    as _i191;
+import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository_impl.dart'
+    as _i172;
 import 'package:skarnik_flutter/features/translation/data/repository/dev_analytics_translation_repository.dart'
     as _i336;
 import 'package:skarnik_flutter/features/translation/data/repository/firebase_analytics_translation_repository.dart'
@@ -65,14 +70,20 @@ import 'package:skarnik_flutter/features/translation/data/repository/objectbox_w
     as _i326;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
     as _i779;
+import 'package:skarnik_flutter/features/translation/data/repository/supabase_api_translation_repository_impl.dart'
+    as _i1072;
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart'
     as _i223;
+import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart'
+    as _i138;
+import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart'
+    as _i361;
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart'
     as _i361;
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart'
     as _i788;
-import 'package:skarnik_flutter/features/translation/domain/repository/translation_repository.dart'
-    as _i507;
+import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart'
+    as _i317;
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart'
     as _i147;
 import 'package:skarnik_flutter/features/translation/domain/use_case/add_to_favorites.dart'
@@ -112,109 +123,147 @@ const String _dev = 'dev';
 const String _prod = 'prod';
 
 extension GetItInjectableX on _i174.GetIt {
-// initializes the registration of main-scope dependencies inside of GetIt
+  // initializes the registration of main-scope dependencies inside of GetIt
   _i174.GetIt init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i526.GetItHelper(
-      this,
-      environment,
-      environmentFilter,
-    );
+    final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i519.GetAppLinkStreamUseCase>(
-        () => _i519.GetAppLinkStreamUseCase());
-    gh.factory<_i525.InitRemoteConfigUseCase>(
-        () => _i525.InitRemoteConfigUseCase());
+      () => _i519.GetAppLinkStreamUseCase(),
+    );
     gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
     gh.factory<_i525.InitRemoteConfigUseCase>(
-        () => _i525.InitRemoteConfigUseCase());
+      () => _i525.InitRemoteConfigUseCase(),
+    );
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i989.DevAnalyticsVocabularyRepository(),
       registerFor: {_dev},
     );
-    gh.lazySingleton<_i124.SearchRepository>(
-        () => _i863.TypesenseSearchRepository());
+    gh.lazySingleton<_i361.CloudTranslationRepository>(
+      () => _i1072.SupabaseTranslationRepositoryImpl(),
+    );
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
     gh.factory<_i915.SearchUseCase>(
-        () => _i915.SearchUseCase(gh<_i124.SearchRepository>()));
+      () => _i915.SearchUseCase(gh<_i124.SearchRepository>()),
+    );
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i805.DevAnalyticsAppRepository(),
       registerFor: {_dev},
     );
-    gh.factory<_i147.WordRepository>(
-        () => _i326.ObjectboxWordRepository(gh<_i522.ObjectboxStoreHolder>()));
+    gh.factory<_i531.SettingsHistoryRepository>(
+      () => _i252.ObjectboxSettingsHistoryRepository(
+        gh<_i522.ObjectboxStoreHolder>(),
+      ),
+    );
     gh.factory<_i763.DatabaseRepository>(
-        () => _i226.ObjectboxDatabaseRepository());
+      () => _i226.ObjectboxDatabaseRepository(),
+    );
     gh.factory<_i223.AnalyticsTranslationRepository>(
       () => _i336.DevAnalyticsTranslationRepository(),
       registerFor: {_dev},
     );
-    gh.factory<_i507.FallbackTranslationRepository>(
-        () => _i779.SkarnikTranslationRepository(gh<_i361.Dio>()));
-    gh.factory<_i914.GetWordUseCase>(
-        () => _i914.GetWordUseCase(gh<_i147.WordRepository>()));
-    gh.factory<_i587.VocabularyRepository>(() =>
-        _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()));
+    gh.factory<_i587.VocabularyRepository>(
+      () =>
+          _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.lazySingleton<_i264.QueryRepository>(
+      () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),
+    );
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i1004.FirebaseAnalyticsAppRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i788.HistoryRepository>(() =>
-        _i556.ObjectboxHistoryRepository(gh<_i522.ObjectboxStoreHolder>()));
-    gh.factory<_i361.FavoritesRepository>(() =>
-        _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()));
+    gh.factory<_i741.LoadVocabularyUseCase>(
+      () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()),
+    );
+    gh.factory<_i958.LogAnalyticsAppOpenUseCase>(
+      () => _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()),
+    );
+    gh.factory<_i788.HistoryRepository>(
+      () => _i556.ObjectboxHistoryRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.factory<_i861.ClearHistoryUseCase>(
+      () => _i861.ClearHistoryUseCase(gh<_i531.SettingsHistoryRepository>()),
+    );
+    gh.factory<_i361.FavoritesRepository>(
+      () =>
+          _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
     gh.factory<_i146.InitDatabaseUseCase>(
-        () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()));
-    gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(() =>
-        _i616.LogAnalyticsVocabularyWordUseCase(
-            gh<_i267.AnalyticsVocabularyRepository>()));
+      () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()),
+    );
     gh.factory<_i223.AnalyticsTranslationRepository>(
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i531.SettingsHistoryRepository>(() =>
-        _i252.ObjectboxSettingsHistoryRepository(
-            gh<_i522.ObjectboxStoreHolder>()));
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i20.FirebaseAnalyticsVocabularyRepository(),
       registerFor: {_prod},
     );
-    gh.factory<_i741.LoadVocabularyUseCase>(
-        () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()));
-    gh.factory<_i507.PrimaryTranslationRepository>(
-        () => _i191.ApiTranslationRepository(gh<_i361.Dio>()));
+    gh.factory<_i147.WordRepository>(
+      () => _i326.ObjectboxWordRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.factory<_i317.WebsiteTranslationRepository>(
+      () => _i779.SkarnikTranslationRepository(gh<_i361.Dio>()),
+    );
     gh.factory<_i522.LoadHistoryUseCase>(
-        () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()));
+      () => _i522.LoadHistoryUseCase(gh<_i788.HistoryRepository>()),
+    );
     gh.factory<_i276.SaveToHistoryUseCase>(
-        () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()));
-    gh.factory<_i958.LogAnalyticsAppOpenUseCase>(() =>
-        _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()));
-    gh.factory<_i135.CheckInFavoritesUseCase>(
-        () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()));
-    gh.factory<_i311.AddToFavoritesUseCase>(
-        () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()));
-    gh.factory<_i235.RemoveFromFavoritesUseCase>(() =>
-        _i235.RemoveFromFavoritesUseCase(gh<_i361.FavoritesRepository>()));
+      () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()),
+    );
+    gh.lazySingleton<_i138.ApiTranslationRepository>(
+      () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
+    );
     gh.factory<_i978.LoadFavoritesUseCase>(
-        () => _i978.LoadFavoritesUseCase(gh<_i361.FavoritesRepository>()));
-    gh.factory<_i861.ClearHistoryUseCase>(
-        () => _i861.ClearHistoryUseCase(gh<_i531.SettingsHistoryRepository>()));
-    gh.factory<_i501.LogAnalyticsTranslationUseCase>(() =>
-        _i501.LogAnalyticsTranslationUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i888.LogAnalyticsShareUseCase>(() =>
-        _i888.LogAnalyticsShareUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(() =>
-        _i135.LogAnalyticsAddToFavoritesUseCase(
-            gh<_i223.AnalyticsTranslationRepository>()));
-    gh.factory<_i803.GetTranslationUseCase>(() => _i803.GetTranslationUseCase(
-          primaryTranslationRepository:
-              gh<_i507.PrimaryTranslationRepository>(),
-          fallbackTranslationRepository:
-              gh<_i507.FallbackTranslationRepository>(),
-        ));
+      () => _i978.LoadFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i311.AddToFavoritesUseCase>(
+      () => _i311.AddToFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i135.CheckInFavoritesUseCase>(
+      () => _i135.CheckInFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i235.RemoveFromFavoritesUseCase>(
+      () => _i235.RemoveFromFavoritesUseCase(gh<_i361.FavoritesRepository>()),
+    );
+    gh.factory<_i914.GetWordUseCase>(
+      () => _i914.GetWordUseCase(gh<_i147.WordRepository>()),
+    );
+    gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(
+      () => _i616.LogAnalyticsVocabularyWordUseCase(
+        gh<_i267.AnalyticsVocabularyRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i124.SearchRepository>(
+      () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()),
+    );
+    gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(
+      () => _i135.LogAnalyticsAddToFavoritesUseCase(
+        gh<_i223.AnalyticsTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i888.LogAnalyticsShareUseCase>(
+      () => _i888.LogAnalyticsShareUseCase(
+        gh<_i223.AnalyticsTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i501.LogAnalyticsTranslationUseCase>(
+      () => _i501.LogAnalyticsTranslationUseCase(
+        gh<_i223.AnalyticsTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i803.GetTranslationUseCase>(
+      () => _i803.GetTranslationUseCase(
+        apiWordRepository: gh<_i138.ApiTranslationRepository>(),
+        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
+        websiteTranslationRepository: gh<_i317.WebsiteTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i915.SearchUseCase>(
+      () => _i915.SearchUseCase(gh<_i124.SearchRepository>()),
+    );
     return this;
   }
 }

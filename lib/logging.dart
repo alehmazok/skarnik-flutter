@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 export 'package:logging/logging.dart';
 
 abstract class Logging {
-  static setupLogger({Level level = Level.INFO, bool recordError = false}) {
+  static void setupLogger({Level level = Level.INFO, bool recordError = false}) {
     Logger.root.level = level;
     Logger.root.onRecord.listen((record) {
       print('${record.level.name}: ${record.loggerName}: ${record.time}: ${record.message}');

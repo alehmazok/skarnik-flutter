@@ -1,25 +1,37 @@
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
-import 'package:skarnik_flutter/serializers.dart';
+import 'package:equatable/equatable.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
-part 'api_word.g.dart';
+import 'translation.dart';
 
-abstract class ApiWord implements Built<ApiWord, ApiWordBuilder> {
-  @BuiltValueField(wireName: 'external_id')
-  int get externalId;
+class ApiWord extends Equatable {
+  final int externalId;
+  final String? stress;
+  final String translation;
+  final String? redirectTo;
 
-  String get translation;
+  @override
+  List<Object?> get props => [
+    externalId,
+    stress,
+    translation,
+    redirectTo,
+  ];
 
-  @BuiltValueField(wireName: 'redirect_to')
-  String? get redirectTo;
+  const ApiWord({
+    required this.externalId,
+    required this.translation,
+    required this.redirectTo,
+    this.stress,
+  });
 
-  ApiWord._();
-
-  factory ApiWord([void Function(ApiWordBuilder) updates]) = _$ApiWord;
-
-  static ApiWord fromJson(Map<String, dynamic> json) {
-    return serializers.deserializeWith(ApiWord.serializer, json)!;
-  }
-
-  static Serializer<ApiWord> get serializer => _$apiWordSerializer;
+  Translation toTranslation({
+    required Word word,
+    required String source,
+  }) => Translation.build(
+    uri: word.buildApiUri(),
+    word: word,
+    stress: stress,
+    html: translation,
+    source: source,
+  );
 }

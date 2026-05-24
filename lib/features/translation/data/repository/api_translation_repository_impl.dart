@@ -4,25 +4,25 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../../domain/entity/api_word.dart';
-import '../../domain/entity/translation.dart';
-import '../../domain/repository/translation_repository.dart';
+import '../../domain/repository/api_translation_repository.dart';
+import '../model/api_word_model.dart';
 
-@Injectable(as: PrimaryTranslationRepository)
-class ApiTranslationRepository implements PrimaryTranslationRepository {
-  final _logger = getLogger(ApiTranslationRepository);
+@LazySingleton(as: ApiTranslationRepository)
+class ApiTranslationRepositoryImpl implements ApiTranslationRepository {
+  final _logger = getLogger(ApiTranslationRepositoryImpl);
 
   final Dio _dio;
 
-  ApiTranslationRepository(this._dio);
+  ApiTranslationRepositoryImpl(this._dio);
 
   @override
-  Future<Translation> getTranslation(Word word) async {
-    final uri = Uri.parse(
-      '${AppConfig.apiHostName}/api/words/${word.dictionary.path}/${word.wordId}/',
-    );
+  Future<ApiWord> getWord(Word word) async {
+    final uri = word.buildApiUri();
+
     _logger.fine('Робім запыт на: ${uri.toString()}');
 
     final res = await _dio.getUri(
@@ -31,12 +31,15 @@ class ApiTranslationRepository implements PrimaryTranslationRepository {
         Duration(hours: FirebaseRemoteConfig.instance.getInt(AppConfig.httpCacheDurationInHours)),
       ),
     );
+    final data = res.data as Map<String, dynamic>;
 
-    final apiWord = ApiWord.fromJson(res.data as Map<String, dynamic>);
-    return Translation.build(
-      uri: uri,
-      word: word,
-      html: apiWord.translation,
-    );
+    final model = ApiWordModel.fromJson(data);
+
+    return model.toEntity();
+  }
+
+  @override
+  Future<Translation> getTranslation(Word word) {
+    throw UnimplementedError();
   }
 }

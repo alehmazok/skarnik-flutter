@@ -86,11 +86,7 @@ class SimpleListView extends StatefulWidget {
   final int langId;
   final List<Word> words;
 
-  const SimpleListView({
-    super.key,
-    required this.langId,
-    required this.words,
-  });
+  const SimpleListView({super.key, required this.langId, required this.words});
 
   @override
   State<SimpleListView> createState() => _SimpleListViewState();
@@ -104,7 +100,7 @@ class _SimpleListViewState extends State<SimpleListView> {
 
   Future<void> _initVibration() async {
     // Не падабаецца, як працуе вібрацыя на Андройдзе.
-    _hasVibration = !Platform.isAndroid && (await Vibration.hasVibrator() ?? false);
+    _hasVibration = !Platform.isAndroid && await Vibration.hasVibrator();
   }
 
   @override
@@ -143,13 +139,7 @@ class _SimpleListViewState extends State<SimpleListView> {
               return ListTile(
                 title: Text(word.word),
                 onTap: () {
-                  context.go(
-                    '/translate/word',
-                    extra: {
-                      'word': word,
-                      'save_to_history': true,
-                    },
-                  );
+                  context.go('/translate/word', extra: {'word': word, 'save_to_history': true});
                   context.read<VocabularyCubit>().logAnalyticsWord(word);
                 },
               );

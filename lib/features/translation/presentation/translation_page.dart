@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
+import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/add_to_favorites.dart';
 import '../domain/use_case/check_in_favorites.dart';
@@ -24,15 +25,48 @@ class TranslationPage extends StatelessWidget {
   final int wordId;
   final bool saveToHistory;
 
-  const TranslationPage({
+  final AddToFavoritesUseCase addToFavoritesUseCase;
+  final CheckInFavoritesUseCase checkInFavoritesUseCase;
+  final GetTranslationUseCase getTranslationUseCase;
+  final GetWordUseCase getWordUseCase;
+  final LogAnalyticsAddToFavoritesUseCase logAnalyticsAddToFavoritesUseCase;
+  final LogAnalyticsShareUseCase logAnalyticsShareUseCase;
+  final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
+  final RemoveFromFavoritesUseCase removeFromFavoritesUseCase;
+  final SaveToHistoryUseCase saveToHistoryUseCase;
+
+  TranslationPage({
     super.key,
     this.word,
     required this.langId,
     required this.wordId,
     this.saveToHistory = true,
-  });
 
-  factory TranslationPage.word({required Word word, required bool saveToHistory}) => TranslationPage(
+    // Dependencies
+    AddToFavoritesUseCase? addToFavoritesUseCase,
+    CheckInFavoritesUseCase? checkInFavoritesUseCase,
+    GetTranslationUseCase? getTranslationUseCase,
+    GetWordUseCase? getWordUseCase,
+    LogAnalyticsAddToFavoritesUseCase? logAnalyticsAddToFavoritesUseCase,
+    LogAnalyticsShareUseCase? logAnalyticsShareUseCase,
+    LogAnalyticsTranslationUseCase? logAnalyticsTranslationUseCase,
+    RemoveFromFavoritesUseCase? removeFromFavoritesUseCase,
+    SaveToHistoryUseCase? saveToHistoryUseCase,
+  }) : addToFavoritesUseCase = addToFavoritesUseCase ?? getIt<AddToFavoritesUseCase>(),
+       checkInFavoritesUseCase = checkInFavoritesUseCase ?? getIt<CheckInFavoritesUseCase>(),
+       getTranslationUseCase = getTranslationUseCase ?? getIt<GetTranslationUseCase>(),
+       getWordUseCase = getWordUseCase ?? getIt<GetWordUseCase>(),
+       logAnalyticsAddToFavoritesUseCase =
+           logAnalyticsAddToFavoritesUseCase ?? getIt<LogAnalyticsAddToFavoritesUseCase>(),
+       logAnalyticsShareUseCase = logAnalyticsShareUseCase ?? getIt<LogAnalyticsShareUseCase>(),
+       logAnalyticsTranslationUseCase =
+           logAnalyticsTranslationUseCase ?? getIt<LogAnalyticsTranslationUseCase>(),
+       removeFromFavoritesUseCase =
+           removeFromFavoritesUseCase ?? getIt<RemoveFromFavoritesUseCase>(),
+       saveToHistoryUseCase = saveToHistoryUseCase ?? getIt<SaveToHistoryUseCase>();
+
+  factory TranslationPage.word({required Word word, required bool saveToHistory}) =>
+      TranslationPage(
         word: word,
         langId: word.langId,
         wordId: word.wordId,
@@ -47,15 +81,15 @@ class TranslationPage extends StatelessWidget {
         langId: langId,
         wordId: wordId,
         saveToHistory: saveToHistory,
-        getWordUseCase: getIt<GetWordUseCase>(),
-        getTranslationUseCase: getIt<GetTranslationUseCase>(),
-        addToFavoritesUseCase: getIt<AddToFavoritesUseCase>(),
-        checkInFavoritesUseCase: getIt<CheckInFavoritesUseCase>(),
-        removeFromFavoritesUseCase: getIt<RemoveFromFavoritesUseCase>(),
-        saveToHistoryUseCase: getIt<SaveToHistoryUseCase>(),
-        logAnalyticsShareUseCase: getIt<LogAnalyticsShareUseCase>(),
-        logAnalyticsTranslationUseCase: getIt<LogAnalyticsTranslationUseCase>(),
-        logAnalyticsAddToFavoritesUseCase: getIt<LogAnalyticsAddToFavoritesUseCase>(),
+        getWordUseCase: getWordUseCase,
+        getTranslationUseCase: getTranslationUseCase,
+        addToFavoritesUseCase: addToFavoritesUseCase,
+        checkInFavoritesUseCase: checkInFavoritesUseCase,
+        removeFromFavoritesUseCase: removeFromFavoritesUseCase,
+        saveToHistoryUseCase: saveToHistoryUseCase,
+        logAnalyticsShareUseCase: logAnalyticsShareUseCase,
+        logAnalyticsTranslationUseCase: logAnalyticsTranslationUseCase,
+        logAnalyticsAddToFavoritesUseCase: logAnalyticsAddToFavoritesUseCase,
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -74,9 +108,7 @@ class TranslationPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      'Дададзена ў закладкі.',
-                    ),
+                    content: Text(Strings.addedToBookmarks),
                   ),
                 );
             }
@@ -85,11 +117,22 @@ class TranslationPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(
                   const SnackBar(
+                    content: Text(Strings.removedFromBookmarks),
+                  ),
+                );
+            }
+            if (state is TranslationRedirectState) {
+              ScaffoldMessenger.of(context)
+                ..clearSnackBars()
+                ..showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 15),
                     content: Text(
-                      'Выдалена з закладак.',
+                      Strings.redirectedFromWord.replaceFirst('{}', state.word.word),
                     ),
                   ),
                 );
+              context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(state.redirectTo));
             }
             if (state is TranslationFailedState) {
               // TODO: зрабіць больш дакладную і прыгожую апрацоўку памылак.
@@ -99,7 +142,7 @@ class TranslationPage extends StatelessWidget {
                   SnackBar(
                     duration: const Duration(seconds: 15),
                     content: Text(
-                      'Прабачце, адбылася памылка перакладу слова.',
+                      Strings.sorryTranslationError,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.errorContainer,
                       ),
@@ -111,10 +154,10 @@ class TranslationPage extends StatelessWidget {
           buildWhen: (_, current) => current is TranslationLoadedState,
           builder: (context, state) {
             final String wordText;
-            if (word != null) {
+            if (state is TranslationLoadedState) {
+              wordText = state.translation.maybeStressedWord;
+            } else if (word != null) {
               wordText = word.word;
-            } else if (state is TranslationLoadedState) {
-              wordText = state.translation.word.word;
             } else {
               wordText = '';
             }

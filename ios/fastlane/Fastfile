@@ -22,6 +22,11 @@ end
 default_platform(:ios)
 
 platform :ios do
+  desc "Runs analyzer"
+  lane :analyze_flutter do
+    flutter(args: ["analyze"])
+  end
+
   desc "Runs flutter widget tests"
   lane :test_flutter do
     flutter(args: ["test", "../test"])
@@ -36,8 +41,7 @@ platform :ios do
                   "--release",
                   "--no-codesign",
                   "-t", "lib/main.dart",
-                  "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
-                  "--dart-define=DEV_EMAIL_ADDRESS=#{ENV['DEV_EMAIL_ADDRESS']}",
+                  "--dart-define-from-file=ios/fastlane/.env.secret",
               ]
            )
   end

@@ -1,12 +1,10 @@
 import 'package:injectable/injectable.dart';
-import 'package:skarnik_flutter/features/app/data/model/objectbox_search_word.dart';
-import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart';
-import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
-import 'package:skarnik_flutter/objectbox.g.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 
+import '../../domain/repository/query_repository.dart';
 import '../../domain/repository/search_repository.dart';
 
-// @Injectable(as: SearchRepository)
+@LazySingleton(as: SearchRepository)
 class ObjectboxSearchRepository implements SearchRepository {
   static const letterSubstitutions = {
     'и': 'і',
@@ -16,42 +14,35 @@ class ObjectboxSearchRepository implements SearchRepository {
     '\'': '‘',
   };
 
-  final ObjectboxStoreHolder _objectboxService;
+  final QueryRepository _queryRepository;
 
-  ObjectboxSearchRepository(this._objectboxService);
+  ObjectboxSearchRepository(
+    this._queryRepository,
+  );
 
   @override
-  Future<Iterable<Word>> search(String searchQuery) async {
+  Future<Iterable<SearchWord>> search(String searchQuery) async {
     searchQuery = searchQuery.toLowerCase();
-    final box = _objectboxService.searchStore.box<ObjectboxSearchWord>();
-
     final searchQueryWithSubstitutions = applySubstitutions(searchQuery);
 
-    final query = box
-        .query(
-          ObjectboxSearchWord_.lword
-              .startsWith(searchQuery)
-              .or(ObjectboxSearchWord_.lword.startsWith(searchQueryWithSubstitutions)),
-        )
-        .order(ObjectboxSearchWord_.lword)
-        .build();
-
-    final queryByMask = box
-        .query(
-          ObjectboxSearchWord_.lwordMask
-              .startsWith(searchQuery)
-              .or(ObjectboxSearchWord_.lwordMask.startsWith(searchQueryWithSubstitutions)),
-        )
-        .order(ObjectboxSearchWord_.lwordMask)
-        .build();
-
-    // Рэзультаты абодвух запытаў складваем у LinkedHashSet, каб пазбегнуць дублікатаў
-    return {
-      ...query.find(),
-      ...queryByMask.find(),
-    }.map(
-      (it) => it.toEntity(),
+    final resultsByWord = _queryRepository.queryByWord(
+      searchQuery: searchQuery,
+      searchQueryWithSubstitutions: searchQueryWithSubstitutions,
     );
+
+    final resultsByWordMask = _queryRepository.queryByWordMask(
+      searchQuery: searchQuery,
+      searchQueryWithSubstitutions: searchQueryWithSubstitutions,
+      excluded: resultsByWord,
+    );
+
+    /// Рэзультаты абодвух запытаў складваем у LinkedHashSet, на ўсялякі выпадак, каб пазбегнуць дублікатаў.
+    /// Але насамрэч дублікатаў не павінна быць яшчэ на ўзроўні запыту да БД.
+    /// Глядзі параметр [excluded] ў [QueryRepository.queryByWordMask].
+    return <SearchWord>{
+      ...resultsByWord,
+      ...resultsByWordMask,
+    };
   }
 
   bool isSearchByMaskApplicable(String query) => query.length >= 3;

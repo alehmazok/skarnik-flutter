@@ -3,7 +3,9 @@ abstract class AppConfig {
 
   static const httpCacheDurationInHours = 'http_cache_duration_in_hours';
 
-  static const wordsPerPage = 50;
+  static const wordsPerPage = 25;
+
+  static const wordsSearchLimit = 15;
 
   static const skarnikSiteHostName = 'skarnik.by';
 
@@ -11,7 +13,7 @@ abstract class AppConfig {
 
   static const devEmailAddress = String.fromEnvironment('DEV_EMAIL_ADDRESS');
 
-  static const typesenseHostName = String.fromEnvironment('TYPESENSE_HOSTNAME');
+  static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
 
-  static const typesenseApiKey = String.fromEnvironment('TYPESENSE_API_KEY');
+  static const supabaseAnonKey = String.fromEnvironment('SUPABASE_KEY');
 }

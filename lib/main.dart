@@ -9,6 +9,7 @@ import 'di.skarnik.dart';
 import 'features/app/presentation/skarnik_app.dart';
 import 'firebase_options.dart';
 import 'logging.dart';
+import 'supabase_client.dart';
 
 void main() async {
   Logging.setupLogger(
@@ -23,6 +24,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await SupabaseConfig.initialize();
 
   if (kDebugMode) {
     Bloc.observer = DevelopmentBlocObserver();
