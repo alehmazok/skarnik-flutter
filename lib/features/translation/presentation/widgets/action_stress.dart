@@ -16,37 +16,27 @@ class ActionStress extends StatelessWidget {
         if (state is! TranslationLoadedState) return const SizedBox.shrink();
         final candidates = state.translation.stressCandidates;
         if (candidates.isEmpty) return const SizedBox.shrink();
-        return TextButton(
-          onPressed: () => _onStressPressed(context, candidates),
-          child: const Text(Strings.nacisk),
+        if (candidates.length == 1) {
+          return TextButton(
+            onPressed: () => _navigateToStress(context, candidates.first),
+            child: const Text(Strings.nacisk),
+          );
+        }
+        return MenuAnchor(
+          builder: (context, controller, _) => TextButton(
+            onPressed: () => controller.open(),
+            child: const Text(Strings.nacisk),
+          ),
+          menuChildren: [
+            for (final candidate in candidates)
+              MenuItemButton(
+                onPressed: () => _navigateToStress(context, candidate),
+                child: Text(candidate),
+              ),
+          ],
         );
       },
     );
-  }
-
-  static void _onStressPressed(BuildContext context, List<String> candidates) {
-    if (candidates.length == 1) {
-      _navigateToStress(context, candidates.first);
-    } else {
-      showModalBottomSheet<String>(
-        context: context,
-        showDragHandle: true,
-        builder: (ctx) => ListView(
-          shrinkWrap: true,
-          children: [
-            for (final candidate in candidates)
-              ListTile(
-                title: Text(candidate),
-                onTap: () => Navigator.of(ctx).pop(candidate),
-              ),
-          ],
-        ),
-      ).then((selected) {
-        if (selected != null && context.mounted) {
-          _navigateToStress(context, selected);
-        }
-      });
-    }
   }
 
   static void _navigateToStress(BuildContext context, String word) {
