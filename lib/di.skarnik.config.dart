@@ -54,6 +54,20 @@ import 'package:skarnik_flutter/features/settings/domain/repository/settings_his
     as _i531;
 import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.dart'
     as _i861;
+import 'package:skarnik_flutter/features/stress/data/repository/dev_analytics_stress_repository.dart'
+    as _i410;
+import 'package:skarnik_flutter/features/stress/data/repository/firebase_analytics_stress_repository.dart'
+    as _i51;
+import 'package:skarnik_flutter/features/stress/data/repository/starnik_stress_repository.dart'
+    as _i370;
+import 'package:skarnik_flutter/features/stress/domain/repository/analytics_stress_repository.dart'
+    as _i173;
+import 'package:skarnik_flutter/features/stress/domain/repository/stress_repository.dart'
+    as _i670;
+import 'package:skarnik_flutter/features/stress/domain/use_case/get_stress_table.dart'
+    as _i468;
+import 'package:skarnik_flutter/features/stress/domain/use_case/log_analytics_stress.dart'
+    as _i240;
 import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
     as _i485;
 import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository_impl.dart'
@@ -160,9 +174,19 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i336.DevAnalyticsTranslationRepository(),
       registerFor: {_dev},
     );
+    gh.factory<_i173.AnalyticsStressRepository>(
+      () => _i410.DevAnalyticsStressRepository(),
+      registerFor: {_dev},
+    );
     gh.factory<_i587.VocabularyRepository>(
       () =>
           _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.factory<_i670.StressRepository>(
+      () => _i370.StarnikStressRepository(gh<_i361.Dio>()),
+    );
+    gh.factory<_i468.GetStressTableUseCase>(
+      () => _i468.GetStressTableUseCase(gh<_i670.StressRepository>()),
     );
     gh.lazySingleton<_i264.QueryRepository>(
       () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),
@@ -173,6 +197,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i741.LoadVocabularyUseCase>(
       () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()),
+    );
+    gh.factory<_i173.AnalyticsStressRepository>(
+      () => _i51.FirebaseAnalyticsStressRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i958.LogAnalyticsAppOpenUseCase>(
       () => _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()),
@@ -235,6 +263,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i124.SearchRepository>(
       () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()),
+    );
+    gh.factory<_i240.LogAnalyticsStressUseCase>(
+      () => _i240.LogAnalyticsStressUseCase(
+        gh<_i173.AnalyticsStressRepository>(),
+      ),
     );
     gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(
       () => _i135.LogAnalyticsAddToFavoritesUseCase(

@@ -17,6 +17,7 @@ import '../domain/use_case/save_to_history.dart';
 import 'translation_cubit.dart';
 import 'widgets/action_favorites.dart';
 import 'widgets/action_share.dart';
+import 'widgets/action_stress.dart';
 import 'widgets/translation_html.dart';
 
 class TranslationPage extends StatelessWidget {
@@ -96,6 +97,7 @@ class TranslationPage extends StatelessWidget {
           actions: const [
             ActionFavorites(),
             ActionShare(),
+            ActionStress(),
           ],
         ),
         body: BlocConsumer<TranslationCubit, TranslationState>(
@@ -162,31 +164,33 @@ class TranslationPage extends StatelessWidget {
               wordText = '';
             }
             if (state is TranslationLoadedState) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text(
-                          '«$wordText»',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleLarge,
+              return SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            '«$wordText»',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          state.translation.word.dictionary.translationName,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelMedium,
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            state.translation.word.dictionary.translationName,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      TranslationHtml(content: state.translation.html),
-                    ],
+                        const SizedBox(height: 16),
+                        TranslationHtml(content: state.translation.html),
+                      ],
+                    ),
                   ),
                 ),
               );

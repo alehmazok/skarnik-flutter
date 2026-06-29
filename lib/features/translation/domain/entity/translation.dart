@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:skarnik_flutter/app_config.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 class Translation extends Equatable {
@@ -10,6 +12,26 @@ class Translation extends Equatable {
   final String source;
 
   String get maybeStressedWord => stress ?? word.word;
+
+  late final List<String> stressCandidates = switch (word.dictionary) {
+    Dictionary.belRus || Dictionary.tsbm => word.word.contains(' ') ? const [] : [word.word],
+    Dictionary.rusBel => _extractRusBelCandidates(html),
+  };
+
+  static List<String> _extractRusBelCandidates(String html) {
+    final fontPattern = RegExp(r'<font[^>]*color="#831b03"[^>]*>(.*?)</font>', dotAll: true);
+    final candidates = <String>{};
+    for (final match in fontPattern.allMatches(html)) {
+      final text = match.group(1)!.replaceAll(RegExp(r'<[^>]+>'), '').trim();
+      for (final part in text.split(',')) {
+        final trimmed = part.trim();
+        if (trimmed.isNotEmpty && !trimmed.contains(' ')) {
+          candidates.add(trimmed);
+        }
+      }
+    }
+    return candidates.sorted().toList();
+  }
 
   @override
   List<Object?> get props => [
@@ -22,7 +44,7 @@ class Translation extends Equatable {
   Uri get shareUri =>
       Uri.parse('https://${AppConfig.skarnikSiteHostName}/${word.dictionary.path}/${word.wordId}');
 
-  const Translation._({
+  Translation._({
     required this.uri,
     required this.word,
     this.stress,

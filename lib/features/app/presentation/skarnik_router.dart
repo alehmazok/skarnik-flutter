@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
-
-import '../../home/presentation/home_page.dart';
-import '../../search/presentation/search_page.dart';
-import '../../settings/presentation/settings_page.dart';
-import '../../translation/presentation/translation_page.dart';
-import '../domain/entity/word.dart';
+import 'package:skarnik_flutter/features/home/presentation/home_page.dart';
+import 'package:skarnik_flutter/features/search/presentation/search_page.dart';
+import 'package:skarnik_flutter/features/settings/presentation/settings_page.dart';
+import 'package:skarnik_flutter/features/stress/presentation/stress_page.dart';
+import 'package:skarnik_flutter/features/translation/presentation/translation_page.dart';
 
 abstract class SkarnikRouter {
   static final goRouter = GoRouter(
@@ -47,6 +47,13 @@ abstract class SkarnikRouter {
                 word: arguments['word'] as Word,
                 saveToHistory: arguments['save_to_history'] as bool,
               );
+            },
+          ),
+          GoRoute(
+            path: 'stress',
+            builder: (context, state) {
+              final word = state.extra as String;
+              return StressPage(word: word);
             },
           ),
         ],
