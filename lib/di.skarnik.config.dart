@@ -68,6 +68,8 @@ import 'package:skarnik_flutter/features/stress/domain/use_case/get_stress_table
     as _i468;
 import 'package:skarnik_flutter/features/stress/domain/use_case/log_analytics_stress.dart'
     as _i240;
+import 'package:skarnik_flutter/features/stress/domain/use_case/resolve_stress_word_list.dart'
+    as _i407;
 import 'package:skarnik_flutter/features/translation/data/http/skarnik_dio.dart'
     as _i485;
 import 'package:skarnik_flutter/features/translation/data/repository/api_translation_repository_impl.dart'
@@ -187,6 +189,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i468.GetStressTableUseCase>(
       () => _i468.GetStressTableUseCase(gh<_i670.StressRepository>()),
+    );
+    gh.factory<_i407.ResolveStressWordListUseCase>(
+      () => _i407.ResolveStressWordListUseCase(gh<_i670.StressRepository>()),
     );
     gh.lazySingleton<_i264.QueryRepository>(
       () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),

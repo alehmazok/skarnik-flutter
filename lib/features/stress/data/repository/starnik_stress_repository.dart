@@ -7,6 +7,7 @@ import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../../domain/entity/stress_row.dart';
+import '../../domain/entity/stress_word_entry.dart';
 import '../../domain/repository/stress_repository.dart';
 
 @Injectable(as: StressRepository)
@@ -19,8 +20,8 @@ class StarnikStressRepository implements StressRepository {
   static const _baseUrl = 'https://${AppConfig.starnikSiteHostName}';
 
   @override
-  Future<int?> resolveWordId(String word) async {
-    _logger.fine('Resolving wordId for: $word');
+  Future<List<StressWordEntry>> resolveWordList(String word) async {
+    _logger.fine('Resolving word list for: $word');
     final response = await _dio.get<dynamic>(
       '$_baseUrl/api/wordList',
       queryParameters: {'lemma': word},
@@ -31,8 +32,16 @@ class StarnikStressRepository implements StressRepository {
     );
     final data = response.data as Map<String, dynamic>;
     final wordList = data['word_list'] as List<dynamic>;
-    if (wordList.isEmpty) return null;
-    return wordList.first['id'] as int;
+    return wordList
+        .map(
+          (item) => StressWordEntry(
+            id: item['id'] as int,
+            lemma: item['lemma'] as String,
+            word: item['word'] as String,
+            tableName: item['table_name'] as String?,
+          ),
+        )
+        .toList();
   }
 
   @override

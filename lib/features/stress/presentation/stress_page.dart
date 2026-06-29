@@ -4,31 +4,31 @@ import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/strings.dart';
 
-import '../domain/use_case/get_stress_table.dart';
 import '../domain/use_case/log_analytics_stress.dart';
+import '../domain/use_case/resolve_stress_word_list.dart';
 import 'stress_cubit.dart';
-import 'widgets/stress_table.dart';
 
 class StressPage extends StatelessWidget {
   final String word;
-  final GetStressTableUseCase getStressTableUseCase;
   final LogAnalyticsStressUseCase logAnalyticsStressUseCase;
+  final ResolveStressWordListUseCase resolveStressWordListUseCase;
 
   StressPage({
     super.key,
     required this.word,
-    GetStressTableUseCase? getStressTableUseCase,
     LogAnalyticsStressUseCase? logAnalyticsStressUseCase,
-  }) : getStressTableUseCase = getStressTableUseCase ?? getIt<GetStressTableUseCase>(),
-       logAnalyticsStressUseCase = logAnalyticsStressUseCase ?? getIt<LogAnalyticsStressUseCase>();
+    ResolveStressWordListUseCase? resolveStressWordListUseCase,
+  }) : logAnalyticsStressUseCase = logAnalyticsStressUseCase ?? getIt<LogAnalyticsStressUseCase>(),
+       resolveStressWordListUseCase =
+           resolveStressWordListUseCase ?? getIt<ResolveStressWordListUseCase>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StressCubit>(
       create: (_) => StressCubit(
         word: word,
-        getStressTableUseCase: getStressTableUseCase,
         logAnalyticsStressUseCase: logAnalyticsStressUseCase,
+        resolveStressWordListUseCase: resolveStressWordListUseCase,
       ),
       child: Scaffold(
         appBar: AppBar(title: const Text(Strings.nacisk)),
@@ -39,15 +39,39 @@ class StressPage extends StatelessWidget {
                 ..clearSnackBars()
                 ..showSnackBar(const SnackBar(content: Text(Strings.naciskNotFound)));
               context.pop();
+            } else if (state is StressWordSelectedState) {
+              if (state.replace) {
+                context.replace('/stress/table', extra: state.wordId);
+              } else {
+                context.push('/stress/table', extra: state.wordId);
+              }
             }
           },
           buildWhen: (_, current) =>
               current is StressInProgressState ||
-              current is StressLoadedState ||
+              current is StressWordSelectionState ||
               current is StressFailedState,
           builder: (context, state) {
-            if (state is StressLoadedState) {
-              return StressTable(rows: state.rows);
+            if (state is StressWordSelectionState) {
+              return ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: Text(
+                      Strings.naciskSelectWord,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  for (final entry in state.words)
+                    ListTile(
+                      title: Text(entry.word),
+                      subtitle: entry.tableName != null
+                          ? Text(Strings.partOfSpeech[entry.tableName!] ?? entry.tableName!)
+                          : null,
+                      onTap: () => context.read<StressCubit>().selectWord(entry),
+                    ),
+                ],
+              );
             }
             if (state is StressFailedState) {
               return Center(
