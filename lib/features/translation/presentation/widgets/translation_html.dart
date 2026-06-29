@@ -50,10 +50,13 @@ class TranslationHtml extends StatelessWidget {
   String _modifyContentForBrightness(Brightness brightness) {
     String content = this.content;
     for (final entry in colorReplacements.entries) {
-      content = content.replaceAll(RegExp(entry.key, caseSensitive: false), entry.value[brightness.name]!);
+      content = content.replaceAll(
+        RegExp(entry.key, caseSensitive: false),
+        entry.value[brightness.name]!,
+      );
     }
     content = content.replaceAll('&nbsp;', '<span>&nbsp;</span>');
-    debugPrint(content);
+    // debugPrint(content);
     return content;
   }
 }

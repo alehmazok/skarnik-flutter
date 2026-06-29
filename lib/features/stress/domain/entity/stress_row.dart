@@ -7,5 +7,8 @@ class StressRow extends Equatable {
   @override
   List<Object> get props => [title, content];
 
-  const StressRow({required this.title, required this.content});
+  const StressRow({
+    required this.title,
+    required this.content,
+  });
 }
