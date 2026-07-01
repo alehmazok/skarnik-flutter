@@ -30,6 +30,9 @@ class ActionStress extends StatelessWidget {
           menuChildren: [
             for (final candidate in candidates)
               MenuItemButton(
+                style: MenuItemButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.titleMedium,
+                ),
                 onPressed: () => _navigateToStress(context, candidate),
                 child: Text(candidate),
               ),
