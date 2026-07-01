@@ -14,8 +14,17 @@ class StressHtmlCell extends StatelessWidget {
       style: {
         'body': Style(
           margin: Margins.zero,
-          padding: HtmlPaddings.only(left: 8, right: 8, top: 4, bottom: 4),
+          fontSize: FontSize.large,
+        ),
+        '.pytanne': Style(
           fontSize: FontSize.medium,
+          fontStyle: FontStyle.italic,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        '.skarot': Style(
+          fontWeight: FontWeight.w400,
+          fontStyle: FontStyle.italic,
+          color: const Color(0xFFF44C3E),
         ),
       },
     );
