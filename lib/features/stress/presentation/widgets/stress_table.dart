@@ -52,23 +52,5 @@ class StressTable extends StatelessWidget {
           )
           .toList(),
     );
-    return ListView.separated(
-      itemCount: rows.length,
-      separatorBuilder: (_, _) => Divider(height: 1, thickness: 1, color: dividerColor),
-      itemBuilder: (context, index) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: StressHtmlCell(html: rows[index].title)),
-          Expanded(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border(left: BorderSide(color: dividerColor)),
-              ),
-              child: StressHtmlCell(html: rows[index].content),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
