@@ -11,6 +11,8 @@ abstract class AppConfig {
 
   static const starnikSiteHostName = 'starnik.by';
 
+  static const skarnikAppSiteHostName = 'skarnik.app';
+
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
 
   static const devEmailAddress = String.fromEnvironment('DEV_EMAIL_ADDRESS');

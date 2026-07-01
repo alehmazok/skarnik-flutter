@@ -41,8 +41,9 @@ class Translation extends Equatable {
     source,
   ];
 
-  Uri get shareUri =>
-      Uri.parse('https://${AppConfig.skarnikSiteHostName}/${word.dictionary.path}/${word.wordId}');
+  Uri get shareUri => Uri.parse(
+    'https://${AppConfig.skarnikAppSiteHostName}/r/${word.dictionary.path}/${word.wordId}',
+  );
 
   Translation._({
     required this.uri,
