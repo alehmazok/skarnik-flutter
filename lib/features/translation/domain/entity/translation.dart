@@ -19,7 +19,11 @@ class Translation extends Equatable {
   };
 
   static List<String> _extractRusBelCandidates(String html) {
-    final fontPattern = RegExp(r'<font[^>]*color="#831b03"[^>]*>(.*?)</font>', dotAll: true);
+    final fontPattern = RegExp(
+      r'<font[^>]*color="#831b03"[^>]*>(.*?)</font>',
+      dotAll: true,
+      caseSensitive: false,
+    );
     final candidates = <String>{};
     for (final match in fontPattern.allMatches(html)) {
       final text = match.group(1)!.replaceAll(RegExp(r'<[^>]+>'), '').trim();
