@@ -17,7 +17,7 @@ class HandleAppLinkUseCase {
     try {
       _logger.fine('Уваходзячы апп лінк: $appLink');
       final regex = RegExp(
-        r'^(https?://(www\.)?(skarnik\.by|skarnik\.app))?/(r/)?(?<dictPath>belrus|rusbel|tsbm)/(?<wordId>[0-9]+)/?(\?.*)?$',
+        r'^(https?://(www\.)?(skarnik\.by|skarnik\.app))?/(r/)?(?<dictPath>belrus|rusbel|tsbm)/(?<wordId>[0-9]+)/?([?#].*)?$',
       );
       if (!regex.hasMatch(appLink)) {
         throw ArgumentError('Не атрымалася распарсіць app link');
