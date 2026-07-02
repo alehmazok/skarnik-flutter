@@ -185,7 +185,12 @@ class TranslationCubit extends Cubit<TranslationState> {
     // Не апрацоўваць вынік выканання usecase-а.
     unawaited(logAnalyticsShareUseCase(link));
 
-    await Share.share(link, subject: translation.word.word);
+    await SharePlus.instance.share(
+      ShareParams(
+        uri: translation.shareUri,
+        subject: translation.word.word,
+      ),
+    );
   }
 
   Future<void> addToFavorites(Word word) async {

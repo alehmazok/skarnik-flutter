@@ -15,7 +15,9 @@ class ActionFavorites extends StatelessWidget {
           final cubit = context.read<TranslationCubit>();
           return IconButton(
             onPressed: () {
-              state.inFavorites ? cubit.removeFromFavorites(state.word) : cubit.addToFavorites(state.word);
+              state.inFavorites
+                  ? cubit.removeFromFavorites(state.word)
+                  : cubit.addToFavorites(state.word);
             },
             icon: state.inFavorites
                 ? Icon(

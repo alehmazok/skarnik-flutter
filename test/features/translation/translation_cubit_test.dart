@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart';
@@ -483,6 +485,86 @@ void main() {
         verify: (_) {
           verify(() => favoritesRepository.add(word)).called(1);
         },
+      );
+    });
+
+    group('share()', () {
+      late Word word;
+      late Translation translation;
+
+      setUp(() {
+        word = MockWord();
+        final uri = Uri.parse('https://skarnik.by/word/test');
+
+        translation = Translation.build(
+          word: word,
+          html: '<div>test</div>',
+          uri: uri,
+          source: 'website',
+        );
+
+        when(() => word.word).thenReturn('слова');
+        when(() => word.dictionary).thenReturn(Dictionary.belRus);
+        when(() => word.wordId).thenReturn(42);
+
+        when(
+          () => wordRepository.getWord(langId: 1, wordId: 1),
+        ).thenAnswer((_) async => word);
+
+        when(
+          () => websiteTranslationRepository.getTranslation(word),
+        ).thenAnswer((_) async => translation);
+
+        when(
+          () => favoritesRepository.contains(word),
+        ).thenAnswer((_) async => false);
+
+        when(
+          () => historyRepository.save(word),
+        ).thenAnswer((_) async => 1);
+
+        when(
+          () => analyticsTranslationRepository.logShare(any()),
+        ).thenAnswer((_) async {});
+
+        TestWidgetsFlutterBinding.ensureInitialized();
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/share'),
+          (MethodCall methodCall) async => null,
+        );
+      });
+
+      blocTest(
+        'calls logShare with share uri',
+        build: () => newInstance(),
+        act: (cubit) async {
+          await Future.delayed(const Duration(milliseconds: 100));
+          await cubit.share(translation);
+        },
+        expect: () => [
+          isA<TranslationLoadedState>(),
+          isA<TranslationInFavoritesState>(),
+        ],
+        verify: (_) {
+          verify(
+            () => analyticsTranslationRepository.logShare(
+              'https://skarnik.app/r/belrus/42',
+            ),
+          ).called(1);
+        },
+      );
+
+      blocTest(
+        'does not emit state during share',
+        build: () => newInstance(),
+        act: (cubit) async {
+          await Future.delayed(const Duration(milliseconds: 100));
+          await cubit.share(translation);
+        },
+        expect: () => [
+          isA<TranslationLoadedState>(),
+          isA<TranslationInFavoritesState>(),
+        ],
       );
     });
 

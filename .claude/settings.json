@@ -10,5 +10,18 @@
       "Bash(grep *)"
     ],
     "deny": []
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,json,os; d=json.load(sys.stdin); p=d.get('tool_input',{}).get('file_path',''); p.endswith('.dart') and os.system(f'dart format {p}')\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
   }
 }

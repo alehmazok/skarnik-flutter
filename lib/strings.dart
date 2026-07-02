@@ -13,6 +13,24 @@ abstract interface class Strings {
   static const dictionary = 'Слоўнік';
   static const historyCleared = 'Гісторыя паспяхова ачышчана.';
   static const no = 'Не';
+  static const nacisk = 'На́ціск';
+  static const naciskLetter = 'Á'; // 'а́';
+  static const naciskError = 'Адбылася памылка пры загрузцы інфармацыі аб націску.';
+  static const naciskNotFound = 'Інфармацыя аб націску для гэтага слова не знойдзена.';
+  static const naciskSelectWord = 'Абярыце слова:';
+  static const partOfSpeech = {
+    'Adjectives': 'Прыметнік',
+    'Adverbs': 'Прыслоўе',
+    'Conjunctions': 'Злучнік',
+    'Interjections': 'Выклічнік',
+    'Nouns': 'Назоўнік',
+    'Numerals': 'Лічэбнік',
+    'Particles': 'Частка',
+    'Participles': 'Дзеепрыметнік',
+    'Prepositions': 'Прыназоўнік',
+    'Pronouns': 'Займеннік',
+    'Verbs': 'Дзеяслоў',
+  };
   static const nothingFound = 'Па запыце нічога не знойдзена';
   static const preferences = 'Налады';
   static const redirectedFromWord = 'Перанакіравана з «{}»';
