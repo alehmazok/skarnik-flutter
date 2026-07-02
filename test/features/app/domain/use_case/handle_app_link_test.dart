@@ -48,11 +48,30 @@ void main() {
       expect(pair.wordId, wordId);
     });
 
+    for (final link in [
+      'https://skarnik.by/tsbm/$wordId/',
+      'https://skarnik.by/tsbm/$wordId?utm_source=share',
+      'https://skarnik.by/tsbm/$wordId/?utm_source=share',
+      'https://skarnik.by/tsbm/$wordId#section',
+      'https://skarnik.by/tsbm/$wordId/#section',
+    ]) {
+      test('parses `$link` with trailing slash, query params, and/or fragment', () async {
+        final result = await useCase.call(link);
+
+        expect(result, isA<Success<({int langId, int wordId})>>());
+        final pair = (result as Success<({int langId, int wordId})>).result;
+        expect(pair.langId, Dictionary.tsbm.langId);
+        expect(pair.wordId, wordId);
+      });
+    }
+
     for (final badLink in [
       'https://skarnik.by/unknown/1000',
       'https://skarnik.by/belrus/notanumber',
       'not a link at all',
       '',
+      'https://evil.com/search?url=/belrus/$wordId',
+      'https://skarnik.by/belrus/$wordId/extra',
     ]) {
       test('returns Failure for unparsable link `$badLink`', () async {
         final result = await useCase.call(badLink);

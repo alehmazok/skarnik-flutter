@@ -41,6 +41,11 @@
 
                 <data android:host="${appHostname}"/>
                 <data android:host="www.${appHostname}"/>
+
+                <data android:pathPrefix="/belrus/"/>
+                <data android:pathPrefix="/rusbel/"/>
+                <data android:pathPrefix="/tsbm/"/>
+                <data android:pathPrefix="/r/"/>
             </intent-filter>
         </activity>
         <!-- Не лагаваць у аналітыку пераходы па экранах -->
