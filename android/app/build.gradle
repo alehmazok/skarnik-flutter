@@ -78,7 +78,7 @@ android {
             signingConfig signingConfigs.debug
             applicationIdSuffix ".debug"
             resValue('string', 'AppName', 'Debug Skarnik')
-            manifestPlaceholders = [hostname: "skarnik.by"]
+            manifestPlaceholders = [hostname: "skarnik.by", appHostname: "skarnik.app"]
         }
 
         release {
@@ -86,7 +86,7 @@ android {
             shrinkResources false // TODO: https://github.com/FirebaseExtended/flutterfire/discussions/5708
             minifyEnabled false
             resValue('string', 'AppName', 'Skarnik')
-            manifestPlaceholders = [hostname: "skarnik.by"]
+            manifestPlaceholders = [hostname: "skarnik.by", appHostname: "skarnik.app"]
         }
     }
 }

@@ -38,6 +38,9 @@
 
                 <data android:host="${hostname}"/>
                 <data android:host="www.${hostname}"/>
+
+                <data android:host="${appHostname}"/>
+                <data android:host="www.${appHostname}"/>
             </intent-filter>
         </activity>
         <!-- Не лагаваць у аналітыку пераходы па экранах -->
