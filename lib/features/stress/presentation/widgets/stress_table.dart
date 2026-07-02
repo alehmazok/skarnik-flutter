@@ -12,6 +12,7 @@ class StressTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final dividerColor = Theme.of(context).dividerColor;
     return SingleChildScrollView(
+      primary: true,
       child: Table(
         columnWidths: const {
           0: FlexColumnWidth(2),

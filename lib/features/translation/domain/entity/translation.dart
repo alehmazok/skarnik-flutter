@@ -20,7 +20,7 @@ class Translation extends Equatable {
 
   static List<String> _extractRusBelCandidates(String html) {
     final fontPattern = RegExp(
-      r'<font[^>]*color="#831b03"[^>]*>(.*?)</font>',
+      r'''<font[^>]*color=["']#831b03["'][^>]*>(.*?)</font>''',
       dotAll: true,
       caseSensitive: false,
     );
