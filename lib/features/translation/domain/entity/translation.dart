@@ -14,8 +14,8 @@ class Translation extends Equatable {
   String get maybeStressedWord => stress ?? word.word;
 
   late final List<String> stressCandidates = switch (word.dictionary) {
-    Dictionary.belRus || Dictionary.tsbm => word.word.contains(' ') ? const [] : [word.word],
-    Dictionary.rusBel => _extractRusBelCandidates(html),
+    Dictionary.tsbm => word.word.contains(' ') ? const [] : [word.word],
+    Dictionary.belRus || Dictionary.rusBel => _extractRusBelCandidates(html),
   };
 
   static List<String> _extractRusBelCandidates(String html) {

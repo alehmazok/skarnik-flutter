@@ -41,14 +41,22 @@ void main() {
 
     group('stressCandidates', () {
       group('belRus', () {
-        test('single word → [word]', () {
-          final t = _translation(word: _word('слова', Dictionary.belRus));
-          expect(t.stressCandidates, ['слова']);
+        test('no matching font tags → []', () {
+          final t = _translation(word: _word('слова', Dictionary.belRus), html: '<p>слова</p>');
+          expect(t.stressCandidates, isEmpty);
         });
 
-        test('multi-word phrase → []', () {
-          final t = _translation(word: _word('добры дзень', Dictionary.belRus));
-          expect(t.stressCandidates, isEmpty);
+        test('extracts candidates from font tags (real API sample)', () {
+          final t = _translation(
+            word: _word('бурштын', Dictionary.belRus),
+            html:
+                '<span class="nrt">янтарь</span> — &nbsp;&nbsp;'
+                '<font size="+2" color="#831b03">янтар</font>, '
+                '<i>-ру <font color="#008000">муж.</font></i>, '
+                '<font size="+2" color="#831b03">бурштын</font>, '
+                '<i>-ну <font color="#008000">муж.</font></i>',
+          );
+          expect(t.stressCandidates, ['бурштын', 'янтар']);
         });
       });
 
@@ -108,7 +116,8 @@ void main() {
         test('deduplicates repeated words', () {
           final t = _translation(
             word: _word('интересный', Dictionary.rusBel),
-            html: '<font size="+2" color="#831b03">цікавы</font>'
+            html:
+                '<font size="+2" color="#831b03">цікавы</font>'
                 '<font size="+2" color="#831b03">цікавы</font>',
           );
           expect(t.stressCandidates, ['цікавы']);
