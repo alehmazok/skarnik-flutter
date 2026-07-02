@@ -71,3 +71,6 @@ database.zip
 
 # dev folder
 dev/
+
+# MCP
+.mcp.json
