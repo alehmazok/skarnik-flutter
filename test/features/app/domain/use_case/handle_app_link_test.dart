@@ -53,6 +53,8 @@ void main() {
       'https://skarnik.by/belrus/notanumber',
       'not a link at all',
       '',
+      'https://evil.com/search?url=/belrus/$wordId',
+      'https://skarnik.by/belrus/$wordId/extra',
     ]) {
       test('returns Failure for unparsable link `$badLink`', () async {
         final result = await useCase.call(badLink);
