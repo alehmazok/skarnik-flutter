@@ -7,6 +7,15 @@ abstract class AppConfig {
 
   static const wordsSearchLimit = 15;
 
+  // `queryByFirstLetter` results are cut off at this limit before being
+  // scored, so it must cover the largest first-letter bucket in the dataset
+  // or a typo target can be excluded before it's ever considered.
+  // Largest bucket (letter 'П') measured at ~61,939 of 316,237 total words
+  // via the Supabase `main_word` table (2026-07-02); 65000 leaves headroom.
+  static const fuzzySearchCandidateLimit = 65000;
+
+  static const fuzzySearchMinQueryLength = 3;
+
   static const skarnikSiteHostName = 'skarnik.by';
 
   static const starnikSiteHostName = 'starnik.by';

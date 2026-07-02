@@ -11,4 +11,9 @@ abstract interface class QueryRepository {
     required String searchQueryWithSubstitutions,
     required Iterable<SearchWord> excluded,
   });
+
+  Iterable<SearchWord> queryByFirstLetter({
+    required String firstLetter,
+    required Iterable<SearchWord> excluded,
+  });
 }

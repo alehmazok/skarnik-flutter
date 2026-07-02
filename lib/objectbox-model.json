@@ -22,7 +22,9 @@
         {
           "id": "3:2245466148711448707",
           "name": "letter",
-          "type": 9
+          "indexId": "6:642269928900054745",
+          "type": 9,
+          "flags": 8
         },
         {
           "id": "4:4737207353756559193",
@@ -133,7 +135,7 @@
     }
   ],
   "lastEntityId": "4:3",
-  "lastIndexId": "5:4510498492143232374",
+  "lastIndexId": "6:642269928900054745",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

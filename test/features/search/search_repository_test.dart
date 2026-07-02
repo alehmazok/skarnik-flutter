@@ -32,6 +32,12 @@ void main() {
     setUp(() {
       queryRepository = MockQueryRepository();
       searchRepository = ObjectboxSearchRepository(queryRepository);
+      when(
+        () => queryRepository.queryByFirstLetter(
+          firstLetter: any(named: 'firstLetter'),
+          excluded: any(named: 'excluded'),
+        ),
+      ).thenReturn([]);
     });
 
     group('search()', () {
@@ -282,6 +288,148 @@ void main() {
 
       test('returns empty string unchanged', () {
         expect(searchRepository.applySubstitutions(''), equals(''));
+      });
+    });
+
+    group('fuzzy search', () {
+      void stubExact({
+        required List<SearchWord> byWord,
+        required List<SearchWord> byWordMask,
+      }) {
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: any(named: 'searchQuery'),
+            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+          ),
+        ).thenReturn(byWord);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: any(named: 'searchQuery'),
+            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenReturn(byWordMask);
+      }
+
+      test(
+        'does not call queryByFirstLetter when there is at least one exact/mask result',
+        () async {
+          final word1 = _makeWord();
+          stubExact(byWord: [word1], byWordMask: []);
+
+          await searchRepository.search('test');
+
+          verifyNever(
+            () => queryRepository.queryByFirstLetter(
+              firstLetter: any(named: 'firstLetter'),
+              excluded: any(named: 'excluded'),
+            ),
+          );
+        },
+      );
+
+      test('calls queryByFirstLetter when there are zero exact/mask results', () async {
+        stubExact(byWord: [], byWordMask: []);
+
+        await searchRepository.search('test');
+
+        verify(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 't',
+            excluded: any(named: 'excluded'),
+          ),
+        ).called(1);
+      });
+
+      test('does not call queryByFirstLetter for short queries even when sparse', () async {
+        stubExact(byWord: [], byWordMask: []);
+
+        await searchRepository.search('ab');
+
+        verifyNever(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: any(named: 'firstLetter'),
+            excluded: any(named: 'excluded'),
+          ),
+        );
+      });
+
+      test('returns fuzzy matches when exact and mask stages find nothing', () async {
+        final fuzzyWord = _makeWord(id: 3, wordId: 3, word: 'tost');
+        stubExact(byWord: [], byWordMask: []);
+        when(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 't',
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenReturn([fuzzyWord]);
+
+        final results = await searchRepository.search('test');
+
+        expect(results.toList(), equals([fuzzyWord]));
+      });
+
+      test('fuzzySearch() filters out candidates beyond the distance threshold', () {
+        final close = _makeWord(id: 1, wordId: 1, word: 'tost');
+        final far = _makeWord(id: 2, wordId: 2, word: 'zzzz');
+        when(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 't',
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenReturn([close, far]);
+
+        final results = searchRepository.fuzzySearch('test', excluded: <SearchWord>{});
+
+        expect(results, equals([close]));
+      });
+
+      test('fuzzySearch() sorts by distance then alphabetically', () {
+        final exact = _makeWord(id: 1, wordId: 1, word: 'test');
+        final oneAway = _makeWord(id: 2, wordId: 2, word: 'tost');
+        final alsoOneAway = _makeWord(id: 3, wordId: 3, word: 'aest');
+        when(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 't',
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenReturn([oneAway, exact, alsoOneAway]);
+
+        final results = searchRepository.fuzzySearch('test', excluded: <SearchWord>{});
+
+        expect(results, equals([exact, alsoOneAway, oneAway]));
+      });
+
+      test('fuzzySearch() caps results at wordsSearchLimit', () {
+        final candidates = List.generate(
+          20,
+          (i) => _makeWord(id: i + 1, wordId: i + 1, word: 'test'),
+        );
+        when(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 't',
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenReturn(candidates);
+
+        final results = searchRepository.fuzzySearch('test', excluded: <SearchWord>{});
+
+        expect(results.length, equals(15));
+      });
+
+      test('deduplicates a fuzzy candidate that collides with an existing result', () async {
+        final word1 = _makeWord(id: 1, wordId: 1, word: 'test');
+        stubExact(byWord: [word1], byWordMask: []);
+        when(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 't',
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenReturn([word1]);
+
+        final results = await searchRepository.search('test');
+
+        expect(results.length, equals(1));
       });
     });
   });
