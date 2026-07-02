@@ -24,14 +24,16 @@ int damerauLevenshteinDistance(String a, String b) {
     for (var j = 1; j <= lengthB; j++) {
       final cost = a[i - 1] == b[j - 1] ? 0 : 1;
 
-      var value = [
-        distances[i - 1][j] + 1,
-        distances[i][j - 1] + 1,
-        distances[i - 1][j - 1] + cost,
-      ].reduce((min, current) => current < min ? current : min);
+      final deletion = distances[i - 1][j] + 1;
+      final insertion = distances[i][j - 1] + 1;
+      final substitution = distances[i - 1][j - 1] + cost;
+
+      var value = deletion < insertion ? deletion : insertion;
+      if (substitution < value) value = substitution;
 
       if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1]) {
-        value = value < distances[i - 2][j - 2] + cost ? value : distances[i - 2][j - 2] + cost;
+        final transposition = distances[i - 2][j - 2] + cost;
+        if (transposition < value) value = transposition;
       }
 
       distances[i][j] = value;

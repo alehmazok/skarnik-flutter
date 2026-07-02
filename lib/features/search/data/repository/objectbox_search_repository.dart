@@ -41,7 +41,7 @@ class ObjectboxSearchRepository implements SearchRepository {
     final combinedExact = <SearchWord>{...resultsByWord, ...resultsByWordMask};
 
     final fuzzyResults = isFuzzySearchApplicable(searchQuery, combinedExact)
-        ? fuzzySearch(searchQuery, excluded: combinedExact)
+        ? fuzzySearch(searchQueryWithSubstitutions, excluded: combinedExact)
         : const <SearchWord>[];
 
     /// Рэзультаты абодвух запытаў складваем у LinkedHashSet, на ўсялякі выпадак, каб пазбегнуць дублікатаў.

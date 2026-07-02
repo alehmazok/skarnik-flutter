@@ -354,6 +354,20 @@ void main() {
         );
       });
 
+      test('queries the letter-substituted first letter, not the raw one', () async {
+        // 'и' -> 'і' via applySubstitutions(); fuzzy should bucket on 'і'.
+        stubExact(byWord: [], byWordMask: []);
+
+        await searchRepository.search('иии');
+
+        verify(
+          () => queryRepository.queryByFirstLetter(
+            firstLetter: 'і',
+            excluded: any(named: 'excluded'),
+          ),
+        ).called(1);
+      });
+
       test('returns fuzzy matches when exact and mask stages find nothing', () async {
         final fuzzyWord = _makeWord(id: 3, wordId: 3, word: 'tost');
         stubExact(byWord: [], byWordMask: []);
