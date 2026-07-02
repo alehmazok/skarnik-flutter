@@ -20,30 +20,40 @@ class QueryRepositoryImpl implements QueryRepository {
   QueryRepositoryImpl(this._objectboxService) {
     final box = _objectboxService.searchStore.box<ObjectboxSearchWord>();
 
-    _queryByWord = box
-        .query(
-          ObjectboxSearchWord_.lword
-              .startsWith('', alias: _aliasSearchQuery)
-              .or(ObjectboxSearchWord_.lword.startsWith('', alias: _aliasSearchQueryWithSubstitutions)),
-        )
-        .order(ObjectboxSearchWord_.lword)
-        .build()
-      ..limit = AppConfig.wordsSearchLimit;
+    _queryByWord =
+        box
+            .query(
+              ObjectboxSearchWord_.lword
+                  .startsWith('', alias: _aliasSearchQuery)
+                  .or(
+                    ObjectboxSearchWord_.lword.startsWith(
+                      '',
+                      alias: _aliasSearchQueryWithSubstitutions,
+                    ),
+                  ),
+            )
+            .order(ObjectboxSearchWord_.lword)
+            .build()
+          ..limit = AppConfig.wordsSearchLimit;
 
-    _queryByWordMask = box
-        .query(
-          ObjectboxSearchWord_.lwordMask
-              .startsWith('', alias: _aliasSearchQuery)
-              .or(
-                ObjectboxSearchWord_.lwordMask.startsWith('', alias: _aliasSearchQueryWithSubstitutions),
-              )
-              .and(
-                ObjectboxSearchWord_.id.notOneOf([], alias: _aliasExcluded),
-              ),
-        )
-        .order(ObjectboxSearchWord_.lwordMask)
-        .build()
-      ..limit = AppConfig.wordsSearchLimit;
+    _queryByWordMask =
+        box
+            .query(
+              ObjectboxSearchWord_.lwordMask
+                  .startsWith('', alias: _aliasSearchQuery)
+                  .or(
+                    ObjectboxSearchWord_.lwordMask.startsWith(
+                      '',
+                      alias: _aliasSearchQueryWithSubstitutions,
+                    ),
+                  )
+                  .and(
+                    ObjectboxSearchWord_.id.notOneOf([], alias: _aliasExcluded),
+                  ),
+            )
+            .order(ObjectboxSearchWord_.lwordMask)
+            .build()
+          ..limit = AppConfig.wordsSearchLimit;
   }
 
   @override
@@ -81,7 +91,9 @@ class QueryRepositoryImpl implements QueryRepository {
       ..param(
         ObjectboxSearchWord_.id,
         alias: _aliasExcluded,
-      ).values = excluded.map((it) => it.id).toList();
+      ).values = excluded.isEmpty
+          ? [0]
+          : excluded.map((it) => it.id).toList();
     return query.find();
   }
 }

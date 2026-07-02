@@ -45,8 +45,6 @@ class ObjectboxSearchRepository implements SearchRepository {
     };
   }
 
-  bool isSearchByMaskApplicable(String query) => query.length >= 3;
-
   String applySubstitutions(String query) {
     for (final entry in letterSubstitutions.entries) {
       query = query.replaceAll(entry.key, entry.value);
