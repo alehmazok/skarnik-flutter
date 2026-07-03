@@ -44,6 +44,7 @@ class SettingsPage extends StatelessWidget {
                     builder: (context, state) {
                       final enabled = state is! SettingsInProgressState;
                       return ListTile(
+                        leading: const Icon(Icons.auto_delete_rounded),
                         title: const Text(Strings.clearHistory),
                         onTap: () => _showClearHistoryConfirmation(context),
                         enabled: enabled,
@@ -52,10 +53,12 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const Divider(),
                   ListTile(
+                    leading: const Icon(Icons.email_rounded),
                     title: const Text(Strings.writeToDevs),
                     onTap: cubit.mailToDevs,
                   ),
                   ListTile(
+                    leading: const Icon(Icons.info_rounded),
                     title: const Text(Strings.aboutSkarnik),
                     onTap: () => showModalBottomSheet(
                       context: context,
@@ -68,20 +71,6 @@ class SettingsPage extends StatelessWidget {
                         child: const AboutBottomSheet(),
                       ),
                     ),
-                  ),
-                  FutureBuilder<String>(
-                    future: cubit.getAppNameAndVersion(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data;
-                        if (data != null) {
-                          return ListTile(
-                            subtitle: Text(data),
-                          );
-                        }
-                      }
-                      return const SizedBox.shrink();
-                    },
                   ),
                 ],
               );

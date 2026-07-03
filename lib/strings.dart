@@ -41,4 +41,9 @@ abstract interface class Strings {
   static const sorryTranslationError = 'Прабачце, адбылася памылка перакладу слова.';
   static const writeToDevs = 'Напісаць распрацоўшчыкам';
   static const yes = 'Так';
+  static const aboutUsefulLinks = 'Карысныя спасылкі';
+  static const aboutStarnikByDescription =
+      'Спецпошук — спецыяльны пошук па базе слоў. Адваротны слоўнік беларускай мовы — падабраць рыфму або скласці крыжаванку.';
+  static const aboutDrukarnikDescription =
+      'Друкарнік — праверка арфаграфіі, хуткія падказкі, моўны бот, прыгожая беларуская мова і добры настрой.';
 }
