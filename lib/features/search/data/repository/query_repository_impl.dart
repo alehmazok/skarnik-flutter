@@ -6,19 +6,59 @@ import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
 import '../../domain/repository/query_repository.dart';
+import '../util/fuzzy_candidate_ranking.dart';
+
+class _FuzzySearchParams {
+  final String firstLetter;
+  final String searchQuery;
+  final int maxDistance;
+  final int resultLimit;
+  final List<int> excludedIds;
+
+  const _FuzzySearchParams({
+    required this.firstLetter,
+    required this.searchQuery,
+    required this.maxDistance,
+    required this.resultLimit,
+    required this.excludedIds,
+  });
+}
+
+List<ObjectboxSearchWord> _fuzzySearchIsolateCallback(
+  Store store,
+  _FuzzySearchParams params,
+) {
+  final box = store.box<ObjectboxSearchWord>();
+  final excluded = params.excludedIds.isEmpty ? [0] : params.excludedIds;
+  final query =
+      box
+          .query(
+            ObjectboxSearchWord_.letter
+                .equals(params.firstLetter)
+                .and(ObjectboxSearchWord_.id.notOneOf(excluded)),
+          )
+          .build()
+        ..limit = AppConfig.fuzzySearchCandidateLimit;
+  final candidates = query.find();
+  query.close();
+
+  return rankFuzzyCandidates(
+    candidates,
+    searchQuery: params.searchQuery,
+    maxDistance: params.maxDistance,
+    limit: params.resultLimit,
+  );
+}
 
 @LazySingleton(as: QueryRepository)
 class QueryRepositoryImpl implements QueryRepository {
   static const _aliasSearchQuery = 'search_query_no_subs';
   static const _aliasSearchQueryWithSubstitutions = 'search_query_with_subs';
   static const _aliasExcluded = 'excluded';
-  static const _aliasFirstLetter = 'first_letter';
-  static const _aliasExcludedFirstLetter = 'excluded_first_letter';
 
   final ObjectboxStoreHolder _objectboxService;
   late final Query<SearchWord> _queryByWord;
   late final Query<SearchWord> _queryByWordMask;
-  late final Query<SearchWord> _queryByFirstLetter;
 
   QueryRepositoryImpl(this._objectboxService) {
     final box = _objectboxService.searchStore.box<ObjectboxSearchWord>();
@@ -57,25 +97,6 @@ class QueryRepositoryImpl implements QueryRepository {
             .order(ObjectboxSearchWord_.lwordMask)
             .build()
           ..limit = AppConfig.wordsSearchLimit;
-
-    _queryByFirstLetter =
-        box
-            .query(
-              ObjectboxSearchWord_.letter
-                  .equals('', alias: _aliasFirstLetter)
-                  .and(
-                    ObjectboxSearchWord_.id.notOneOf(
-                      [],
-                      alias: _aliasExcludedFirstLetter,
-                    ),
-                  ),
-            )
-            // No .order() here: candidates are fully re-sorted by edit
-            // distance in ObjectboxSearchRepository.fuzzySearch(), so
-            // ordering this (potentially tens-of-thousands-row) query by
-            // lword would just be wasted native sort work.
-            .build()
-          ..limit = AppConfig.fuzzySearchCandidateLimit;
   }
 
   @override
@@ -120,21 +141,20 @@ class QueryRepositoryImpl implements QueryRepository {
   }
 
   @override
-  Iterable<SearchWord> queryByFirstLetter({
+  Future<Iterable<SearchWord>> fuzzySearch({
     required String firstLetter,
+    required String searchQuery,
+    required int maxDistance,
+    required int resultLimit,
     required Iterable<SearchWord> excluded,
-  }) {
-    final query = _queryByFirstLetter
-      ..param(
-        ObjectboxSearchWord_.letter,
-        alias: _aliasFirstLetter,
-      ).value = firstLetter
-      ..param(
-        ObjectboxSearchWord_.id,
-        alias: _aliasExcludedFirstLetter,
-      ).values = excluded.isEmpty
-          ? [0]
-          : excluded.map((it) => it.id).toList();
-    return query.find();
-  }
+  }) => _objectboxService.searchStore.runAsync(
+    _fuzzySearchIsolateCallback,
+    _FuzzySearchParams(
+      firstLetter: firstLetter,
+      searchQuery: searchQuery,
+      maxDistance: maxDistance,
+      resultLimit: resultLimit,
+      excludedIds: excluded.map((it) => it.id).toList(),
+    ),
+  );
 }

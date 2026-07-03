@@ -4,7 +4,6 @@ import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 
 import '../../domain/repository/query_repository.dart';
 import '../../domain/repository/search_repository.dart';
-import '../util/damerau_levenshtein.dart';
 
 @LazySingleton(as: SearchRepository)
 class ObjectboxSearchRepository implements SearchRepository {
@@ -41,7 +40,7 @@ class ObjectboxSearchRepository implements SearchRepository {
     final combinedExact = <SearchWord>{...resultsByWord, ...resultsByWordMask};
 
     final fuzzyResults = isFuzzySearchApplicable(searchQuery, combinedExact)
-        ? fuzzySearch(searchQueryWithSubstitutions, excluded: combinedExact)
+        ? await fuzzySearch(searchQueryWithSubstitutions, excluded: combinedExact)
         : const <SearchWord>[];
 
     /// Рэзультаты абодвух запытаў складваем у LinkedHashSet, на ўсялякі выпадак, каб пазбегнуць дублікатаў.
@@ -59,28 +58,20 @@ class ObjectboxSearchRepository implements SearchRepository {
     Iterable<SearchWord> combinedExact,
   ) => searchQuery.length >= AppConfig.fuzzySearchMinQueryLength && combinedExact.isEmpty;
 
-  Iterable<SearchWord> fuzzySearch(
+  Future<Iterable<SearchWord>> fuzzySearch(
     String searchQuery, {
     required Iterable<SearchWord> excluded,
   }) {
     // The `letter` column is stored lowercase by the external dictionary
     // build pipeline, like `lword`/`lwordMask` which are also pre-lowercased.
-    final candidates = _queryRepository.queryByFirstLetter(
+    final maxDistance = searchQuery.length <= 5 ? 1 : 2;
+    return _queryRepository.fuzzySearch(
       firstLetter: searchQuery[0],
+      searchQuery: searchQuery,
+      maxDistance: maxDistance,
+      resultLimit: AppConfig.wordsSearchLimit,
       excluded: excluded,
     );
-    final maxDistance = searchQuery.length <= 5 ? 1 : 2;
-
-    final scored =
-        [
-          for (final candidate in candidates)
-            MapEntry(candidate, damerauLevenshteinDistance(searchQuery, candidate.lword)),
-        ].where((entry) => entry.value <= maxDistance).toList()..sort((a, b) {
-          final byDistance = a.value.compareTo(b.value);
-          return byDistance != 0 ? byDistance : a.key.lword.compareTo(b.key.lword);
-        });
-
-    return scored.take(AppConfig.wordsSearchLimit).map((entry) => entry.key);
   }
 
   String applySubstitutions(String query) {
