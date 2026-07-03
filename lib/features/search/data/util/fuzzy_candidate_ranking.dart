@@ -11,12 +11,20 @@ List<ObjectboxSearchWord> rankFuzzyCandidates(
   required int limit,
 }) {
   final scored =
-      [
-        for (final candidate in candidates)
-          MapEntry(candidate, damerauLevenshteinDistance(searchQuery, candidate.lword)),
-      ].where((entry) => entry.value <= maxDistance).toList()..sort((a, b) {
-        final byDistance = a.value.compareTo(b.value);
-        return byDistance != 0 ? byDistance : a.key.lword.compareTo(b.key.lword);
-      });
-  return scored.take(limit).map((entry) => entry.key).toList();
+      candidates
+          .map(
+            (candidate) => (
+              candidate,
+              damerauLevenshteinDistance(searchQuery, candidate.lword),
+            ),
+          )
+          .where(
+            (pair) => pair.$2 <= maxDistance,
+          )
+          .toList()
+        ..sort((a, b) {
+          final byDistance = a.$2.compareTo(b.$2);
+          return byDistance != 0 ? byDistance : a.$1.lword.compareTo(b.$1.lword);
+        });
+  return scored.take(limit).map((pair) => pair.$1).toList();
 }
