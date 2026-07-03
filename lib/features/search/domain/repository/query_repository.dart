@@ -11,4 +11,12 @@ abstract interface class QueryRepository {
     required String searchQueryWithSubstitutions,
     required Iterable<SearchWord> excluded,
   });
+
+  Future<Iterable<SearchWord>> fuzzySearch({
+    required String firstLetter,
+    required String searchQuery,
+    required int maxDistance,
+    required int resultLimit,
+    required Iterable<SearchWord> excluded,
+  });
 }

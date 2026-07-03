@@ -13,6 +13,7 @@ class ObjectboxSearchWord implements SearchWord {
   int langId;
 
   @override
+  @Index(type: IndexType.value)
   String letter;
 
   @override

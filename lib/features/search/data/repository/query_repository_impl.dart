@@ -6,6 +6,49 @@ import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
 import '../../domain/repository/query_repository.dart';
+import '../util/fuzzy_candidate_ranking.dart';
+
+class _FuzzySearchParams {
+  final String firstLetter;
+  final String searchQuery;
+  final int maxDistance;
+  final int resultLimit;
+  final List<int> excludedIds;
+
+  const _FuzzySearchParams({
+    required this.firstLetter,
+    required this.searchQuery,
+    required this.maxDistance,
+    required this.resultLimit,
+    required this.excludedIds,
+  });
+}
+
+List<ObjectboxSearchWord> _fuzzySearchIsolateCallback(
+  Store store,
+  _FuzzySearchParams params,
+) {
+  final box = store.box<ObjectboxSearchWord>();
+  final excluded = params.excludedIds.isEmpty ? [0] : params.excludedIds;
+  final query =
+      box
+          .query(
+            ObjectboxSearchWord_.letter
+                .equals(params.firstLetter)
+                .and(ObjectboxSearchWord_.id.notOneOf(excluded)),
+          )
+          .build()
+        ..limit = AppConfig.fuzzySearchCandidateLimit;
+  final candidates = query.find();
+  query.close();
+
+  return rankFuzzyCandidates(
+    candidates,
+    searchQuery: params.searchQuery,
+    maxDistance: params.maxDistance,
+    limit: params.resultLimit,
+  );
+}
 
 @LazySingleton(as: QueryRepository)
 class QueryRepositoryImpl implements QueryRepository {
@@ -96,4 +139,22 @@ class QueryRepositoryImpl implements QueryRepository {
           : excluded.map((it) => it.id).toList();
     return query.find();
   }
+
+  @override
+  Future<Iterable<SearchWord>> fuzzySearch({
+    required String firstLetter,
+    required String searchQuery,
+    required int maxDistance,
+    required int resultLimit,
+    required Iterable<SearchWord> excluded,
+  }) => _objectboxService.searchStore.runAsync(
+    _fuzzySearchIsolateCallback,
+    _FuzzySearchParams(
+      firstLetter: firstLetter,
+      searchQuery: searchQuery,
+      maxDistance: maxDistance,
+      resultLimit: resultLimit,
+      excludedIds: excluded.map((it) => it.id).toList(),
+    ),
+  );
 }
