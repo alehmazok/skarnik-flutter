@@ -45,8 +45,7 @@ platform :android do
                "appbundle",
                "--release",
                "-t", "lib/main.dart",
-               "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
-               "--dart-define=DEV_EMAIL_ADDRESS=#{ENV['DEV_EMAIL_ADDRESS']}",
+               "--dart-define-from-file=android/fastlane/.env.secret",
              ]
            )
   end
@@ -58,8 +57,7 @@ platform :android do
                "build",
                "apk",
                "--release",
-               "--dart-define=API_HOSTNAME=#{ENV['API_HOSTNAME']}",
-               "--dart-define=DEV_EMAIL_ADDRESS=#{ENV['DEV_EMAIL_ADDRESS']}",
+               "--dart-define-from-file=android/fastlane/.env.secret",
              ]
            )
   end

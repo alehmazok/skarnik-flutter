@@ -20,6 +20,8 @@ abstract class AppConfig {
 
   static const starnikSiteHostName = 'starnik.by';
 
+  static const drukarnikSiteHostName = 'drukarnik.app';
+
   static const skarnikAppSiteHostName = 'skarnik.app';
 
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
