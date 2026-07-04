@@ -51,7 +51,6 @@ class SettingsPage extends StatelessWidget {
                       );
                     },
                   ),
-                  const Divider(),
                   ListTile(
                     leading: const Icon(Icons.email_outlined),
                     title: const Text(Strings.writeToDevs),
@@ -65,7 +64,6 @@ class SettingsPage extends StatelessWidget {
                       useSafeArea: true,
                       showDragHandle: true,
                       isScrollControlled: true,
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       builder: (context) => BlocProvider.value(
                         value: cubit,
                         child: const AboutBottomSheet(),
