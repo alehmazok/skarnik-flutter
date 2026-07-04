@@ -3,13 +3,38 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/strings.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../settings_cubit.dart';
 
-class AboutBottomSheet extends StatelessWidget {
+class AboutBottomSheet extends StatefulWidget {
   const AboutBottomSheet({super.key});
+
+  @override
+  State<AboutBottomSheet> createState() => _AboutBottomSheetState();
+}
+
+class _AboutBottomSheetState extends State<AboutBottomSheet> {
+  final TapGestureRecognizer _skarnikLinkRecognizer = TapGestureRecognizer()
+    ..onTap = () => launchUrl(
+      Uri(scheme: 'https', host: AppConfig.skarnikSiteHostName),
+      mode: LaunchMode.externalApplication,
+    );
+  late final Future<String> _appNameAndVersion;
+
+  @override
+  void initState() {
+    super.initState();
+    _appNameAndVersion = context.read<SettingsCubit>().getAppNameAndVersion();
+  }
+
+  @override
+  void dispose() {
+    _skarnikLinkRecognizer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +62,13 @@ class AboutBottomSheet extends StatelessWidget {
                             'Гэтая праграма — ${Platform.isIOS ? 'iOS' : 'Android'}-кліент сайта ',
                       ),
                       TextSpan(
-                        text: 'Skarnik.by',
+                        text: AppConfig.skarnikSiteHostName,
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Theme.of(context).colorScheme.primary,
                           decorationColor: Theme.of(context).colorScheme.primary,
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => launchUrlString(
-                            'https://skarnik.by',
-                            mode: LaunchMode.externalApplication,
-                          ),
+                        recognizer: _skarnikLinkRecognizer,
                       ),
                       const TextSpan(
                         text: '. Працуе ў рэжыме анлайн.',
@@ -125,14 +146,14 @@ class AboutBottomSheet extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             title: const Text(
-              'Starnik.by',
+              AppConfig.starnikSiteHostName,
               style: TextStyle(
                 decoration: TextDecoration.underline,
               ),
             ),
             subtitle: const Text(Strings.aboutStarnikByDescription),
-            onTap: () => launchUrlString(
-              'https://starnik.by',
+            onTap: () => launchUrl(
+              Uri(scheme: 'https', host: AppConfig.starnikSiteHostName),
               mode: LaunchMode.externalApplication,
             ),
           ),
@@ -142,27 +163,27 @@ class AboutBottomSheet extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             title: const Text(
-              'Drukarnik.app',
+              AppConfig.drukarnikSiteHostName,
               style: TextStyle(
                 decoration: TextDecoration.underline,
               ),
             ),
             subtitle: const Text(Strings.aboutDrukarnikDescription),
-            onTap: () => launchUrlString(
-              'https://drukarnik.app',
+            onTap: () => launchUrl(
+              Uri(scheme: 'https', host: AppConfig.drukarnikSiteHostName),
               mode: LaunchMode.externalApplication,
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: TextButton.icon(
-              icon: const Icon(Icons.email_rounded),
+              icon: const Icon(Icons.email_outlined),
               onPressed: context.read<SettingsCubit>().mailToDevs,
               label: const Text(Strings.writeToDevs),
             ),
           ),
           FutureBuilder<String>(
-            future: context.read<SettingsCubit>().getAppNameAndVersion(),
+            future: _appNameAndVersion,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final data = snapshot.data;

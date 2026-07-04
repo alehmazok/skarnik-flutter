@@ -44,7 +44,7 @@ class SettingsPage extends StatelessWidget {
                     builder: (context, state) {
                       final enabled = state is! SettingsInProgressState;
                       return ListTile(
-                        leading: const Icon(Icons.auto_delete_rounded),
+                        leading: const Icon(Icons.auto_delete_outlined),
                         title: const Text(Strings.clearHistory),
                         onTap: () => _showClearHistoryConfirmation(context),
                         enabled: enabled,
@@ -53,12 +53,12 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const Divider(),
                   ListTile(
-                    leading: const Icon(Icons.email_rounded),
+                    leading: const Icon(Icons.email_outlined),
                     title: const Text(Strings.writeToDevs),
                     onTap: cubit.mailToDevs,
                   ),
                   ListTile(
-                    leading: const Icon(Icons.info_rounded),
+                    leading: const Icon(Icons.info_outline),
                     title: const Text(Strings.aboutSkarnik),
                     onTap: () => showModalBottomSheet(
                       context: context,
