@@ -141,7 +141,7 @@ class _AboutBottomSheetState extends State<AboutBottomSheet> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.link_rounded),
+            leading: const Icon(Icons.link_outlined),
             titleTextStyle: TextStyle(
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -158,7 +158,7 @@ class _AboutBottomSheetState extends State<AboutBottomSheet> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.link_rounded),
+            leading: const Icon(Icons.link_outlined),
             titleTextStyle: TextStyle(
               color: Theme.of(context).colorScheme.primary,
             ),
