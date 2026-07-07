@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
@@ -67,4 +68,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     );
     launchUrlString(devMailTo);
   }
+
+  Future<void> rateApp() => InAppReview.instance.openStoreListing();
 }

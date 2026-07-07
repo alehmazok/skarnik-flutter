@@ -2,8 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/review/domain/use_case/check_and_request_review.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/analytics_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart';
@@ -37,6 +39,8 @@ class MockHistoryRepository extends Mock implements HistoryRepository {}
 
 class MockAnalyticsTranslationRepository extends Mock implements AnalyticsTranslationRepository {}
 
+class MockCheckAndRequestReviewUseCase extends Mock implements CheckAndRequestReviewUseCase {}
+
 class MockWord extends Mock implements Word {}
 
 void main() {
@@ -48,6 +52,12 @@ void main() {
     final favoritesRepository = MockFavoritesRepository();
     final historyRepository = MockHistoryRepository();
     final analyticsTranslationRepository = MockAnalyticsTranslationRepository();
+    final checkAndRequestReviewUseCase = MockCheckAndRequestReviewUseCase();
+
+    setUp(() {
+      reset(checkAndRequestReviewUseCase);
+      when(() => checkAndRequestReviewUseCase.call()).thenAnswer((_) async => const Success(false));
+    });
 
     TranslationCubit newInstance({bool saveToHistory = true}) => TranslationCubit(
       langId: 1,
@@ -70,6 +80,7 @@ void main() {
         analyticsTranslationRepository,
       ),
       logAnalyticsShareUseCase: LogAnalyticsShareUseCase(analyticsTranslationRepository),
+      checkAndRequestReviewUseCase: checkAndRequestReviewUseCase,
     );
 
     group('_getWord()', () {
@@ -323,6 +334,61 @@ void main() {
         ],
         verify: (_) {
           verifyNever(() => historyRepository.save(word));
+        },
+      );
+
+      blocTest(
+        'triggers review check after a successful word view',
+        setUp: () {
+          final word = MockWord();
+          final uri = Uri.parse('https://skarnik.by/word/test');
+
+          final translation = Translation.build(
+            word: word,
+            html: '<div>test</div>',
+            uri: uri,
+            source: 'website',
+          );
+
+          when(() => word.word).thenReturn('word 1');
+
+          when(
+            () => wordRepository.getWord(langId: 1, wordId: 1),
+          ).thenAnswer(
+            (_) async => word,
+          );
+
+          when(
+            () => websiteTranslationRepository.getTranslation(word),
+          ).thenAnswer(
+            (_) async => translation,
+          );
+
+          when(
+            () => favoritesRepository.contains(word),
+          ).thenAnswer(
+            (_) async => false,
+          );
+
+          when(
+            () => historyRepository.save(word),
+          ).thenAnswer(
+            (_) async => 1,
+          );
+
+          when(
+            () => analyticsTranslationRepository.logTranslation(translation),
+          ).thenAnswer(
+            (_) async => true,
+          );
+        },
+        build: () => newInstance(),
+        expect: () => [
+          isA<TranslationLoadedState>(),
+          isA<TranslationInFavoritesState>(),
+        ],
+        verify: (_) {
+          verify(() => checkAndRequestReviewUseCase.call()).called(1);
         },
       );
     });

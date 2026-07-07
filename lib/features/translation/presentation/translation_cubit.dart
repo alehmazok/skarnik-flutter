@@ -7,6 +7,7 @@ import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/core/exceptions.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
+import '../../review/domain/use_case/check_and_request_review.dart';
 import '../domain/entity/translation.dart';
 import '../domain/use_case/add_to_favorites.dart';
 import '../domain/use_case/check_in_favorites.dart';
@@ -102,6 +103,7 @@ class TranslationCubit extends Cubit<TranslationState> {
   final LogAnalyticsShareUseCase logAnalyticsShareUseCase;
   final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
   final LogAnalyticsAddToFavoritesUseCase logAnalyticsAddToFavoritesUseCase;
+  final CheckAndRequestReviewUseCase checkAndRequestReviewUseCase;
 
   TranslationCubit({
     required this.langId,
@@ -116,6 +118,7 @@ class TranslationCubit extends Cubit<TranslationState> {
     required this.logAnalyticsShareUseCase,
     required this.logAnalyticsTranslationUseCase,
     required this.logAnalyticsAddToFavoritesUseCase,
+    required this.checkAndRequestReviewUseCase,
   }) : super(const TranslationInProgressState()) {
     _getWord();
   }
@@ -155,7 +158,11 @@ class TranslationCubit extends Cubit<TranslationState> {
                   (_) => (translation, inFavorites),
                 );
               },
-            );
+            )
+            .onSuccess((_) {
+              // Не апрацоўваць вынік выканання usecase-а.
+              unawaited(checkAndRequestReviewUseCase());
+            });
     switch (getTranslation) {
       case Failure(error: final error):
         if (error is TranslationRedirectError) {

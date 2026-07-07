@@ -5,6 +5,8 @@ abstract class AppConfig {
 
   static const wordsPerPage = 25;
 
+  static const reviewRequestViewThreshold = 7;
+
   static const wordsSearchLimit = 15;
 
   // Fuzzy candidates are cut off at this limit before being scored, so it

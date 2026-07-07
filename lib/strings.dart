@@ -33,6 +33,7 @@ abstract interface class Strings {
   };
   static const nothingFound = 'Па запыце нічога не знойдзена';
   static const preferences = 'Налады';
+  static const rateApp = 'Ацаніць праграму';
   static const redirectedFromWord = 'Перанакіравана з «{}»';
   static const removedFromBookmarks = 'Выдалена з закладак.';
   static const revert = 'Вярнуць';

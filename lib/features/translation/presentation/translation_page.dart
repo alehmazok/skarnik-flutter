@@ -5,6 +5,7 @@ import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
 import 'package:skarnik_flutter/strings.dart';
 
+import '../../review/domain/use_case/check_and_request_review.dart';
 import '../domain/use_case/add_to_favorites.dart';
 import '../domain/use_case/check_in_favorites.dart';
 import '../domain/use_case/get_translation.dart';
@@ -35,6 +36,7 @@ class TranslationPage extends StatelessWidget {
   final LogAnalyticsTranslationUseCase logAnalyticsTranslationUseCase;
   final RemoveFromFavoritesUseCase removeFromFavoritesUseCase;
   final SaveToHistoryUseCase saveToHistoryUseCase;
+  final CheckAndRequestReviewUseCase checkAndRequestReviewUseCase;
 
   TranslationPage({
     super.key,
@@ -53,6 +55,7 @@ class TranslationPage extends StatelessWidget {
     LogAnalyticsTranslationUseCase? logAnalyticsTranslationUseCase,
     RemoveFromFavoritesUseCase? removeFromFavoritesUseCase,
     SaveToHistoryUseCase? saveToHistoryUseCase,
+    CheckAndRequestReviewUseCase? checkAndRequestReviewUseCase,
   }) : addToFavoritesUseCase = addToFavoritesUseCase ?? getIt<AddToFavoritesUseCase>(),
        checkInFavoritesUseCase = checkInFavoritesUseCase ?? getIt<CheckInFavoritesUseCase>(),
        getTranslationUseCase = getTranslationUseCase ?? getIt<GetTranslationUseCase>(),
@@ -64,7 +67,9 @@ class TranslationPage extends StatelessWidget {
            logAnalyticsTranslationUseCase ?? getIt<LogAnalyticsTranslationUseCase>(),
        removeFromFavoritesUseCase =
            removeFromFavoritesUseCase ?? getIt<RemoveFromFavoritesUseCase>(),
-       saveToHistoryUseCase = saveToHistoryUseCase ?? getIt<SaveToHistoryUseCase>();
+       saveToHistoryUseCase = saveToHistoryUseCase ?? getIt<SaveToHistoryUseCase>(),
+       checkAndRequestReviewUseCase =
+           checkAndRequestReviewUseCase ?? getIt<CheckAndRequestReviewUseCase>();
 
   factory TranslationPage.word({required Word word, required bool saveToHistory}) =>
       TranslationPage(
@@ -91,6 +96,7 @@ class TranslationPage extends StatelessWidget {
         logAnalyticsShareUseCase: logAnalyticsShareUseCase,
         logAnalyticsTranslationUseCase: logAnalyticsTranslationUseCase,
         logAnalyticsAddToFavoritesUseCase: logAnalyticsAddToFavoritesUseCase,
+        checkAndRequestReviewUseCase: checkAndRequestReviewUseCase,
       ),
       child: Scaffold(
         appBar: AppBar(
