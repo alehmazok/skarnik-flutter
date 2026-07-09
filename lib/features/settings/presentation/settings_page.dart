@@ -57,6 +57,11 @@ class SettingsPage extends StatelessWidget {
                     onTap: cubit.mailToDevs,
                   ),
                   ListTile(
+                    leading: const Icon(Icons.star_outline),
+                    title: const Text(Strings.rateApp),
+                    onTap: cubit.rateApp,
+                  ),
+                  ListTile(
                     leading: const Icon(Icons.info_outline),
                     title: const Text(Strings.aboutSkarnik),
                     onTap: () => showModalBottomSheet(

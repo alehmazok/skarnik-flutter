@@ -38,6 +38,12 @@ import 'package:skarnik_flutter/features/favorites/domain/use_case/load_favorite
     as _i978;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
     as _i522;
+import 'package:skarnik_flutter/features/review/data/repository/shared_preferences_review_repository.dart'
+    as _i543;
+import 'package:skarnik_flutter/features/review/domain/repository/review_repository.dart'
+    as _i806;
+import 'package:skarnik_flutter/features/review/domain/use_case/check_and_request_review.dart'
+    as _i754;
 import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
     as _i578;
 import 'package:skarnik_flutter/features/search/data/repository/query_repository_impl.dart'
@@ -180,6 +186,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i410.DevAnalyticsStressRepository(),
       registerFor: {_dev},
     );
+    gh.factory<_i806.ReviewRepository>(
+      () => _i543.SharedPreferencesReviewRepository(),
+    );
     gh.factory<_i587.VocabularyRepository>(
       () =>
           _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()),
@@ -245,6 +254,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i138.ApiTranslationRepository>(
       () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
+    );
+    gh.factory<_i754.CheckAndRequestReviewUseCase>(
+      () => _i754.CheckAndRequestReviewUseCase(gh<_i806.ReviewRepository>()),
     );
     gh.factory<_i978.LoadFavoritesUseCase>(
       () => _i978.LoadFavoritesUseCase(gh<_i361.FavoritesRepository>()),
