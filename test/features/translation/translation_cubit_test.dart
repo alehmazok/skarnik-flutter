@@ -12,6 +12,7 @@ import 'package:skarnik_flutter/features/translation/domain/repository/api_trans
 import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/local_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/add_to_favorites.dart';
@@ -28,6 +29,8 @@ import 'package:skarnik_flutter/features/translation/presentation/translation_cu
 class MockWordRepository extends Mock implements WordRepository {}
 
 class MockCloudTranslationRepository extends Mock implements CloudTranslationRepository {}
+
+class MockLocalTranslationRepository extends Mock implements LocalTranslationRepository {}
 
 class MockWebsiteTranslationRepository extends Mock implements WebsiteTranslationRepository {}
 
@@ -48,6 +51,7 @@ void main() {
     final wordRepository = MockWordRepository();
     final apiTranslationRepository = MockApiWordRepository();
     final cloudTranslationRepository = MockCloudTranslationRepository();
+    final localTranslationRepository = MockLocalTranslationRepository();
     final websiteTranslationRepository = MockWebsiteTranslationRepository();
     final favoritesRepository = MockFavoritesRepository();
     final historyRepository = MockHistoryRepository();
@@ -57,6 +61,12 @@ void main() {
     setUp(() {
       reset(checkAndRequestReviewUseCase);
       when(() => checkAndRequestReviewUseCase.call()).thenAnswer((_) async => const Success(false));
+      when(
+        () => localTranslationRepository.getWord(
+          langId: any(named: 'langId'),
+          wordId: any(named: 'wordId'),
+        ),
+      ).thenAnswer((_) async => null);
     });
 
     TranslationCubit newInstance({bool saveToHistory = true}) => TranslationCubit(
@@ -65,6 +75,7 @@ void main() {
       saveToHistory: saveToHistory,
       getWordUseCase: GetWordUseCase(wordRepository),
       getTranslationUseCase: GetTranslationUseCase(
+        localTranslationRepository: localTranslationRepository,
         apiWordRepository: apiTranslationRepository,
         cloudTranslationRepository: cloudTranslationRepository,
         websiteTranslationRepository: websiteTranslationRepository,
@@ -109,6 +120,8 @@ void main() {
         'emits error state when failed to get translation from both primary and fallback data sources',
         setUp: () {
           final word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
 
           when(
             () => wordRepository.getWord(langId: 1, wordId: 1),
@@ -142,6 +155,8 @@ void main() {
         'emits failed state when failed to check the word is in favorites',
         setUp: () {
           final word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           when(
@@ -181,6 +196,8 @@ void main() {
         'emits failed state when failed to save the word in history',
         setUp: () {
           final word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           when(
@@ -226,6 +243,8 @@ void main() {
         'emits ok state when failed to log analytics event',
         setUp: () {
           final word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           final translation = Translation.build(
@@ -282,6 +301,8 @@ void main() {
         'not saving to history when saveToHistory=false passed',
         setUp: () {
           word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           final translation = Translation.build(
@@ -341,6 +362,8 @@ void main() {
         'triggers review check after a successful word view',
         setUp: () {
           final word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           final translation = Translation.build(
@@ -400,6 +423,8 @@ void main() {
         'emits failed state when saving to favorites',
         setUp: () {
           word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           final translation = Translation.build(
@@ -478,6 +503,8 @@ void main() {
         'emits ok state when saving to favorites',
         setUp: () {
           word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
           final uri = Uri.parse('https://skarnik.by/word/test');
 
           final translation = Translation.build(
@@ -560,6 +587,8 @@ void main() {
 
       setUp(() {
         word = MockWord();
+        when(() => word.langId).thenReturn(1);
+        when(() => word.wordId).thenReturn(1);
         final uri = Uri.parse('https://skarnik.by/word/test');
 
         translation = Translation.build(
@@ -642,6 +671,8 @@ void main() {
         'emits failed state when removing from favorites',
         setUp: () {
           word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
 
           uri = Uri.parse('https://skarnik.by/word/test');
 
@@ -721,6 +752,8 @@ void main() {
         'emits ok state when removing from favorites',
         setUp: () {
           word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
 
           final translation = Translation.build(
             word: word,

@@ -60,6 +60,8 @@ import 'package:skarnik_flutter/features/settings/domain/repository/settings_his
     as _i531;
 import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.dart'
     as _i861;
+import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_cubit.dart'
+    as _i253;
 import 'package:skarnik_flutter/features/stress/data/repository/dev_analytics_stress_repository.dart'
     as _i410;
 import 'package:skarnik_flutter/features/stress/data/repository/firebase_analytics_stress_repository.dart'
@@ -88,8 +90,12 @@ import 'package:skarnik_flutter/features/translation/data/repository/objectbox_f
     as _i792;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_history_repository.dart'
     as _i556;
+import 'package:skarnik_flutter/features/translation/data/repository/objectbox_translation_repository.dart'
+    as _i395;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_word_repository.dart'
     as _i326;
+import 'package:skarnik_flutter/features/translation/data/repository/shared_preferences_download_rate_limit_repository.dart'
+    as _i877;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
     as _i779;
 import 'package:skarnik_flutter/features/translation/data/repository/supabase_api_translation_repository_impl.dart'
@@ -100,18 +106,30 @@ import 'package:skarnik_flutter/features/translation/domain/repository/api_trans
     as _i138;
 import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart'
     as _i361;
+import 'package:skarnik_flutter/features/translation/domain/repository/download_rate_limit_repository.dart'
+    as _i1028;
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart'
     as _i361;
 import 'package:skarnik_flutter/features/translation/domain/repository/history_repository.dart'
     as _i788;
+import 'package:skarnik_flutter/features/translation/domain/repository/local_translation_repository.dart'
+    as _i554;
 import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart'
     as _i317;
 import 'package:skarnik_flutter/features/translation/domain/repository/word_repository.dart'
     as _i147;
 import 'package:skarnik_flutter/features/translation/domain/use_case/add_to_favorites.dart'
     as _i311;
+import 'package:skarnik_flutter/features/translation/domain/use_case/check_download_rate_limit.dart'
+    as _i358;
 import 'package:skarnik_flutter/features/translation/domain/use_case/check_in_favorites.dart'
     as _i135;
+import 'package:skarnik_flutter/features/translation/domain/use_case/clear_downloaded_dictionary.dart'
+    as _i118;
+import 'package:skarnik_flutter/features/translation/domain/use_case/count_downloaded_words.dart'
+    as _i883;
+import 'package:skarnik_flutter/features/translation/domain/use_case/download_dictionary.dart'
+    as _i705;
 import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart'
     as _i803;
 import 'package:skarnik_flutter/features/translation/domain/use_case/get_word.dart'
@@ -202,6 +220,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i407.ResolveStressWordListUseCase>(
       () => _i407.ResolveStressWordListUseCase(gh<_i670.StressRepository>()),
     );
+    gh.factory<_i1028.DownloadRateLimitRepository>(
+      () => _i877.SharedPreferencesDownloadRateLimitRepository(),
+    );
+    gh.factory<_i358.CheckDownloadRateLimitUseCase>(
+      () => _i358.CheckDownloadRateLimitUseCase(
+        gh<_i1028.DownloadRateLimitRepository>(),
+      ),
+    );
     gh.lazySingleton<_i264.QueryRepository>(
       () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),
     );
@@ -229,6 +255,11 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()),
     );
+    gh.factory<_i554.LocalTranslationRepository>(
+      () => _i395.ObjectboxTranslationRepository(
+        gh<_i522.ObjectboxStoreHolder>(),
+      ),
+    );
     gh.factory<_i146.InitDatabaseUseCase>(
       () => _i146.InitDatabaseUseCase(gh<_i763.DatabaseRepository>()),
     );
@@ -254,6 +285,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i138.ApiTranslationRepository>(
       () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
+    );
+    gh.factory<_i705.DownloadDictionaryUseCase>(
+      () => _i705.DownloadDictionaryUseCase(
+        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
+        localTranslationRepository: gh<_i554.LocalTranslationRepository>(),
+      ),
     );
     gh.factory<_i754.CheckAndRequestReviewUseCase>(
       () => _i754.CheckAndRequestReviewUseCase(gh<_i806.ReviewRepository>()),
@@ -286,6 +323,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i173.AnalyticsStressRepository>(),
       ),
     );
+    gh.factory<_i803.GetTranslationUseCase>(
+      () => _i803.GetTranslationUseCase(
+        localTranslationRepository: gh<_i554.LocalTranslationRepository>(),
+        apiWordRepository: gh<_i138.ApiTranslationRepository>(),
+        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
+        websiteTranslationRepository: gh<_i317.WebsiteTranslationRepository>(),
+      ),
+    );
     gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(
       () => _i135.LogAnalyticsAddToFavoritesUseCase(
         gh<_i223.AnalyticsTranslationRepository>(),
@@ -301,15 +346,28 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i223.AnalyticsTranslationRepository>(),
       ),
     );
-    gh.factory<_i803.GetTranslationUseCase>(
-      () => _i803.GetTranslationUseCase(
-        apiWordRepository: gh<_i138.ApiTranslationRepository>(),
-        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
-        websiteTranslationRepository: gh<_i317.WebsiteTranslationRepository>(),
+    gh.factory<_i118.ClearDownloadedDictionaryUseCase>(
+      () => _i118.ClearDownloadedDictionaryUseCase(
+        gh<_i554.LocalTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i883.CountDownloadedWordsUseCase>(
+      () => _i883.CountDownloadedWordsUseCase(
+        gh<_i554.LocalTranslationRepository>(),
       ),
     );
     gh.factory<_i915.SearchUseCase>(
       () => _i915.SearchUseCase(gh<_i124.SearchRepository>()),
+    );
+    gh.lazySingleton<_i253.OfflineDictionariesCubit>(
+      () => _i253.OfflineDictionariesCubit(
+        downloadDictionaryUseCase: gh<_i705.DownloadDictionaryUseCase>(),
+        clearDownloadedDictionaryUseCase:
+            gh<_i118.ClearDownloadedDictionaryUseCase>(),
+        countDownloadedWordsUseCase: gh<_i883.CountDownloadedWordsUseCase>(),
+        checkDownloadRateLimitUseCase:
+            gh<_i358.CheckDownloadRateLimitUseCase>(),
+      ),
     );
     return this;
   }

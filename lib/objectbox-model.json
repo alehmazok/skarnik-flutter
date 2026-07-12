@@ -132,10 +132,58 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:4",
+      "lastPropertyId": "7:4584813955533662640",
+      "name": "ObjectboxTranslationWord",
+      "properties": [
+        {
+          "id": "1:7579270847399598420",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4049664022356595381",
+          "name": "langId",
+          "indexId": "7:5049849086102559561",
+          "type": 6,
+          "flags": 8
+        },
+        {
+          "id": "3:1259015345606876323",
+          "name": "wordId",
+          "type": 6
+        },
+        {
+          "id": "4:2810840452811135272",
+          "name": "key",
+          "indexId": "8:3234472521774271061",
+          "type": 9,
+          "flags": 34848
+        },
+        {
+          "id": "5:216731990211460732",
+          "name": "stress",
+          "type": 9
+        },
+        {
+          "id": "6:2161657096390901051",
+          "name": "translation",
+          "type": 9
+        },
+        {
+          "id": "7:4584813955533662640",
+          "name": "redirectTo",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:3",
-  "lastIndexId": "6:642269928900054745",
+  "lastEntityId": "5:4",
+  "lastIndexId": "8:3234472521774271061",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

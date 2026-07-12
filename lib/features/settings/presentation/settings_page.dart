@@ -6,18 +6,30 @@ import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart
 import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/clear_history.dart';
+import 'offline_dictionaries_cubit.dart';
 import 'settings_cubit.dart';
 import 'widgets/about_bottom_sheet.dart';
+import 'widgets/offline_dictionaries_section.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SettingsCubit>(
-      create: (context) => SettingsCubit(
-        clearHistoryUseCase: getIt<ClearHistoryUseCase>(),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SettingsCubit>(
+          create: (context) => SettingsCubit(
+            clearHistoryUseCase: getIt<ClearHistoryUseCase>(),
+          ),
+        ),
+        // App-scoped singleton (see OfflineDictionariesCubit) — provided by
+        // value so popping this page doesn't close it and abandon a
+        // still-running download.
+        BlocProvider<OfflineDictionariesCubit>.value(
+          value: getIt<OfflineDictionariesCubit>(),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: const Text(Strings.preferences),
@@ -51,6 +63,13 @@ class SettingsPage extends StatelessWidget {
                       );
                     },
                   ),
+                  const Divider(),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Text(Strings.offlineMode),
+                  ),
+                  const OfflineDictionariesSection(),
+                  const Divider(),
                   ListTile(
                     leading: const Icon(Icons.email_outlined),
                     title: const Text(Strings.writeToDevs),

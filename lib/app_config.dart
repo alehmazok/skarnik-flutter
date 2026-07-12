@@ -7,6 +7,10 @@ abstract class AppConfig {
 
   static const reviewRequestViewThreshold = 7;
 
+  static const downloadRateLimitWindow = Duration(minutes: 5);
+
+  static const downloadMaxAttemptsPerWindow = 4;
+
   static const wordsSearchLimit = 15;
 
   // Fuzzy candidates are cut off at this limit before being scored, so it

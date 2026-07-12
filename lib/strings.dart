@@ -7,17 +7,29 @@ abstract interface class Strings {
   static const bookmarks = 'Закладкі';
   static const clearHistory = 'Ачысціць гісторыю пошуку';
   static const clearHistoryConfirmation = 'Вы сапраўды жадаеце ачысціць гісторыю пошуку?';
+  static const deleteOfflineDictionary = 'Выдаліць афлайн-копію';
+  static const deleteOfflineDictionaryConfirmation =
+      'Вы сапраўды жадаеце выдаліць афлайн-копію слоўніка «{}»?';
   static const dictBelRus = 'Бел-Рус';
   static const dictRusBel = 'Рус-Бел';
   static const dictTsbm = 'Тлумачальны';
   static const dictionary = 'Слоўнік';
+  static const downloadDictionary = 'Спампаваць для афлайн доступу';
+  static const downloadDictionaryError = 'Адбылася памылка падчас спампоўкі слоўніка.';
+  static const downloadRateLimited =
+      'Занадта шмат спроб спампоўкі. Паспрабуйце праз некалькі хвілін.';
+  static const downloaded = 'Спампавана';
+  static const downloading = 'Спампоўваецца…';
   static const historyCleared = 'Гісторыя паспяхова ачышчана.';
   static const no = 'Не';
   static const nacisk = 'На́ціск';
-  static const naciskLetter = 'Á'; // 'а́';
-  static const naciskError = 'Адбылася памылка пры загрузцы інфармацыі аб націску.';
+  static const naciskError = 'Адбылася памылка падчас загрузцы інфармацыі аб націску.';
   static const naciskNotFound = 'Інфармацыя аб націску для гэтага слова не знойдзена.';
   static const naciskSelectWord = 'Абярыце слова:';
+  static const nothingFound = 'Па запыце нічога не знойдзена';
+  static const offlineDictionaryDeleted = 'Афлайн-копія слоўніка выдалена.';
+  static const offlineDictionaryDownloaded = 'Слоўнік спампаваны і даступны афлайн.';
+  static const offlineMode = 'Афлайн-доступ';
   static const partOfSpeech = {
     'Adjectives': 'Прыметнік',
     'Adverbs': 'Прыслоўе',
@@ -31,7 +43,6 @@ abstract interface class Strings {
     'Pronouns': 'Займеннік',
     'Verbs': 'Дзеяслоў',
   };
-  static const nothingFound = 'Па запыце нічога не знойдзена';
   static const preferences = 'Налады';
   static const rateApp = 'Ацаніць праграму';
   static const redirectedFromWord = 'Перанакіравана з «{}»';
@@ -40,6 +51,7 @@ abstract interface class Strings {
   static const search = 'Пошук';
   static const searchNote = 'Пошук з аўтаматычнай падменай і|и, ў|щ, \'|ь|ъ, е|ё';
   static const sorryTranslationError = 'Прабачце, адбылася памылка перакладу слова.';
+  static const wordsUnit = 'слоў';
   static const writeToDevs = 'Напісаць распрацоўшчыкам';
   static const yes = 'Так';
   static const aboutUsefulLinks = 'Карысныя спасылкі';

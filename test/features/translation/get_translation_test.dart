@@ -6,12 +6,15 @@ import 'package:skarnik_flutter/features/translation/data/model/api_word_model.d
 import 'package:skarnik_flutter/features/translation/domain/entity/translation.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/api_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart';
+import 'package:skarnik_flutter/features/translation/domain/repository/local_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/website_translation_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/get_translation.dart';
 
 class MockApiWordRepository extends Mock implements ApiTranslationRepository {}
 
 class MockCloudTranslationRepository extends Mock implements CloudTranslationRepository {}
+
+class MockLocalTranslationRepository extends Mock implements LocalTranslationRepository {}
 
 class MockWebsiteTranslationRepository extends Mock implements WebsiteTranslationRepository {}
 
@@ -21,13 +24,22 @@ void main() {
   late GetTranslationUseCase useCase;
   late MockApiWordRepository mockApiWordRepository;
   late MockCloudTranslationRepository mockCloudTranslationRepository;
+  late MockLocalTranslationRepository mockLocalTranslationRepository;
   late MockWebsiteTranslationRepository mockWebsiteTranslationRepository;
 
   setUp(() {
     mockApiWordRepository = MockApiWordRepository();
     mockCloudTranslationRepository = MockCloudTranslationRepository();
+    mockLocalTranslationRepository = MockLocalTranslationRepository();
     mockWebsiteTranslationRepository = MockWebsiteTranslationRepository();
+    when(
+      () => mockLocalTranslationRepository.getWord(
+        langId: any(named: 'langId'),
+        wordId: any(named: 'wordId'),
+      ),
+    ).thenAnswer((_) async => null);
     useCase = GetTranslationUseCase(
+      localTranslationRepository: mockLocalTranslationRepository,
       apiWordRepository: mockApiWordRepository,
       cloudTranslationRepository: mockCloudTranslationRepository,
       websiteTranslationRepository: mockWebsiteTranslationRepository,
@@ -51,6 +63,35 @@ void main() {
       ).thenReturn(
         Uri.parse('https://skarnik.by/belrus/1'),
       );
+      when(() => word.langId).thenReturn(1);
+      when(() => word.wordId).thenReturn(1);
+    });
+
+    test('should return ApiWord from the local repository when downloaded offline', () async {
+      translation = Translation.build(
+        uri: word.buildApiUri(),
+        html: '<div></div>',
+        word: word,
+        source: 'local',
+      );
+
+      // Arrange
+      when(
+        () => mockLocalTranslationRepository.getWord(
+          langId: any(named: 'langId'),
+          wordId: any(named: 'wordId'),
+        ),
+      ).thenAnswer((_) async => apiWord.toEntity());
+
+      // Act
+      final result = await useCase.call(word);
+
+      // Assert
+      expect(result, isA<Success<Translation>>());
+      expect((result as Success).result, translation);
+      verifyNever(() => mockApiWordRepository.getWord(word));
+      verifyNever(() => mockCloudTranslationRepository.getWord(word));
+      verifyNever(() => mockWebsiteTranslationRepository.getTranslation(word));
     });
 
     test('should return ApiWord from the API repository when successful', () async {

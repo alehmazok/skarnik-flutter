@@ -17,6 +17,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import 'features/app/data/model/objectbox_favorite_word.dart';
 import 'features/app/data/model/objectbox_history_word.dart';
 import 'features/app/data/model/objectbox_search_word.dart';
+import 'features/app/data/model/objectbox_translation_word.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -169,6 +170,60 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(5, 4),
+    name: 'ObjectboxTranslationWord',
+    lastPropertyId: const obx_int.IdUid(7, 4584813955533662640),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 7579270847399598420),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 4049664022356595381),
+        name: 'langId',
+        type: 6,
+        flags: 8,
+        indexId: const obx_int.IdUid(7, 5049849086102559561),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 1259015345606876323),
+        name: 'wordId',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 2810840452811135272),
+        name: 'key',
+        type: 9,
+        flags: 34848,
+        indexId: const obx_int.IdUid(8, 3234472521774271061),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 216731990211460732),
+        name: 'stress',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 2161657096390901051),
+        name: 'translation',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 4584813955533662640),
+        name: 'redirectTo',
+        type: 9,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -214,8 +269,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
     // Typically, this is done with `dart run build_runner build`.
     generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(4, 3),
-    lastIndexId: const obx_int.IdUid(6, 642269928900054745),
+    lastEntityId: const obx_int.IdUid(5, 4),
+    lastIndexId: const obx_int.IdUid(8, 3234472521774271061),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [6340663483916346837],
@@ -419,6 +474,80 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    ObjectboxTranslationWord:
+        obx_int.EntityDefinition<ObjectboxTranslationWord>(
+          model: _entities[3],
+          toOneRelations: (ObjectboxTranslationWord object) => [],
+          toManyRelations: (ObjectboxTranslationWord object) => {},
+          getId: (ObjectboxTranslationWord object) => object.id,
+          setId: (ObjectboxTranslationWord object, int id) {
+            object.id = id;
+          },
+          objectToFB: (ObjectboxTranslationWord object, fb.Builder fbb) {
+            final keyOffset = fbb.writeString(object.key);
+            final stressOffset = object.stress == null
+                ? null
+                : fbb.writeString(object.stress!);
+            final translationOffset = fbb.writeString(object.translation);
+            final redirectToOffset = object.redirectTo == null
+                ? null
+                : fbb.writeString(object.redirectTo!);
+            fbb.startTable(8);
+            fbb.addInt64(0, object.id);
+            fbb.addInt64(1, object.langId);
+            fbb.addInt64(2, object.wordId);
+            fbb.addOffset(3, keyOffset);
+            fbb.addOffset(4, stressOffset);
+            fbb.addOffset(5, translationOffset);
+            fbb.addOffset(6, redirectToOffset);
+            fbb.finish(fbb.endTable());
+            return object.id;
+          },
+          objectFromFB: (obx.Store store, ByteData fbData) {
+            final buffer = fb.BufferContext(fbData);
+            final rootOffset = buffer.derefObject(0);
+            final langIdParam = const fb.Int64Reader().vTableGet(
+              buffer,
+              rootOffset,
+              6,
+              0,
+            );
+            final wordIdParam = const fb.Int64Reader().vTableGet(
+              buffer,
+              rootOffset,
+              8,
+              0,
+            );
+            final translationParam = const fb.StringReader(
+              asciiOptimization: true,
+            ).vTableGet(buffer, rootOffset, 14, '');
+            final stressParam = const fb.StringReader(
+              asciiOptimization: true,
+            ).vTableGetNullable(buffer, rootOffset, 12);
+            final redirectToParam = const fb.StringReader(
+              asciiOptimization: true,
+            ).vTableGetNullable(buffer, rootOffset, 16);
+            final object =
+                ObjectboxTranslationWord(
+                    langId: langIdParam,
+                    wordId: wordIdParam,
+                    translation: translationParam,
+                    stress: stressParam,
+                    redirectTo: redirectToParam,
+                  )
+                  ..id = const fb.Int64Reader().vTableGet(
+                    buffer,
+                    rootOffset,
+                    4,
+                    0,
+                  )
+                  ..key = const fb.StringReader(
+                    asciiOptimization: true,
+                  ).vTableGet(buffer, rootOffset, 10, '');
+
+            return object;
+          },
+        ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -525,5 +654,43 @@ class ObjectboxFavoriteWord_ {
   /// See [ObjectboxFavoriteWord.word].
   static final word = obx.QueryStringProperty<ObjectboxFavoriteWord>(
     _entities[2].properties[4],
+  );
+}
+
+/// [ObjectboxTranslationWord] entity fields to define ObjectBox queries.
+class ObjectboxTranslationWord_ {
+  /// See [ObjectboxTranslationWord.id].
+  static final id = obx.QueryIntegerProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[0],
+  );
+
+  /// See [ObjectboxTranslationWord.langId].
+  static final langId = obx.QueryIntegerProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[1],
+  );
+
+  /// See [ObjectboxTranslationWord.wordId].
+  static final wordId = obx.QueryIntegerProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[2],
+  );
+
+  /// See [ObjectboxTranslationWord.key].
+  static final key = obx.QueryStringProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[3],
+  );
+
+  /// See [ObjectboxTranslationWord.stress].
+  static final stress = obx.QueryStringProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[4],
+  );
+
+  /// See [ObjectboxTranslationWord.translation].
+  static final translation = obx.QueryStringProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[5],
+  );
+
+  /// See [ObjectboxTranslationWord.redirectTo].
+  static final redirectTo = obx.QueryStringProperty<ObjectboxTranslationWord>(
+    _entities[3].properties[6],
   );
 }

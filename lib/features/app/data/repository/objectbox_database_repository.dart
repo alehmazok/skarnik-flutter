@@ -18,6 +18,7 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
   static const _mdbAsset = 'assets/objectbox/$_mdbFileName';
   static const _mdbSearchDirectoryName = 'objectbox_search';
   static const _mdbHistoryDirectoryName = 'objectbox_history';
+  static const _mdbTranslationDirectoryName = 'objectbox_translation';
 
   final _logger = getLogger(ObjectboxDatabaseRepository);
 
@@ -30,9 +31,11 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
     }
     final searchStore = await _openObjectboxStore();
     final historyStore = await _openHistoryObjectboxStore();
+    final translationStore = await _openTranslationObjectboxStore();
     _registerStoreHolder(
       searchStore: searchStore,
       historyStore: historyStore,
+      translationStore: translationStore,
     );
     final box = searchStore.box<ObjectboxSearchWord>();
 
@@ -69,13 +72,19 @@ class ObjectboxDatabaseRepository implements DatabaseRepository {
     directory: await _getObjectBoxDir(_mdbHistoryDirectoryName),
   );
 
+  Future<Store> _openTranslationObjectboxStore() async => openStore(
+    directory: await _getObjectBoxDir(_mdbTranslationDirectoryName),
+  );
+
   void _registerStoreHolder({
     required Store searchStore,
     required Store historyStore,
+    required Store translationStore,
   }) {
     final holder = ObjectboxStoreHolder(
       searchStore: searchStore,
       historyStore: historyStore,
+      translationStore: translationStore,
     );
     _logger.fine('Рэгіструем `${holder.runtimeType}` залежнасць, як сінглтон.');
     getIt.registerSingleton(holder);
