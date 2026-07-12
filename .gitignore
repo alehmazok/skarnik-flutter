@@ -74,3 +74,6 @@ dev/
 
 # MCP
 .mcp.json
+
+# Screenshots
+screenshots/
