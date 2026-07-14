@@ -65,7 +65,10 @@ class OfflineDictionariesCubit extends Cubit<Map<Dictionary, DictionaryOfflineSt
   }) : super({
          for (final dictionary in Dictionary.values) dictionary: const DictionaryNotDownloaded(),
        }) {
-    _loadDownloadedCounts();
+    // Defer past the synchronous constructor frame: the first ObjectBox
+    // count() hit is a blocking FFI call, and running it inline here would
+    // block whatever build() resolved this lazy singleton (Settings page).
+    scheduleMicrotask(_loadDownloadedCounts);
   }
 
   final DownloadDictionaryUseCase downloadDictionaryUseCase;
