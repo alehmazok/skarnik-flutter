@@ -29,7 +29,7 @@ abstract interface class Strings {
   static const nothingFound = 'Па запыце нічога не знойдзена';
   static const offlineDictionaryDeleted = 'Афлайн-копія слоўніка выдалена.';
   static const offlineDictionaryDownloaded = 'Слоўнік спампаваны і даступны афлайн.';
-  static const offlineMode = 'Афлайн-доступ';
+  static const offlineMode = 'Афлайн доступ';
   static const partOfSpeech = {
     'Adjectives': 'Прыметнік',
     'Adverbs': 'Прыслоўе',
