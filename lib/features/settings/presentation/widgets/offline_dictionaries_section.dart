@@ -44,13 +44,18 @@ class _DictionaryTile extends StatelessWidget {
     final cubit = context.read<OfflineDictionariesCubit>();
     final name = _shortName[dictionary]!;
 
+    final subtitleColor = Theme.of(context).colorScheme.onSurfaceVariant;
+
     return switch (status) {
       DictionaryNotDownloaded() || DictionaryDownloadFailed() => ListTile(
         leading: const Icon(Icons.download_outlined),
         title: Text(name),
-        subtitle: status is DictionaryDownloadFailed
-            ? const Text(Strings.downloadDictionaryError)
-            : const Text(Strings.downloadDictionary),
+        subtitle: Text(
+          status is DictionaryDownloadFailed
+              ? Strings.downloadDictionaryError
+              : Strings.downloadDictionary,
+          style: TextStyle(color: subtitleColor),
+        ),
         onTap: () => _startDownload(context, cubit),
       ),
       DictionaryDownloading(:final progress) => ListTile(
@@ -63,18 +68,24 @@ class _DictionaryTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(Strings.downloading),
+            Text(Strings.downloading, style: TextStyle(color: subtitleColor)),
             LinearProgressIndicator(value: progress.fraction),
-            Text('${progress.done} / ${progress.total} ${Strings.wordsUnit}'),
+            Text(
+              '${progress.done} / ${progress.total} ${Strings.wordsUnit}',
+              style: TextStyle(color: subtitleColor),
+            ),
           ],
         ),
       ),
       DictionaryDownloaded(:final wordCount) => ListTile(
         leading: const Icon(Icons.download_done_outlined),
         title: Text(name),
-        subtitle: Text('${Strings.downloaded}: $wordCount ${Strings.wordsUnit}'),
+        subtitle: Text(
+          '${Strings.downloaded}: $wordCount ${Strings.wordsUnit}',
+          style: TextStyle(color: subtitleColor),
+        ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outline),
+          icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
           onPressed: () => _showDeleteConfirmation(context, cubit),
         ),
       ),

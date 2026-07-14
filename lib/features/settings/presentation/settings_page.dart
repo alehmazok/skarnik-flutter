@@ -52,9 +52,14 @@ class SettingsPage extends StatelessWidget {
               final cubit = context.read<SettingsCubit>();
               return ListView(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: Text(Strings.offlineMode),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Text(
+                      Strings.offlineMode,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ),
                   const OfflineDictionariesSection(),
                   const Divider(),
