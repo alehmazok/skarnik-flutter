@@ -54,12 +54,20 @@ import 'package:skarnik_flutter/features/search/domain/repository/search_reposit
     as _i124;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
     as _i915;
+import 'package:skarnik_flutter/features/settings/data/repository/dev_analytics_settings_repository.dart'
+    as _i1018;
+import 'package:skarnik_flutter/features/settings/data/repository/firebase_analytics_settings_repository.dart'
+    as _i383;
 import 'package:skarnik_flutter/features/settings/data/repository/objectbox_settings_history_repository.dart'
     as _i252;
+import 'package:skarnik_flutter/features/settings/domain/repository/analytics_settings_repository.dart'
+    as _i924;
 import 'package:skarnik_flutter/features/settings/domain/repository/settings_history_repository.dart'
     as _i531;
 import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.dart'
     as _i861;
+import 'package:skarnik_flutter/features/settings/domain/use_case/log_analytics_dictionary_download.dart'
+    as _i263;
 import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_cubit.dart'
     as _i253;
 import 'package:skarnik_flutter/features/stress/data/repository/dev_analytics_stress_repository.dart'
@@ -211,6 +219,10 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i609.ObjectboxVocabularyRepository(gh<_i522.ObjectboxStoreHolder>()),
     );
+    gh.factory<_i924.AnalyticsSettingsRepository>(
+      () => _i1018.DevAnalyticsSettingsRepository(),
+      registerFor: {_dev},
+    );
     gh.factory<_i670.StressRepository>(
       () => _i370.StarnikStressRepository(gh<_i361.Dio>()),
     );
@@ -241,6 +253,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i173.AnalyticsStressRepository>(
       () => _i51.FirebaseAnalyticsStressRepository(),
       registerFor: {_prod},
+    );
+    gh.factory<_i924.AnalyticsSettingsRepository>(
+      () => _i383.FirebaseAnalyticsSettingsRepository(),
+      registerFor: {_prod},
+    );
+    gh.factory<_i263.LogAnalyticsDictionaryDownloadUseCase>(
+      () => _i263.LogAnalyticsDictionaryDownloadUseCase(
+        gh<_i924.AnalyticsSettingsRepository>(),
+      ),
     );
     gh.factory<_i958.LogAnalyticsAppOpenUseCase>(
       () => _i958.LogAnalyticsAppOpenUseCase(gh<_i71.AnalyticsAppRepository>()),
@@ -367,6 +388,8 @@ extension GetItInjectableX on _i174.GetIt {
         countDownloadedWordsUseCase: gh<_i883.CountDownloadedWordsUseCase>(),
         checkDownloadRateLimitUseCase:
             gh<_i358.CheckDownloadRateLimitUseCase>(),
+        logAnalyticsDictionaryDownloadUseCase:
+            gh<_i263.LogAnalyticsDictionaryDownloadUseCase>(),
       ),
     );
     return this;

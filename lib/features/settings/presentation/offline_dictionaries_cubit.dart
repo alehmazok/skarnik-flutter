@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
+import 'package:skarnik_flutter/features/settings/domain/use_case/log_analytics_dictionary_download.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/download_progress.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/check_download_rate_limit.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/clear_downloaded_dictionary.dart';
@@ -60,6 +61,7 @@ class OfflineDictionariesCubit extends Cubit<Map<Dictionary, DictionaryOfflineSt
     required this.clearDownloadedDictionaryUseCase,
     required this.countDownloadedWordsUseCase,
     required this.checkDownloadRateLimitUseCase,
+    required this.logAnalyticsDictionaryDownloadUseCase,
   }) : super({
          for (final dictionary in Dictionary.values) dictionary: const DictionaryNotDownloaded(),
        }) {
@@ -70,6 +72,7 @@ class OfflineDictionariesCubit extends Cubit<Map<Dictionary, DictionaryOfflineSt
   final ClearDownloadedDictionaryUseCase clearDownloadedDictionaryUseCase;
   final CountDownloadedWordsUseCase countDownloadedWordsUseCase;
   final CheckDownloadRateLimitUseCase checkDownloadRateLimitUseCase;
+  final LogAnalyticsDictionaryDownloadUseCase logAnalyticsDictionaryDownloadUseCase;
 
   Future<void> _loadDownloadedCounts() async {
     for (final dictionary in Dictionary.values) {
@@ -90,6 +93,8 @@ class OfflineDictionariesCubit extends Cubit<Map<Dictionary, DictionaryOfflineSt
   // the download itself keeps running in the background and reports
   // progress through emitted state, same as before.
   Future<bool> download(Dictionary dictionary) async {
+    unawaited(logAnalyticsDictionaryDownloadUseCase(dictionary));
+
     final allowed = await checkDownloadRateLimitUseCase();
     if (isClosed || !allowed) return false;
 

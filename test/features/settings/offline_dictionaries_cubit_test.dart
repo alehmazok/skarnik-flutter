@@ -1,7 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
+import 'package:skarnik_flutter/features/settings/domain/use_case/log_analytics_dictionary_download.dart';
 import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_cubit.dart';
 import 'package:skarnik_flutter/features/translation/domain/entity/download_progress.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/check_download_rate_limit.dart';
@@ -18,6 +20,9 @@ class MockCountDownloadedWordsUseCase extends Mock implements CountDownloadedWor
 
 class MockCheckDownloadRateLimitUseCase extends Mock implements CheckDownloadRateLimitUseCase {}
 
+class MockLogAnalyticsDictionaryDownloadUseCase extends Mock
+    implements LogAnalyticsDictionaryDownloadUseCase {}
+
 void main() {
   setUpAll(() {
     registerFallbackValue(Dictionary.tsbm);
@@ -28,14 +33,19 @@ void main() {
     late MockClearDownloadedDictionaryUseCase clearDownloadedDictionaryUseCase;
     late MockCountDownloadedWordsUseCase countDownloadedWordsUseCase;
     late MockCheckDownloadRateLimitUseCase checkDownloadRateLimitUseCase;
+    late MockLogAnalyticsDictionaryDownloadUseCase logAnalyticsDictionaryDownloadUseCase;
 
     setUp(() {
       downloadDictionaryUseCase = MockDownloadDictionaryUseCase();
       clearDownloadedDictionaryUseCase = MockClearDownloadedDictionaryUseCase();
       countDownloadedWordsUseCase = MockCountDownloadedWordsUseCase();
       checkDownloadRateLimitUseCase = MockCheckDownloadRateLimitUseCase();
+      logAnalyticsDictionaryDownloadUseCase = MockLogAnalyticsDictionaryDownloadUseCase();
 
       when(() => countDownloadedWordsUseCase(any())).thenAnswer((_) async => 0);
+      when(
+        () => logAnalyticsDictionaryDownloadUseCase(any()),
+      ).thenAnswer((_) async => const Success(true));
     });
 
     OfflineDictionariesCubit newInstance() => OfflineDictionariesCubit(
@@ -43,6 +53,7 @@ void main() {
       clearDownloadedDictionaryUseCase: clearDownloadedDictionaryUseCase,
       countDownloadedWordsUseCase: countDownloadedWordsUseCase,
       checkDownloadRateLimitUseCase: checkDownloadRateLimitUseCase,
+      logAnalyticsDictionaryDownloadUseCase: logAnalyticsDictionaryDownloadUseCase,
     );
 
     test('download() returns false and does not start a download when rate-limited', () async {
