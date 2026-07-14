@@ -5,7 +5,7 @@ abstract class AppConfig {
 
   static const wordsPerPage = 25;
 
-  static const reviewRequestViewThreshold = 7;
+  static const reviewRequestViewThreshold = 10;
 
   static const downloadRateLimitWindow = Duration(minutes: 5);
 
