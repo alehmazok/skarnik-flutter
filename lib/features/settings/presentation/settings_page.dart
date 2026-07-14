@@ -69,7 +69,6 @@ class SettingsPage extends StatelessWidget {
                       );
                     },
                   ),
-                  const Divider(),
                   ListTile(
                     leading: const Icon(Icons.email_outlined),
                     title: const Text(Strings.writeToDevs),
