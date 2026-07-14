@@ -1,9 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/favorites/domain/entity/favorites_sort_order.dart';
+import 'package:skarnik_flutter/features/favorites/domain/repository/favorites_sort_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/remove_from_favorites.dart';
 import 'package:skarnik_flutter/logging.dart';
 
@@ -43,19 +46,36 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   final LoadFavoritesUseCase loadFavoritesUseCase;
   final RemoveFromFavoritesUseCase removeFromFavoritesUseCase;
+  final FavoritesSortRepository favoritesSortRepository;
   final pagingController = PagingController<int, Word>(firstPageKey: 0);
   final _candidatesToRemove = <Word, bool>{};
+  final sortOrder = ValueNotifier<FavoritesSortOrder>(FavoritesSortOrder.dateAdded);
+  late final Future<void> _sortOrderLoaded;
 
   FavoritesCubit({
     required this.loadFavoritesUseCase,
     required this.removeFromFavoritesUseCase,
+    required this.favoritesSortRepository,
   }) : super(const FavoritesInitedState()) {
     _logger.fine('New instance created: $hashCode');
+    _sortOrderLoaded = _loadSortOrder();
     pagingController.addPageRequestListener(_load);
   }
 
+  Future<void> _loadSortOrder() async {
+    sortOrder.value = await favoritesSortRepository.getSortOrder();
+  }
+
+  Future<void> changeSortOrder(FavoritesSortOrder newSortOrder) async {
+    if (newSortOrder == sortOrder.value) return;
+    await favoritesSortRepository.setSortOrder(newSortOrder);
+    sortOrder.value = newSortOrder;
+    reload();
+  }
+
   Future<void> _load(int offset) async {
-    final loadFavorites = await loadFavoritesUseCase(offset);
+    await _sortOrderLoaded;
+    final loadFavorites = await loadFavoritesUseCase(offset, sortOrder.value);
     switch (loadFavorites) {
       case Failure(error: final error):
         emit(FavoritesFailedState(error));
@@ -103,6 +123,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   Future<void> close() {
     _logger.fine('Cubit has been closed');
     pagingController.dispose();
+    sortOrder.dispose();
     return super.close();
   }
 }

@@ -34,6 +34,10 @@ import 'package:skarnik_flutter/features/app/domain/use_case/init_remote_config.
     as _i525;
 import 'package:skarnik_flutter/features/app/domain/use_case/log_analytics_app_started.dart'
     as _i958;
+import 'package:skarnik_flutter/features/favorites/data/repository/shared_preferences_favorites_sort_repository.dart'
+    as _i1037;
+import 'package:skarnik_flutter/features/favorites/domain/repository/favorites_sort_repository.dart'
+    as _i636;
 import 'package:skarnik_flutter/features/favorites/domain/use_case/load_favorites.dart'
     as _i978;
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
@@ -199,6 +203,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1072.SupabaseTranslationRepositoryImpl(),
     );
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
+    gh.factory<_i636.FavoritesSortRepository>(
+      () => _i1037.SharedPreferencesFavoritesSortRepository(),
+    );
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i805.DevAnalyticsAppRepository(),
       registerFor: {_dev},

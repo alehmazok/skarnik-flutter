@@ -1,0 +1,4 @@
+enum FavoritesSortOrder {
+  dateAdded,
+  alphabetical,
+}

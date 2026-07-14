@@ -3,6 +3,7 @@ import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/features/app/data/model/objectbox_favorite_word.dart';
 import 'package:skarnik_flutter/features/app/data/service/objectbox_store_holder.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/favorites/domain/entity/favorites_sort_order.dart';
 import 'package:skarnik_flutter/objectbox.g.dart';
 
 import '../../domain/repository/favorites_repository.dart';
@@ -14,14 +15,15 @@ class ObjectboxFavoritesRepository implements FavoritesRepository {
   ObjectboxFavoritesRepository(this._objectboxStoreHolder);
 
   @override
-  Future<Iterable<Word>> getAll(int offset) async {
-    final query = _objectboxStoreHolder.favoritesBox
-        .query()
-        .order(
-          ObjectboxFavoriteWord_.id,
-          flags: Order.descending,
-        )
-        .build()
+  Future<Iterable<Word>> getAll(int offset, FavoritesSortOrder sortOrder) async {
+    final queryBuilder = _objectboxStoreHolder.favoritesBox.query();
+    switch (sortOrder) {
+      case FavoritesSortOrder.dateAdded:
+        queryBuilder.order(ObjectboxFavoriteWord_.id, flags: Order.descending);
+      case FavoritesSortOrder.alphabetical:
+        queryBuilder.order(ObjectboxFavoriteWord_.word);
+    }
+    final query = queryBuilder.build()
       ..limit = AppConfig.wordsPerPage
       ..offset = offset;
     final words = await query.findAsync();

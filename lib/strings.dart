@@ -10,6 +10,8 @@ abstract interface class Strings {
   static const deleteOfflineDictionary = 'Выдаліць афлайн-копію';
   static const deleteOfflineDictionaryConfirmation =
       'Вы сапраўды жадаеце выдаліць афлайн-копію слоўніка «{}»?';
+  static const sortByDateAdded = 'Па даце';
+  static const sortByLetter = 'Па алфавіце';
   static const dictBelRus = 'Бел-Рус';
   static const dictRusBel = 'Рус-Бел';
   static const dictTsbm = 'Тлумачальны';

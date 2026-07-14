@@ -2,6 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
+import 'package:skarnik_flutter/features/favorites/domain/entity/favorites_sort_order.dart';
+import 'package:skarnik_flutter/features/favorites/domain/repository/favorites_sort_repository.dart';
 import 'package:skarnik_flutter/features/favorites/domain/use_case/load_favorites.dart';
 import 'package:skarnik_flutter/features/favorites/presentation/favorites_cubit.dart';
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart';
@@ -9,16 +11,27 @@ import 'package:skarnik_flutter/features/translation/domain/use_case/remove_from
 
 class MockFavoritesRepository extends Mock implements FavoritesRepository {}
 
+class MockFavoritesSortRepository extends Mock implements FavoritesSortRepository {}
+
 class MockWord extends Mock implements Word {}
 
 void main() {
   group('FavoritesCubit', () {
     final favoritesRepository = MockFavoritesRepository();
+    final favoritesSortRepository = MockFavoritesSortRepository();
+
+    setUpAll(() {
+      registerFallbackValue(FavoritesSortOrder.dateAdded);
+      when(
+        () => favoritesSortRepository.getSortOrder(),
+      ).thenAnswer((_) async => FavoritesSortOrder.dateAdded);
+    });
 
     FavoritesCubit newInstance() => FavoritesCubit(
-          loadFavoritesUseCase: LoadFavoritesUseCase(favoritesRepository),
-          removeFromFavoritesUseCase: RemoveFromFavoritesUseCase(favoritesRepository),
-        );
+      loadFavoritesUseCase: LoadFavoritesUseCase(favoritesRepository),
+      removeFromFavoritesUseCase: RemoveFromFavoritesUseCase(favoritesRepository),
+      favoritesSortRepository: favoritesSortRepository,
+    );
 
     group('_load()', () {
       late final Word word;
@@ -27,7 +40,7 @@ void main() {
         'emits failed state when failed to retrieve words from database',
         setUp: () {
           when(
-            () => favoritesRepository.getAll(any()),
+            () => favoritesRepository.getAll(any(), any()),
           ).thenThrow(
             UnimplementedError('test error'),
           );
@@ -44,7 +57,7 @@ void main() {
         setUp: () {
           word = MockWord();
           when(
-            () => favoritesRepository.getAll(any()),
+            () => favoritesRepository.getAll(any(), any()),
           ).thenAnswer(
             (_) async => [word],
           );
@@ -69,7 +82,7 @@ void main() {
         word2 = MockWord();
 
         when(
-          () => favoritesRepository.getAll(any()),
+          () => favoritesRepository.getAll(any(), any()),
         ).thenAnswer(
           (_) async => [word1, word2],
         );
