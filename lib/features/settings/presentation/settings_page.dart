@@ -52,6 +52,12 @@ class SettingsPage extends StatelessWidget {
               final cubit = context.read<SettingsCubit>();
               return ListView(
                 children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Text(Strings.offlineMode),
+                  ),
+                  const OfflineDictionariesSection(),
+                  const Divider(),
                   BlocBuilder<SettingsCubit, SettingsState>(
                     builder: (context, state) {
                       final enabled = state is! SettingsInProgressState;
@@ -63,12 +69,6 @@ class SettingsPage extends StatelessWidget {
                       );
                     },
                   ),
-                  const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: Text(Strings.offlineMode),
-                  ),
-                  const OfflineDictionariesSection(),
                   const Divider(),
                   ListTile(
                     leading: const Icon(Icons.email_outlined),
