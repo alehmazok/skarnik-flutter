@@ -5,6 +5,7 @@ import 'package:skarnik_flutter/features/favorites/domain/entity/favorites_sort_
 import 'package:skarnik_flutter/features/favorites/domain/repository/favorites_sort_repository.dart';
 import 'package:skarnik_flutter/features/translation/domain/use_case/remove_from_favorites.dart';
 import 'package:skarnik_flutter/strings.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../domain/use_case/load_favorites.dart';
 import 'favorites_cubit.dart';
@@ -31,7 +32,7 @@ class FavoritesPage extends StatelessWidget {
                 return ValueListenableBuilder<FavoritesSortOrder>(
                   valueListenable: cubit.sortOrder,
                   builder: (context, sortOrder, _) => PopupMenuButton<FavoritesSortOrder>(
-                    icon: const Icon(Icons.sort_rounded),
+                    icon: Icon(AdaptiveIcons.sortBy),
                     initialValue: sortOrder,
                     onSelected: cubit.changeSortOrder,
                     itemBuilder: (context) => [

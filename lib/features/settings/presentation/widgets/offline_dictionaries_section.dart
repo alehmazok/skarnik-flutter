@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/strings.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../offline_dictionaries_cubit.dart';
 
@@ -48,7 +49,7 @@ class _DictionaryTile extends StatelessWidget {
 
     return switch (status) {
       DictionaryNotDownloaded() || DictionaryDownloadFailed() => ListTile(
-        leading: const Icon(Icons.download_outlined),
+        leading: Icon(AdaptiveIcons.download),
         title: Text(name),
         subtitle: Text(
           status is DictionaryDownloadFailed
@@ -78,14 +79,14 @@ class _DictionaryTile extends StatelessWidget {
         ),
       ),
       DictionaryDownloaded(:final wordCount) => ListTile(
-        leading: const Icon(Icons.download_done_outlined),
+        leading: Icon(AdaptiveIcons.downloadDone),
         title: Text(name),
         subtitle: Text(
           '${Strings.downloaded}: $wordCount ${Strings.wordsUnit}',
           style: TextStyle(color: subtitleColor),
         ),
         trailing: IconButton(
-          icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+          icon: Icon(AdaptiveIcons.trash, color: Theme.of(context).colorScheme.error),
           onPressed: () => _showDeleteConfirmation(context, cubit),
         ),
       ),

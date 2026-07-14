@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/strings.dart';
+import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../settings_cubit.dart';
@@ -158,7 +159,7 @@ class _AboutBottomSheetState extends State<AboutBottomSheet> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.link_outlined),
+            leading: Icon(AdaptiveIcons.link),
             titleTextStyle: TextStyle(
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -177,7 +178,7 @@ class _AboutBottomSheetState extends State<AboutBottomSheet> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: TextButton.icon(
-              icon: const Icon(Icons.email_outlined),
+              icon: Icon(AdaptiveIcons.email),
               onPressed: context.read<SettingsCubit>().mailToDevs,
               label: const Text(Strings.writeToDevs),
             ),
