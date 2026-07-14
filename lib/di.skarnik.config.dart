@@ -102,6 +102,8 @@ import 'package:skarnik_flutter/features/translation/data/repository/objectbox_t
     as _i395;
 import 'package:skarnik_flutter/features/translation/data/repository/objectbox_word_repository.dart'
     as _i326;
+import 'package:skarnik_flutter/features/translation/data/repository/shared_preferences_download_cursor_repository.dart'
+    as _i278;
 import 'package:skarnik_flutter/features/translation/data/repository/shared_preferences_download_rate_limit_repository.dart'
     as _i877;
 import 'package:skarnik_flutter/features/translation/data/repository/skarnik_translation_repository.dart'
@@ -114,6 +116,8 @@ import 'package:skarnik_flutter/features/translation/domain/repository/api_trans
     as _i138;
 import 'package:skarnik_flutter/features/translation/domain/repository/cloud_translation_repository.dart'
     as _i361;
+import 'package:skarnik_flutter/features/translation/domain/repository/download_cursor_repository.dart'
+    as _i978;
 import 'package:skarnik_flutter/features/translation/domain/repository/download_rate_limit_repository.dart'
     as _i1028;
 import 'package:skarnik_flutter/features/translation/domain/repository/favorites_repository.dart'
@@ -183,6 +187,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i590.HandleAppLinkUseCase>(() => _i590.HandleAppLinkUseCase());
     gh.factory<_i525.InitRemoteConfigUseCase>(
       () => _i525.InitRemoteConfigUseCase(),
+    );
+    gh.factory<_i978.DownloadCursorRepository>(
+      () => _i278.SharedPreferencesDownloadCursorRepository(),
     );
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i989.DevAnalyticsVocabularyRepository(),
@@ -288,9 +295,22 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
     );
+    gh.factory<_i118.ClearDownloadedDictionaryUseCase>(
+      () => _i118.ClearDownloadedDictionaryUseCase(
+        gh<_i554.LocalTranslationRepository>(),
+        gh<_i978.DownloadCursorRepository>(),
+      ),
+    );
     gh.factory<_i267.AnalyticsVocabularyRepository>(
       () => _i20.FirebaseAnalyticsVocabularyRepository(),
       registerFor: {_prod},
+    );
+    gh.factory<_i705.DownloadDictionaryUseCase>(
+      () => _i705.DownloadDictionaryUseCase(
+        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
+        localTranslationRepository: gh<_i554.LocalTranslationRepository>(),
+        downloadCursorRepository: gh<_i978.DownloadCursorRepository>(),
+      ),
     );
     gh.factory<_i147.WordRepository>(
       () => _i326.ObjectboxWordRepository(gh<_i522.ObjectboxStoreHolder>()),
@@ -306,12 +326,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i138.ApiTranslationRepository>(
       () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
-    );
-    gh.factory<_i705.DownloadDictionaryUseCase>(
-      () => _i705.DownloadDictionaryUseCase(
-        cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
-        localTranslationRepository: gh<_i554.LocalTranslationRepository>(),
-      ),
     );
     gh.factory<_i754.CheckAndRequestReviewUseCase>(
       () => _i754.CheckAndRequestReviewUseCase(gh<_i806.ReviewRepository>()),
@@ -365,11 +379,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i501.LogAnalyticsTranslationUseCase>(
       () => _i501.LogAnalyticsTranslationUseCase(
         gh<_i223.AnalyticsTranslationRepository>(),
-      ),
-    );
-    gh.factory<_i118.ClearDownloadedDictionaryUseCase>(
-      () => _i118.ClearDownloadedDictionaryUseCase(
-        gh<_i554.LocalTranslationRepository>(),
       ),
     );
     gh.factory<_i883.CountDownloadedWordsUseCase>(

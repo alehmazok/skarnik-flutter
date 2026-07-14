@@ -7,6 +7,7 @@ import 'package:skarnik_flutter/supabase_client.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/entity/api_word.dart';
+import '../../domain/entity/download_page.dart';
 import '../../domain/repository/cloud_translation_repository.dart';
 import '../model/cloud_word_model.dart';
 
@@ -55,8 +56,12 @@ class SupabaseTranslationRepositoryImpl implements CloudTranslationRepository {
   }
 
   @override
-  Stream<List<ApiWord>> downloadDictionary(Dictionary dictionary, {int pageSize = 5000}) async* {
-    var cursor = 0;
+  Stream<DownloadPage> downloadDictionary(
+    Dictionary dictionary, {
+    int pageSize = 5000,
+    int startCursor = 0,
+  }) async* {
+    var cursor = startCursor;
     while (true) {
       final rows = await _fetchPageWithRetry(dictionary, cursor, pageSize);
 
@@ -65,15 +70,22 @@ class SupabaseTranslationRepositoryImpl implements CloudTranslationRepository {
       }
 
       cursor = rows.last['id'] as int;
-      yield rows.map((row) => CloudWordModel.fromJson(row).toEntity()).toList();
+      yield DownloadPage(
+        words: rows.map((row) => CloudWordModel.fromJson(row).toEntity()).toList(),
+        cursor: cursor,
+      );
     }
   }
 
   // A ~20-request sequential download (5000 rows/page) is long enough that a
   // single transient failure (seen in practice: PostgrestException 57014
   // "canceling statement due to statement timeout" on an otherwise-cheap
-  // indexed query) shouldn't abort the whole batch.
-  static const _maxPageAttempts = 3;
+  // indexed query, plus plain network blips) shouldn't abort the whole
+  // batch. `on Exception` (not `PostgrestException` alone) also covers
+  // SocketException/ClientException/TimeoutException, which otherwise skip
+  // retry entirely; `Error` subtypes still propagate immediately since they
+  // indicate a bug, not a transient condition.
+  static const _maxPageAttempts = 5;
 
   Future<List<Map<String, dynamic>>> _fetchPageWithRetry(
     Dictionary dictionary,
@@ -89,7 +101,7 @@ class SupabaseTranslationRepositoryImpl implements CloudTranslationRepository {
             .gt('id', cursor)
             .order('id', ascending: true)
             .limit(pageSize);
-      } on PostgrestException catch (e, st) {
+      } on Exception catch (e, st) {
         if (attempt >= _maxPageAttempts) rethrow;
         _logger.warning('Page fetch failed (attempt $attempt/$_maxPageAttempts), retrying:', e, st);
         await Future<void>.delayed(Duration(milliseconds: 500 * attempt));
