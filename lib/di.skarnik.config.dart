@@ -80,8 +80,12 @@ import 'package:skarnik_flutter/features/stress/data/repository/firebase_analyti
     as _i51;
 import 'package:skarnik_flutter/features/stress/data/repository/starnik_stress_repository.dart'
     as _i370;
+import 'package:skarnik_flutter/features/stress/data/repository/supabase_stress_repository_impl.dart'
+    as _i256;
 import 'package:skarnik_flutter/features/stress/domain/repository/analytics_stress_repository.dart'
     as _i173;
+import 'package:skarnik_flutter/features/stress/domain/repository/cloud_stress_repository.dart'
+    as _i297;
 import 'package:skarnik_flutter/features/stress/domain/repository/stress_repository.dart'
     as _i670;
 import 'package:skarnik_flutter/features/stress/domain/use_case/get_stress_table.dart'
@@ -202,6 +206,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.CloudTranslationRepository>(
       () => _i1072.SupabaseTranslationRepositoryImpl(),
     );
+    gh.lazySingleton<_i297.CloudStressRepository>(
+      () => _i256.SupabaseStressRepositoryImpl(),
+    );
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
     gh.factory<_i636.FavoritesSortRepository>(
       () => _i1037.SharedPreferencesFavoritesSortRepository(),
@@ -239,12 +246,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i670.StressRepository>(
       () => _i370.StarnikStressRepository(gh<_i361.Dio>()),
-    );
-    gh.factory<_i468.GetStressTableUseCase>(
-      () => _i468.GetStressTableUseCase(gh<_i670.StressRepository>()),
-    );
-    gh.factory<_i407.ResolveStressWordListUseCase>(
-      () => _i407.ResolveStressWordListUseCase(gh<_i670.StressRepository>()),
     );
     gh.factory<_i1028.DownloadRateLimitRepository>(
       () => _i877.SharedPreferencesDownloadRateLimitRepository(),
@@ -359,6 +360,18 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i124.SearchRepository>(
       () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()),
+    );
+    gh.factory<_i468.GetStressTableUseCase>(
+      () => _i468.GetStressTableUseCase(
+        gh<_i670.StressRepository>(),
+        gh<_i297.CloudStressRepository>(),
+      ),
+    );
+    gh.factory<_i407.ResolveStressWordListUseCase>(
+      () => _i407.ResolveStressWordListUseCase(
+        gh<_i670.StressRepository>(),
+        gh<_i297.CloudStressRepository>(),
+      ),
     );
     gh.factory<_i240.LogAnalyticsStressUseCase>(
       () => _i240.LogAnalyticsStressUseCase(

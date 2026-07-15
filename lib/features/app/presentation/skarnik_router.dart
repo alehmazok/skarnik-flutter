@@ -6,6 +6,7 @@ import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart
 import 'package:skarnik_flutter/features/home/presentation/home_page.dart';
 import 'package:skarnik_flutter/features/search/presentation/search_page.dart';
 import 'package:skarnik_flutter/features/settings/presentation/settings_page.dart';
+import 'package:skarnik_flutter/features/stress/domain/entity/stress_source.dart';
 import 'package:skarnik_flutter/features/stress/presentation/stress_page.dart';
 import 'package:skarnik_flutter/features/stress/presentation/stress_table_page.dart';
 import 'package:skarnik_flutter/features/translation/presentation/translation_page.dart';
@@ -60,8 +61,8 @@ abstract class SkarnikRouter {
               GoRoute(
                 path: 'table',
                 builder: (context, state) {
-                  final wordId = state.extra as int;
-                  return StressTablePage(wordId: wordId);
+                  final (wordId, source) = state.extra as (int, StressSource);
+                  return StressTablePage(wordId: wordId, source: source);
                 },
               ),
             ],

@@ -4,24 +4,28 @@ import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/strings.dart';
 
+import '../domain/entity/stress_source.dart';
 import '../domain/use_case/get_stress_table.dart';
 import 'stress_cubit.dart';
 import 'widgets/stress_table.dart';
 
 class StressTablePage extends StatelessWidget {
   final int wordId;
+  final StressSource source;
   final GetStressTableUseCase getStressTableUseCase;
 
   StressTablePage({
     super.key,
     required this.wordId,
+    required this.source,
     GetStressTableUseCase? getStressTableUseCase,
   }) : getStressTableUseCase = getStressTableUseCase ?? getIt<GetStressTableUseCase>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StressTableCubit>(
-      create: (_) => StressTableCubit(getStressTableUseCase: getStressTableUseCase)..load(wordId),
+      create: (_) =>
+          StressTableCubit(getStressTableUseCase: getStressTableUseCase)..load(wordId, source),
       child: Scaffold(
         appBar: AppBar(title: const Text(Strings.nacisk)),
         body: BlocConsumer<StressTableCubit, StressState>(

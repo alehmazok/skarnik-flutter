@@ -7,6 +7,7 @@ import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/logging.dart';
 
 import '../../domain/entity/stress_row.dart';
+import '../../domain/entity/stress_source.dart';
 import '../../domain/entity/stress_word_entry.dart';
 import '../../domain/repository/stress_repository.dart';
 
@@ -39,6 +40,7 @@ class StarnikStressRepository implements StressRepository {
             lemma: item['lemma'] as String,
             word: item['word'] as String,
             tableName: item['table_name'] as String?,
+            source: StressSource.api,
           ),
         )
         .toList();

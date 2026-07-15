@@ -9,6 +9,7 @@ part of 'serializers.dart';
 Serializers _$serializers =
     (Serializers().toBuilder()
           ..add(ApiWordModel.serializer)
+          ..add(CloudStressWordModel.serializer)
           ..add(CloudWordModel.serializer))
         .build();
 

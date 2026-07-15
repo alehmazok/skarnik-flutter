@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/core/base_use_case.dart';
 
 import '../domain/entity/stress_row.dart';
+import '../domain/entity/stress_source.dart';
 import '../domain/entity/stress_word_entry.dart';
 import '../domain/use_case/get_stress_table.dart';
 import '../domain/use_case/log_analytics_stress.dart';
@@ -31,15 +32,16 @@ class StressWordSelectionState extends StressState {
 
 class StressWordSelectedState extends StressState {
   final int wordId;
+  final StressSource source;
 
   /// true → replace current route (single auto-match, no selection to go back to)
   /// false → push new route (user picked from list, selection stays in stack)
   final bool replace;
 
   @override
-  List<Object> get props => [wordId, replace];
+  List<Object> get props => [wordId, source, replace];
 
-  const StressWordSelectedState(this.wordId, {required this.replace});
+  const StressWordSelectedState(this.wordId, {required this.source, required this.replace});
 }
 
 class StressLoadedState extends StressState {
@@ -88,7 +90,7 @@ class StressCubit extends Cubit<StressState> {
     if (isClosed) return;
     switch (result) {
       case Success(result: final words) when words.length == 1:
-        emit(StressWordSelectedState(words.first.id, replace: true));
+        emit(StressWordSelectedState(words.first.id, source: words.first.source, replace: true));
       case Success(result: final words):
         emit(StressWordSelectionState(words));
       case Failure(error: null):
@@ -100,7 +102,7 @@ class StressCubit extends Cubit<StressState> {
 
   void selectWord(StressWordEntry entry) {
     final current = state;
-    emit(StressWordSelectedState(entry.id, replace: false));
+    emit(StressWordSelectedState(entry.id, source: entry.source, replace: false));
     emit(current);
   }
 }
@@ -114,8 +116,8 @@ class StressTableCubit extends Cubit<StressState> {
     // wordId is passed via load(), not constructor, to keep it testable
   }
 
-  Future<void> load(int wordId) async {
-    final result = await _getStressTableUseCase(wordId);
+  Future<void> load(int wordId, StressSource source) async {
+    final result = await _getStressTableUseCase(wordId, source);
     if (isClosed) return;
     switch (result) {
       case Success(result: final rows):
