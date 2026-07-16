@@ -52,7 +52,6 @@ app.*.map.json
 release_notes.txt
 
 # FVM
-.fvm/flutter_sdk
 
 # Android
 android/skarnik_private_key
@@ -77,3 +76,6 @@ dev/
 
 # Screenshots
 screenshots/
+
+# FVM Version Cache
+.fvm/
