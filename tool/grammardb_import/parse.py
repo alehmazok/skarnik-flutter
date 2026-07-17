@@ -84,7 +84,13 @@ def _parse_paradigm(pos_file: str, el: etree._Element) -> dict | None:
         forms_by_tag: dict[str, list[dict]] = {}
         for variant in el.findall("Variant"):
             pravapis = variant.get("pravapis")
-            if pravapis and _MODERN_PRAVAPIS not in pravapis.split(","):
+            # Some entries write "A1957, A2008" (space after comma), most
+            # write "A1957,A2008" -- strip each token or the spaced form
+            # never matches and gets wrongly treated as old-orthography-only,
+            # silently dropping otherwise-valid variants (e.g. both па́ра
+            # homonyms, pdgId 1021373/1021374, were missing from Supabase
+            # because of this).
+            if pravapis and _MODERN_PRAVAPIS not in [p.strip() for p in pravapis.split(",")]:
                 continue
             _merge(forms_by_tag, _variant_forms(variant))
         if not forms_by_tag:

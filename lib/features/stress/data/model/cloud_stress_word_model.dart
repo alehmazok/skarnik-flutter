@@ -57,7 +57,7 @@ extension CloudStressWordModelExt on CloudStressWordModel {
   );
 
   List<StressRow> toRows() => rows!.asList
-      .map((e) => e.asMap)
-      .map((m) => StressRow(title: m['title']!.asString, content: m['content']!.asString))
+      .map((e) => e as Map<String, dynamic>)
+      .map((m) => StressRow(title: m['title'] as String, content: m['content'] as String))
       .toList();
 }

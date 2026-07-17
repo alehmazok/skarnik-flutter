@@ -74,14 +74,14 @@ import 'package:skarnik_flutter/features/settings/domain/use_case/log_analytics_
     as _i263;
 import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_cubit.dart'
     as _i253;
+import 'package:skarnik_flutter/features/stress/data/repository/api_stress_repository_impl.dart'
+    as _i795;
 import 'package:skarnik_flutter/features/stress/data/repository/dev_analytics_stress_repository.dart'
     as _i410;
 import 'package:skarnik_flutter/features/stress/data/repository/firebase_analytics_stress_repository.dart'
     as _i51;
 import 'package:skarnik_flutter/features/stress/data/repository/starnik_stress_repository.dart'
     as _i370;
-import 'package:skarnik_flutter/features/stress/data/repository/supabase_stress_repository_impl.dart'
-    as _i256;
 import 'package:skarnik_flutter/features/stress/domain/repository/analytics_stress_repository.dart'
     as _i173;
 import 'package:skarnik_flutter/features/stress/domain/repository/cloud_stress_repository.dart'
@@ -206,9 +206,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.CloudTranslationRepository>(
       () => _i1072.SupabaseTranslationRepositoryImpl(),
     );
-    gh.lazySingleton<_i297.CloudStressRepository>(
-      () => _i256.SupabaseStressRepositoryImpl(),
-    );
     gh.lazySingleton<_i361.Dio>(() => _i485.SkarnikDio());
     gh.factory<_i636.FavoritesSortRepository>(
       () => _i1037.SharedPreferencesFavoritesSortRepository(),
@@ -331,6 +328,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i276.SaveToHistoryUseCase>(
       () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()),
+    );
+    gh.lazySingleton<_i297.CloudStressRepository>(
+      () => _i795.ApiStressRepositoryImpl(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i138.ApiTranslationRepository>(
       () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
