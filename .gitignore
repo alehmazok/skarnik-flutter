@@ -79,3 +79,6 @@ screenshots/
 
 # FVM Version Cache
 .fvm/
+
+# GrammarDB source data (large, not app source; see tool/grammardb_import/README.md)
+bnkorpus/

@@ -74,6 +74,8 @@ import 'package:skarnik_flutter/features/settings/domain/use_case/log_analytics_
     as _i263;
 import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_cubit.dart'
     as _i253;
+import 'package:skarnik_flutter/features/stress/data/repository/api_stress_repository_impl.dart'
+    as _i795;
 import 'package:skarnik_flutter/features/stress/data/repository/dev_analytics_stress_repository.dart'
     as _i410;
 import 'package:skarnik_flutter/features/stress/data/repository/firebase_analytics_stress_repository.dart'
@@ -82,6 +84,8 @@ import 'package:skarnik_flutter/features/stress/data/repository/starnik_stress_r
     as _i370;
 import 'package:skarnik_flutter/features/stress/domain/repository/analytics_stress_repository.dart'
     as _i173;
+import 'package:skarnik_flutter/features/stress/domain/repository/cloud_stress_repository.dart'
+    as _i297;
 import 'package:skarnik_flutter/features/stress/domain/repository/stress_repository.dart'
     as _i670;
 import 'package:skarnik_flutter/features/stress/domain/use_case/get_stress_table.dart'
@@ -240,12 +244,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i670.StressRepository>(
       () => _i370.StarnikStressRepository(gh<_i361.Dio>()),
     );
-    gh.factory<_i468.GetStressTableUseCase>(
-      () => _i468.GetStressTableUseCase(gh<_i670.StressRepository>()),
-    );
-    gh.factory<_i407.ResolveStressWordListUseCase>(
-      () => _i407.ResolveStressWordListUseCase(gh<_i670.StressRepository>()),
-    );
     gh.factory<_i1028.DownloadRateLimitRepository>(
       () => _i877.SharedPreferencesDownloadRateLimitRepository(),
     );
@@ -331,6 +329,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i276.SaveToHistoryUseCase>(
       () => _i276.SaveToHistoryUseCase(gh<_i788.HistoryRepository>()),
     );
+    gh.lazySingleton<_i297.CloudStressRepository>(
+      () => _i795.ApiStressRepositoryImpl(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i138.ApiTranslationRepository>(
       () => _i172.ApiTranslationRepositoryImpl(gh<_i361.Dio>()),
     );
@@ -359,6 +360,18 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i124.SearchRepository>(
       () => _i578.ObjectboxSearchRepository(gh<_i264.QueryRepository>()),
+    );
+    gh.factory<_i468.GetStressTableUseCase>(
+      () => _i468.GetStressTableUseCase(
+        gh<_i670.StressRepository>(),
+        gh<_i297.CloudStressRepository>(),
+      ),
+    );
+    gh.factory<_i407.ResolveStressWordListUseCase>(
+      () => _i407.ResolveStressWordListUseCase(
+        gh<_i670.StressRepository>(),
+        gh<_i297.CloudStressRepository>(),
+      ),
     );
     gh.factory<_i240.LogAnalyticsStressUseCase>(
       () => _i240.LogAnalyticsStressUseCase(

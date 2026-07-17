@@ -40,10 +40,11 @@ class StressPage extends StatelessWidget {
                 ..showSnackBar(const SnackBar(content: Text(Strings.naciskNotFound)));
               context.pop();
             } else if (state is StressWordSelectedState) {
+              final extra = (state.wordId, state.source);
               if (state.replace) {
-                context.replace('/stress/table', extra: state.wordId);
+                context.replace('/stress/table', extra: extra);
               } else {
-                context.push('/stress/table', extra: state.wordId);
+                context.push('/stress/table', extra: extra);
               }
             }
           },
