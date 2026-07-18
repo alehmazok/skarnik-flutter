@@ -8,6 +8,8 @@
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
   ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-blue)
   ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)
+
+  [Get it on Google Play](https://play.google.com/store/apps/details?id=by.mazokaleh.skarnik)
 </div>
 
 ## About
