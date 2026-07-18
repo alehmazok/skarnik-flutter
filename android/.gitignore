@@ -15,6 +15,7 @@ key.properties
 # Google services
 google-services.json
 google-play-service-account.json
+api-*.json
 
 # Scripts
 fastlane_*.sh

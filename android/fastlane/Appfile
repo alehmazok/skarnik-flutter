@@ -1,2 +1,2 @@
-json_key_file("google-play-service-account.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-package_name("by.mazokaleh.skarnik") # e.g. com.krausefx.app
+json_key_file("api-5250772048485758345-30841-b098f9171bbe.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("by.mazokaleh.skarnik")
