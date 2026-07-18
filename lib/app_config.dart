@@ -30,6 +30,8 @@ abstract class AppConfig {
 
   static const skarnikAppSiteHostName = 'skarnik.app';
 
+  static const huaweiAppGalleryDeepLink = 'appmarket://details?id=by.mazokaleh.skarnik';
+
   static const apiHostName = String.fromEnvironment('API_HOSTNAME');
 
   static const devEmailAddress = String.fromEnvironment('DEV_EMAIL_ADDRESS');

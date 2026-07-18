@@ -60,7 +60,9 @@ void main() {
 
     setUp(() {
       reset(checkAndRequestReviewUseCase);
-      when(() => checkAndRequestReviewUseCase.call()).thenAnswer((_) async => const Success(false));
+      when(
+        () => checkAndRequestReviewUseCase.call(),
+      ).thenAnswer((_) async => const Success(ReviewOutcome.notEligible));
       when(
         () => localTranslationRepository.getWord(
           langId: any(named: 'langId'),
@@ -413,6 +415,65 @@ void main() {
         verify: (_) {
           verify(() => checkAndRequestReviewUseCase.call()).called(1);
         },
+      );
+
+      blocTest(
+        'emits review fallback state when native review is unavailable',
+        setUp: () {
+          when(
+            () => checkAndRequestReviewUseCase.call(),
+          ).thenAnswer((_) async => const Success(ReviewOutcome.unavailable));
+
+          final word = MockWord();
+          when(() => word.langId).thenReturn(1);
+          when(() => word.wordId).thenReturn(1);
+          final uri = Uri.parse('https://skarnik.by/word/test');
+
+          final translation = Translation.build(
+            word: word,
+            html: '<div>test</div>',
+            uri: uri,
+            source: 'website',
+          );
+
+          when(() => word.word).thenReturn('word 1');
+
+          when(
+            () => wordRepository.getWord(langId: 1, wordId: 1),
+          ).thenAnswer(
+            (_) async => word,
+          );
+
+          when(
+            () => websiteTranslationRepository.getTranslation(word),
+          ).thenAnswer(
+            (_) async => translation,
+          );
+
+          when(
+            () => favoritesRepository.contains(word),
+          ).thenAnswer(
+            (_) async => false,
+          );
+
+          when(
+            () => historyRepository.save(word),
+          ).thenAnswer(
+            (_) async => 1,
+          );
+
+          when(
+            () => analyticsTranslationRepository.logTranslation(translation),
+          ).thenAnswer(
+            (_) async => true,
+          );
+        },
+        build: () => newInstance(),
+        expect: () => [
+          isA<TranslationLoadedState>(),
+          isA<TranslationInFavoritesState>(),
+          isA<TranslationReviewFallbackState>(),
+        ],
       );
     });
 

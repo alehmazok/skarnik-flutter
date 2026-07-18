@@ -26,10 +26,12 @@ class SharedPreferencesReviewRepository implements ReviewRepository {
   Future<void> markReviewRequested() => _prefs.setBool(_alreadyRequestedKey, true);
 
   @override
-  Future<void> requestReview() async {
+  Future<bool> requestReview() async {
     final inAppReview = InAppReview.instance;
     if (await inAppReview.isAvailable()) {
       await inAppReview.requestReview();
+      return true;
     }
+    return false;
   }
 }

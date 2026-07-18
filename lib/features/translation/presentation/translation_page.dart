@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skarnik_flutter/app_config.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/app/presentation/skarnik_app_bloc.dart';
 import 'package:skarnik_flutter/strings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../review/domain/use_case/check_and_request_review.dart';
 import '../domain/use_case/add_to_favorites.dart';
@@ -142,6 +144,9 @@ class TranslationPage extends StatelessWidget {
                 );
               context.read<SkarnikAppBloc>().add(SkarnikAppAppLinkReceived(state.redirectTo));
             }
+            if (state is TranslationReviewFallbackState) {
+              _showReviewFallbackDialog(context);
+            }
             if (state is TranslationFailedState) {
               // TODO: зрабіць больш дакладную і прыгожую апрацоўку памылак.
               ScaffoldMessenger.of(context)
@@ -207,4 +212,34 @@ class TranslationPage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Uses [AlertDialog] instead of `adaptive_dialog` — Huawei AppGallery is
+/// an Android-only distribution channel, so this dialog never shows on iOS.
+/// No cross-platform styling to adapt for.
+Future<void> _showReviewFallbackDialog(BuildContext context) async {
+  final deepLink = Uri.parse(AppConfig.huaweiAppGalleryDeepLink);
+  // Толькі AppGallery ведае гэтую схему, таму гэта таксама правярае яе наяўнасць.
+  if (!await canLaunchUrl(deepLink)) return;
+  if (!context.mounted) return;
+  await showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text(Strings.rateAppFallbackTitle),
+      content: const Text(Strings.rateAppFallbackMessage),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(),
+          child: const Text(Strings.rateAppFallbackCancel),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(dialogContext).pop();
+            launchUrl(deepLink);
+          },
+          child: const Text(Strings.rateAppFallbackConfirm),
+        ),
+      ],
+    ),
+  );
 }

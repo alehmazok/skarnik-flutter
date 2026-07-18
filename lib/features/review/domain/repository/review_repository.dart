@@ -5,5 +5,6 @@ abstract interface class ReviewRepository {
 
   Future<void> markReviewRequested();
 
-  Future<void> requestReview();
+  /// Returns true if the native review prompt was shown.
+  Future<bool> requestReview();
 }
