@@ -54,15 +54,14 @@ class DefaultFirebaseOptions {
     appId: '1:690309283484:android:3c2521a8af9d651ad03759',
     messagingSenderId: '690309283484',
     projectId: 'skarnik-app',
-    storageBucket: 'skarnik-app.appspot.com',
+    storageBucket: 'skarnik-app.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDsljZVWbdf085flNemJHibrj05T8YAdWU',
-    appId: '1:690309283484:ios:d83cd93277650a13d03759',
+    appId: '1:690309283484:ios:082b200fe1bb0a3ed03759',
     messagingSenderId: '690309283484',
     projectId: 'skarnik-app',
-    storageBucket: 'skarnik-app.appspot.com',
+    storageBucket: 'skarnik-app.firebasestorage.app',
     iosBundleId: 'by.skarnik.app',
   );
 }
