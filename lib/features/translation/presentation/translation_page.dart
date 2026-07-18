@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/app_config.dart';
@@ -235,7 +237,7 @@ Future<void> _showReviewFallbackDialog(BuildContext context) async {
         TextButton(
           onPressed: () {
             Navigator.of(dialogContext).pop();
-            launchUrl(deepLink);
+            unawaited(launchUrl(deepLink));
           },
           child: const Text(Strings.rateAppFallbackConfirm),
         ),
