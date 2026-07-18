@@ -3,6 +3,14 @@
     <!-- Required to fetch data from the internet. -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Needed so canLaunchUrl() can detect Huawei AppGallery for review-fallback deeplink. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="appmarket"/>
+        </intent>
+    </queries>
+
     <application
             android:label="@string/AppName"
             android:name="${applicationName}"

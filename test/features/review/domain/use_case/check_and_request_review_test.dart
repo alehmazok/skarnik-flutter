@@ -17,19 +17,19 @@ void main() {
   });
 
   group('CheckAndRequestReviewUseCase', () {
-    test('returns Success(false) and does nothing else when already requested', () async {
+    test('returns notEligible and does nothing else when already requested', () async {
       when(() => mockRepository.isReviewAlreadyRequested()).thenAnswer((_) async => true);
 
       final result = await useCase.call();
 
-      expect(result, isA<Success<bool>>());
-      expect((result as Success).result, false);
+      expect(result, isA<Success<ReviewOutcome>>());
+      expect((result as Success).result, ReviewOutcome.notEligible);
       verifyNever(() => mockRepository.incrementAndGetTranslationViewCount());
       verifyNever(() => mockRepository.markReviewRequested());
       verifyNever(() => mockRepository.requestReview());
     });
 
-    test('returns Success(false) and does not request review when below threshold', () async {
+    test('returns notEligible and does not request review when below threshold', () async {
       when(() => mockRepository.isReviewAlreadyRequested()).thenAnswer((_) async => false);
       when(
         () => mockRepository.incrementAndGetTranslationViewCount(),
@@ -37,8 +37,8 @@ void main() {
 
       final result = await useCase.call();
 
-      expect(result, isA<Success<bool>>());
-      expect((result as Success).result, false);
+      expect(result, isA<Success<ReviewOutcome>>());
+      expect((result as Success).result, ReviewOutcome.notEligible);
       verifyNever(() => mockRepository.markReviewRequested());
       verifyNever(() => mockRepository.requestReview());
     });
@@ -51,12 +51,12 @@ void main() {
           () => mockRepository.incrementAndGetTranslationViewCount(),
         ).thenAnswer((_) async => AppConfig.reviewRequestViewThreshold);
         when(() => mockRepository.markReviewRequested()).thenAnswer((_) async {});
-        when(() => mockRepository.requestReview()).thenAnswer((_) async {});
+        when(() => mockRepository.requestReview()).thenAnswer((_) async => true);
 
         final result = await useCase.call();
 
-        expect(result, isA<Success<bool>>());
-        expect((result as Success).result, true);
+        expect(result, isA<Success<ReviewOutcome>>());
+        expect((result as Success).result, ReviewOutcome.shown);
         verifyInOrder([
           () => mockRepository.markReviewRequested(),
           () => mockRepository.requestReview(),
@@ -64,13 +64,27 @@ void main() {
       },
     );
 
-    test('returns Success(false) when repository throws', () async {
+    test('returns unavailable when native review prompt cannot be shown', () async {
+      when(() => mockRepository.isReviewAlreadyRequested()).thenAnswer((_) async => false);
+      when(
+        () => mockRepository.incrementAndGetTranslationViewCount(),
+      ).thenAnswer((_) async => AppConfig.reviewRequestViewThreshold);
+      when(() => mockRepository.markReviewRequested()).thenAnswer((_) async {});
+      when(() => mockRepository.requestReview()).thenAnswer((_) async => false);
+
+      final result = await useCase.call();
+
+      expect(result, isA<Success<ReviewOutcome>>());
+      expect((result as Success).result, ReviewOutcome.unavailable);
+    });
+
+    test('returns notEligible when repository throws', () async {
       when(() => mockRepository.isReviewAlreadyRequested()).thenThrow(Exception('boom'));
 
       final result = await useCase.call();
 
-      expect(result, isA<Success<bool>>());
-      expect((result as Success).result, false);
+      expect(result, isA<Success<ReviewOutcome>>());
+      expect((result as Success).result, ReviewOutcome.notEligible);
     });
   });
 }

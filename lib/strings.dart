@@ -47,6 +47,11 @@ abstract interface class Strings {
   };
   static const preferences = 'Налады';
   static const rateApp = 'Ацаніць праграму';
+  static const rateAppFallbackTitle = 'Ацаніць праграму';
+  static const rateAppFallbackMessage =
+      'Падабаецца «Скарнік»? Калі ласка, пакіньце водгук у AppGallery!';
+  static const rateAppFallbackConfirm = 'Адкрыць AppGallery';
+  static const rateAppFallbackCancel = 'Пазней';
   static const redirectedFromWord = 'Перанакіравана з «{}»';
   static const removedFromBookmarks = 'Выдалена з закладак.';
   static const revert = 'Вярнуць';

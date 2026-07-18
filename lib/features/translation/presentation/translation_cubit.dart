@@ -77,6 +77,10 @@ class TranslationAddedToFavoritesState extends TranslationState {
   const TranslationAddedToFavoritesState();
 }
 
+class TranslationReviewFallbackState extends TranslationState {
+  const TranslationReviewFallbackState();
+}
+
 class TranslationInFavoritesState extends TranslationState {
   final Word word;
   final bool inFavorites;
@@ -160,8 +164,13 @@ class TranslationCubit extends Cubit<TranslationState> {
               },
             )
             .onSuccess((_) {
-              // Не апрацоўваць вынік выканання usecase-а.
-              unawaited(checkAndRequestReviewUseCase());
+              unawaited(
+                checkAndRequestReviewUseCase().then((result) {
+                  if (result case Success(result: ReviewOutcome.unavailable)) {
+                    emitGuarded(const TranslationReviewFallbackState());
+                  }
+                }),
+              );
             });
     switch (getTranslation) {
       case Failure(error: final error):
