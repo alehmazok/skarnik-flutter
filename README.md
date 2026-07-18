@@ -23,6 +23,8 @@ Skarnik is a mobile dictionary app for Belarusian, offering word search, transla
 - Fast offline word search via local ObjectBox database
 - Word translation and detail lookup with HTTP caching
 - Word stress (nacisk) lookup, with GrammarDB-backed fallback if the primary source fails
+- Full dictionary offline download, per dictionary, with resumable progress and rate limiting
+- Word sharing via skarnik.app deep links
 - Favorites / bookmarks
 - Search history
 - Deep linking support
