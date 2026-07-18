@@ -49,7 +49,7 @@ abstract interface class Strings {
   static const rateApp = 'Ацаніць праграму';
   static const rateAppFallbackTitle = 'Ацаніць праграму';
   static const rateAppFallbackMessage =
-      'Ці спадабалася вам «Скарнік»? Пакіньце водгук у AppGallery!';
+      'Падабаецца «Скарнік»? Калі ласка, пакіньце водгук у AppGallery!';
   static const rateAppFallbackConfirm = 'Адкрыць AppGallery';
   static const rateAppFallbackCancel = 'Пазней';
   static const redirectedFromWord = 'Перанакіравана з «{}»';
