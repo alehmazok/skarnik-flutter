@@ -6,6 +6,7 @@ import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart'
 import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
 import '../../app/presentation/skarnik_app_bloc.dart';
+import '../../settings/presentation/offline_dictionaries_promo_cubit.dart';
 import 'history_cubit.dart';
 import 'widgets/history_list_view.dart';
 
@@ -57,7 +58,15 @@ class HistoryPage extends StatelessWidget {
                     '/settings',
                     extra: context.read<HistoryCubit>(),
                   ),
-                  icon: Icon(AdaptiveIcons.settings),
+                  icon: BlocBuilder<OfflineDictionariesPromoCubit, bool>(
+                    bloc: getIt<OfflineDictionariesPromoCubit>(),
+                    builder: (context, showBadge) {
+                      return Badge(
+                        isLabelVisible: showBadge,
+                        child: Icon(AdaptiveIcons.settings),
+                      );
+                    },
+                  ),
                 );
               },
             ),

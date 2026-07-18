@@ -7,12 +7,24 @@ import 'package:skarnik_flutter/strings.dart';
 
 import '../domain/use_case/clear_history.dart';
 import 'offline_dictionaries_cubit.dart';
+import 'offline_dictionaries_promo_cubit.dart';
 import 'settings_cubit.dart';
 import 'widgets/about_bottom_sheet.dart';
 import 'widgets/offline_dictionaries_section.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void initState() {
+    super.initState();
+    getIt<OfflineDictionariesPromoCubit>().markSeen();
+  }
 
   @override
   Widget build(BuildContext context) {

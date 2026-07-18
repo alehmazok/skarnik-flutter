@@ -64,8 +64,12 @@ import 'package:skarnik_flutter/features/settings/data/repository/firebase_analy
     as _i383;
 import 'package:skarnik_flutter/features/settings/data/repository/objectbox_settings_history_repository.dart'
     as _i252;
+import 'package:skarnik_flutter/features/settings/data/repository/shared_preferences_offline_dictionaries_promo_repository.dart'
+    as _i232;
 import 'package:skarnik_flutter/features/settings/domain/repository/analytics_settings_repository.dart'
     as _i924;
+import 'package:skarnik_flutter/features/settings/domain/repository/offline_dictionaries_promo_repository.dart'
+    as _i240;
 import 'package:skarnik_flutter/features/settings/domain/repository/settings_history_repository.dart'
     as _i531;
 import 'package:skarnik_flutter/features/settings/domain/use_case/clear_history.dart'
@@ -74,6 +78,8 @@ import 'package:skarnik_flutter/features/settings/domain/use_case/log_analytics_
     as _i263;
 import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_cubit.dart'
     as _i253;
+import 'package:skarnik_flutter/features/settings/presentation/offline_dictionaries_promo_cubit.dart'
+    as _i951;
 import 'package:skarnik_flutter/features/stress/data/repository/api_stress_repository_impl.dart'
     as _i795;
 import 'package:skarnik_flutter/features/stress/data/repository/dev_analytics_stress_repository.dart'
@@ -226,6 +232,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i336.DevAnalyticsTranslationRepository(),
       registerFor: {_dev},
     );
+    gh.factory<_i240.OfflineDictionariesPromoRepository>(
+      () => _i232.SharedPreferencesOfflineDictionariesPromoRepository(),
+    );
     gh.factory<_i173.AnalyticsStressRepository>(
       () => _i410.DevAnalyticsStressRepository(),
       registerFor: {_dev},
@@ -337,6 +346,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i754.CheckAndRequestReviewUseCase>(
       () => _i754.CheckAndRequestReviewUseCase(gh<_i806.ReviewRepository>()),
+    );
+    gh.lazySingleton<_i951.OfflineDictionariesPromoCubit>(
+      () => _i951.OfflineDictionariesPromoCubit(
+        gh<_i240.OfflineDictionariesPromoRepository>(),
+      ),
     );
     gh.factory<_i978.LoadFavoritesUseCase>(
       () => _i978.LoadFavoritesUseCase(gh<_i361.FavoritesRepository>()),
