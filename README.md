@@ -9,7 +9,9 @@
   ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-blue)
   ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)
 
-  [![Get it on Google Play](assets/branding/google-play-badge.svg)](https://play.google.com/store/apps/details?id=by.mazokaleh.skarnik)
+  <a href="https://play.google.com/store/apps/details?id=by.mazokaleh.skarnik">
+    <img src="assets/branding/google-play-badge.svg" alt="Get it on Google Play" width="200" />
+  </a>
 </div>
 
 ## About
