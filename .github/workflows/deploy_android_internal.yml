@@ -1,0 +1,55 @@
+name: Deploy Android (Internal track)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_internal:
+    name: Build appbundle and upload to Play Store Internal track
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: play-internal
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: stable
+          cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: android
+
+      - name: Restore keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/skarnik.keystore
+
+      - name: Restore key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=../skarnik.keystore
+          EOF
+
+      - name: Restore Play Store service account json
+        run: echo "${{ secrets.PLAY_STORE_JSON_KEY }}" > android/api-5250772048485758345-30841-b098f9171bbe.json
+
+      - name: Restore .env.secret
+        run: echo "${{ secrets.ANDROID_ENV_SECRET }}" > android/fastlane/.env.secret
+
+      - run: flutter pub get
+
+      - name: Build and deploy via fastlane
+        working-directory: android
+        run: bundle exec fastlane playstore_internal
