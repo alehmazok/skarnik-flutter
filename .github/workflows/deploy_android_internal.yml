@@ -42,6 +42,9 @@ jobs:
           storeFile=../skarnik.keystore
           EOF
 
+      - name: Restore google-services.json
+        run: echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+
       - name: Restore Play Store service account json
         run: echo "${{ secrets.PLAY_STORE_JSON_KEY }}" > android/api-5250772048485758345-30841-b098f9171bbe.json
 
