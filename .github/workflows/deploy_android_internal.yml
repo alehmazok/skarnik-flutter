@@ -52,4 +52,4 @@ jobs:
 
       - name: Build and deploy via fastlane
         working-directory: android
-        run: bundle exec fastlane playstore_internal
+        run: bundle exec fastlane appbundle && bundle exec fastlane playstore_internal
