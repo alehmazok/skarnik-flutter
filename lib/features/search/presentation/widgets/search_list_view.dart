@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
+import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/strings.dart';
 
 import '../search_cubit.dart';
@@ -10,12 +10,14 @@ class SearchListView extends StatelessWidget {
   final bool isNothingFound;
   final Iterable<SearchWord> words;
   final String query;
+  final void Function(Word word) onWordTap;
 
   const SearchListView({
     super.key,
     required this.isNothingFound,
     required this.words,
     required this.query,
+    required this.onWordTap,
   });
 
   @override
@@ -42,13 +44,7 @@ class SearchListView extends StatelessWidget {
           ),
           onTap: () {
             context.read<SearchCubit>().onResultTapped(word, index, query);
-            context.push(
-              '/translate/word',
-              extra: {
-                'word': word.toEntity(),
-                'save_to_history': true,
-              },
-            );
+            onWordTap(word.toEntity());
           },
         );
       },

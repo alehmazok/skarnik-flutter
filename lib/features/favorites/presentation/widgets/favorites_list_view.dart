@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 
 import '../favorites_cubit.dart';
 
 class FavoritesListView extends StatelessWidget {
-  const FavoritesListView({super.key});
+  final void Function(Word word) onWordTap;
+
+  const FavoritesListView({super.key, required this.onWordTap});
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +48,7 @@ class FavoritesListView extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
-              onTap: () => context.go(
-                '/translate/word',
-                extra: {
-                  'word': word,
-                  // Не захоўваць у гісторыю, таму што слова ўжо захавана ў Гісторыі.
-                  'save_to_history': false,
-                },
-              ),
+              onTap: () => onWordTap(word),
             ),
           );
         },

@@ -57,6 +57,7 @@ abstract interface class Strings {
   static const revert = 'Вярнуць';
   static const search = 'Пошук';
   static const searchNote = 'Пошук з аўтаматычнай падменай і|и, ў|щ, \'|ь|ъ, е|ё';
+  static const selectWordPrompt = 'Абярыце слова са спіса';
   static const sorryTranslationError = 'Прабачце, адбылася памылка перакладу слова.';
   static const wordsUnit = 'слоў';
   static const writeToDevs = 'Напісаць распрацоўшчыкам';
