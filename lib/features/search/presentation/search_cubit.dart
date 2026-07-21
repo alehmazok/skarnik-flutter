@@ -124,8 +124,9 @@ class SearchCubit extends Cubit<SearchState> {
   void _debounceSearchAnalytics(String query, int resultCount) {
     _analyticsDebounce?.cancel();
     _analyticsDebounce = Timer(const Duration(milliseconds: 500), () {
-      unawaited(logAnalyticsSearchPerformedUseCase((query: query, resultCount: resultCount)));
-      if (resultCount == 0) {
+      if (resultCount > 0) {
+        unawaited(logAnalyticsSearchPerformedUseCase((query: query, resultCount: resultCount)));
+      } else {
         unawaited(logAnalyticsSearchNoResultsUseCase(query));
       }
     });
