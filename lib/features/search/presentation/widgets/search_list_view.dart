@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/strings.dart';
 
+import '../search_cubit.dart';
+
 class SearchListView extends StatelessWidget {
   final bool isNothingFound;
   final Iterable<SearchWord> words;
+  final String query;
 
   const SearchListView({
     super.key,
     required this.isNothingFound,
     required this.words,
+    required this.query,
   });
 
   @override
@@ -35,13 +40,16 @@ class SearchListView extends StatelessWidget {
           subtitle: Text(
             word.dictionary.name,
           ),
-          onTap: () => context.push(
-            '/translate/word',
-            extra: {
-              'word': word.toEntity(),
-              'save_to_history': true,
-            },
-          ),
+          onTap: () {
+            context.read<SearchCubit>().onResultTapped(word, index, query);
+            context.push(
+              '/translate/word',
+              extra: {
+                'word': word.toEntity(),
+                'save_to_history': true,
+              },
+            );
+          },
         );
       },
       itemCount: items.length,

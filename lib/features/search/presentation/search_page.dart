@@ -4,6 +4,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 
+import '../domain/use_case/log_analytics_search_no_results.dart';
+import '../domain/use_case/log_analytics_search_performed.dart';
+import '../domain/use_case/log_analytics_search_result_tapped.dart';
 import '../domain/use_case/search_use_case.dart';
 import 'search_cubit.dart';
 import 'widgets/search_extra_buttons.dart';
@@ -18,6 +21,9 @@ class SearchPage extends StatelessWidget {
       create: (context) => SearchCubit(
         keyboardVisibilityController: KeyboardVisibilityController(),
         searchUseCase: getIt<SearchUseCase>(),
+        logAnalyticsSearchPerformedUseCase: getIt<LogAnalyticsSearchPerformedUseCase>(),
+        logAnalyticsSearchNoResultsUseCase: getIt<LogAnalyticsSearchNoResultsUseCase>(),
+        logAnalyticsSearchResultTappedUseCase: getIt<LogAnalyticsSearchResultTappedUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -63,6 +69,7 @@ class SearchPage extends StatelessWidget {
               return SearchListView(
                 isNothingFound: state.isNothingFound,
                 words: state.items,
+                query: state.query,
               );
             }
             return const SizedBox.shrink();

@@ -48,14 +48,26 @@ import 'package:skarnik_flutter/features/review/domain/repository/review_reposit
     as _i806;
 import 'package:skarnik_flutter/features/review/domain/use_case/check_and_request_review.dart'
     as _i754;
+import 'package:skarnik_flutter/features/search/data/repository/dev_analytics_search_repository.dart'
+    as _i772;
+import 'package:skarnik_flutter/features/search/data/repository/firebase_analytics_search_repository.dart'
+    as _i536;
 import 'package:skarnik_flutter/features/search/data/repository/objectbox_search_repository.dart'
     as _i578;
 import 'package:skarnik_flutter/features/search/data/repository/query_repository_impl.dart'
     as _i613;
+import 'package:skarnik_flutter/features/search/domain/repository/analytics_search_repository.dart'
+    as _i994;
 import 'package:skarnik_flutter/features/search/domain/repository/query_repository.dart'
     as _i264;
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart'
     as _i124;
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_no_results.dart'
+    as _i369;
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_performed.dart'
+    as _i846;
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_result_tapped.dart'
+    as _i765;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
     as _i915;
 import 'package:skarnik_flutter/features/settings/data/repository/dev_analytics_settings_repository.dart'
@@ -216,6 +228,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i636.FavoritesSortRepository>(
       () => _i1037.SharedPreferencesFavoritesSortRepository(),
     );
+    gh.factory<_i994.AnalyticsSearchRepository>(
+      () => _i772.DevAnalyticsSearchRepository(),
+      registerFor: {_dev},
+    );
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i805.DevAnalyticsAppRepository(),
       registerFor: {_dev},
@@ -270,6 +286,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i741.LoadVocabularyUseCase>(
       () => _i741.LoadVocabularyUseCase(gh<_i587.VocabularyRepository>()),
+    );
+    gh.factory<_i994.AnalyticsSearchRepository>(
+      () => _i536.FirebaseAnalyticsSearchRepository(),
+      registerFor: {_prod},
     );
     gh.factory<_i173.AnalyticsStressRepository>(
       () => _i51.FirebaseAnalyticsStressRepository(),
@@ -366,6 +386,21 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i914.GetWordUseCase>(
       () => _i914.GetWordUseCase(gh<_i147.WordRepository>()),
+    );
+    gh.factory<_i369.LogAnalyticsSearchNoResultsUseCase>(
+      () => _i369.LogAnalyticsSearchNoResultsUseCase(
+        gh<_i994.AnalyticsSearchRepository>(),
+      ),
+    );
+    gh.factory<_i846.LogAnalyticsSearchPerformedUseCase>(
+      () => _i846.LogAnalyticsSearchPerformedUseCase(
+        gh<_i994.AnalyticsSearchRepository>(),
+      ),
+    );
+    gh.factory<_i765.LogAnalyticsSearchResultTappedUseCase>(
+      () => _i765.LogAnalyticsSearchResultTappedUseCase(
+        gh<_i994.AnalyticsSearchRepository>(),
+      ),
     );
     gh.factory<_i616.LogAnalyticsVocabularyWordUseCase>(
       () => _i616.LogAnalyticsVocabularyWordUseCase(
