@@ -3,8 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/features/search/domain/repository/search_repository.dart';
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_no_results.dart';
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_performed.dart';
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_result_tapped.dart';
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart';
 import 'package:skarnik_flutter/features/search/presentation/search_cubit.dart';
 
@@ -14,15 +18,44 @@ class MockSearchRepository extends Mock implements SearchRepository {}
 
 class MockWord extends Mock implements SearchWord {}
 
+class MockLogAnalyticsSearchPerformedUseCase extends Mock
+    implements LogAnalyticsSearchPerformedUseCase {}
+
+class MockLogAnalyticsSearchNoResultsUseCase extends Mock
+    implements LogAnalyticsSearchNoResultsUseCase {}
+
+class MockLogAnalyticsSearchResultTappedUseCase extends Mock
+    implements LogAnalyticsSearchResultTappedUseCase {}
+
 void main() {
   group('SearchCubit', () {
     final keyboardController = MockKeyboardVisibilityController();
     final searchRepository = MockSearchRepository();
+    final logAnalyticsSearchPerformedUseCase = MockLogAnalyticsSearchPerformedUseCase();
+    final logAnalyticsSearchNoResultsUseCase = MockLogAnalyticsSearchNoResultsUseCase();
+    final logAnalyticsSearchResultTappedUseCase = MockLogAnalyticsSearchResultTappedUseCase();
+
+    setUpAll(() {
+      registerFallbackValue((query: '', resultCount: 0));
+      registerFallbackValue((word: MockWord(), position: 0, query: ''));
+      when(
+        () => logAnalyticsSearchPerformedUseCase(any()),
+      ).thenAnswer((_) async => const Success(true));
+      when(
+        () => logAnalyticsSearchNoResultsUseCase(any()),
+      ).thenAnswer((_) async => const Success(true));
+      when(
+        () => logAnalyticsSearchResultTappedUseCase(any()),
+      ).thenAnswer((_) async => const Success(true));
+    });
 
     SearchCubit newInstance() => SearchCubit(
-          keyboardVisibilityController: keyboardController,
-          searchUseCase: SearchUseCase(searchRepository),
-        );
+      keyboardVisibilityController: keyboardController,
+      searchUseCase: SearchUseCase(searchRepository),
+      logAnalyticsSearchPerformedUseCase: logAnalyticsSearchPerformedUseCase,
+      logAnalyticsSearchNoResultsUseCase: logAnalyticsSearchNoResultsUseCase,
+      logAnalyticsSearchResultTappedUseCase: logAnalyticsSearchResultTappedUseCase,
+    );
 
     group('_search()', () {
       late final SearchWord word1;
@@ -100,7 +133,9 @@ void main() {
       test('append letter with special buttons, clear input', () {
         final cubit = newInstance();
         // Set initial text selection to emulate user focus.
-        cubit.searchTextController.selection = TextSelection.fromPosition(const TextPosition(offset: 0));
+        cubit.searchTextController.selection = TextSelection.fromPosition(
+          const TextPosition(offset: 0),
+        );
         expect(cubit.searchTextController.text, equals(''));
 
         cubit.appendLetter('а');

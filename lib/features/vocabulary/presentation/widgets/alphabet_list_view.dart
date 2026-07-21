@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/dictionary.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
@@ -85,8 +84,14 @@ class SimpleListView extends StatefulWidget {
 
   final int langId;
   final List<Word> words;
+  final void Function(Word word) onWordTap;
 
-  const SimpleListView({super.key, required this.langId, required this.words});
+  const SimpleListView({
+    super.key,
+    required this.langId,
+    required this.words,
+    required this.onWordTap,
+  });
 
   @override
   State<SimpleListView> createState() => _SimpleListViewState();
@@ -139,7 +144,7 @@ class _SimpleListViewState extends State<SimpleListView> {
               return ListTile(
                 title: Text(word.word),
                 onTap: () {
-                  context.go('/translate/word', extra: {'word': word, 'save_to_history': true});
+                  widget.onWordTap(word);
                   context.read<VocabularyCubit>().logAnalyticsWord(word);
                 },
               );

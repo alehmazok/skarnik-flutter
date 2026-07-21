@@ -11,6 +11,9 @@ import 'package:skarnik_flutter/core/base_use_case.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/search_word.dart';
 import 'package:skarnik_flutter/logging.dart';
 
+import '../domain/use_case/log_analytics_search_no_results.dart';
+import '../domain/use_case/log_analytics_search_performed.dart';
+import '../domain/use_case/log_analytics_search_result_tapped.dart';
 import '../domain/use_case/search_use_case.dart';
 
 abstract class SearchState extends Equatable {
@@ -48,9 +51,9 @@ class SearchLoadedState extends SearchState {
   });
 
   factory SearchLoadedState.empty() => SearchLoadedState(
-        query: '',
-        items: BuiltList(),
-      );
+    query: '',
+    items: BuiltList(),
+  );
 
   @override
   String toString() => 'SearchLoadedState(items=${items.length})';
@@ -70,18 +73,28 @@ class SearchCubit extends Cubit<SearchState> {
 
   final KeyboardVisibilityController keyboardVisibilityController;
   final SearchUseCase searchUseCase;
+  final LogAnalyticsSearchPerformedUseCase logAnalyticsSearchPerformedUseCase;
+  final LogAnalyticsSearchNoResultsUseCase logAnalyticsSearchNoResultsUseCase;
+  final LogAnalyticsSearchResultTappedUseCase logAnalyticsSearchResultTappedUseCase;
 
   final _bag = DisposeBag();
   final searchTextController = TextEditingController();
   final _streamController = StreamController<String>();
+  Timer? _analyticsDebounce;
 
   SearchCubit({
     required this.keyboardVisibilityController,
     required this.searchUseCase,
+    required this.logAnalyticsSearchPerformedUseCase,
+    required this.logAnalyticsSearchNoResultsUseCase,
+    required this.logAnalyticsSearchResultTappedUseCase,
   }) : super(const SearchInitedState()) {
     keyboardVisibilityController.onChange.listen(_toggleKeyboard).disposedBy(_bag);
     searchTextController.addListener(() => _streamController.add(searchTextController.text));
-    _streamController.stream.debounceTime(const Duration(milliseconds: 50)).listen(_search).disposedBy(_bag);
+    _streamController.stream
+        .debounceTime(const Duration(milliseconds: 50))
+        .listen(_search)
+        .disposedBy(_bag);
   }
 
   void _toggleKeyboard(bool value) => emit(SearchKeyboardChangedState(value));
@@ -97,13 +110,32 @@ class SearchCubit extends Cubit<SearchState> {
       case Failure(error: final error):
         emit(SearchFailedState(error));
       case Success(result: final result):
+        final items = result.toBuiltList();
         emit(
           SearchLoadedState(
             query: query,
-            items: result.toBuiltList(),
+            items: items,
           ),
         );
+        _debounceSearchAnalytics(query, items.length);
     }
+  }
+
+  void _debounceSearchAnalytics(String query, int resultCount) {
+    _analyticsDebounce?.cancel();
+    _analyticsDebounce = Timer(const Duration(milliseconds: 500), () {
+      if (resultCount > 0) {
+        unawaited(logAnalyticsSearchPerformedUseCase((query: query, resultCount: resultCount)));
+      } else {
+        unawaited(logAnalyticsSearchNoResultsUseCase(query));
+      }
+    });
+  }
+
+  void onResultTapped(SearchWord word, int position, String query) {
+    unawaited(
+      logAnalyticsSearchResultTappedUseCase((word: word, position: position, query: query)),
+    );
   }
 
   void appendLetter(String letter) {
@@ -121,6 +153,7 @@ class SearchCubit extends Cubit<SearchState> {
   @override
   Future<void> close() {
     _logger.fine('Cubit has been closed.');
+    _analyticsDebounce?.cancel();
     _bag.dispose();
     _streamController.close();
     searchTextController.dispose();
