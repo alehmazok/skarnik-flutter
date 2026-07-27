@@ -32,6 +32,12 @@
                     android:name="io.flutter.embedding.android.NormalTheme"
                     android:resource="@style/NormalTheme"
             />
+            <!-- App owns deep-link handling via app_links + HandleAppLinkUseCase (regex → SkarnikAppBloc).
+                 Flutter's default raw-URI forwarding would otherwise push the full https:// URL into
+                 go_router as initial route on cold start, which has no matching route → crashes to error page. -->
+            <meta-data
+                    android:name="flutter_deeplinking_enabled"
+                    android:value="false"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -56,6 +62,17 @@
                 <data android:pathPrefix="/r/"/>
             </intent-filter>
         </activity>
+        <receiver
+                android:name=".widget.WordOfDayWidgetReceiver"
+                android:exported="true"
+                android:label="@string/word_of_day_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/word_of_day_widget_info"/>
+        </receiver>
         <!-- Не лагаваць у аналітыку пераходы па экранах -->
         <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false"/>
         <!-- Don't delete the meta-data below.

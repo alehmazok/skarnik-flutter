@@ -196,6 +196,16 @@ import 'package:skarnik_flutter/features/vocabulary/domain/use_case/load_vocabul
     as _i741;
 import 'package:skarnik_flutter/features/vocabulary/domain/use_case/log_analytics_vocabulary_word.dart'
     as _i616;
+import 'package:skarnik_flutter/features/widget/data/repository/shared_preferences_widget_history_repository.dart'
+    as _i167;
+import 'package:skarnik_flutter/features/widget/data/service/home_widget_gateway.dart'
+    as _i800;
+import 'package:skarnik_flutter/features/widget/domain/repository/widget_history_repository.dart'
+    as _i914;
+import 'package:skarnik_flutter/features/widget/domain/use_case/pick_random_word.dart'
+    as _i429;
+import 'package:skarnik_flutter/features/widget/domain/use_case/refresh_widget_data.dart'
+    as _i621;
 
 const String _dev = 'dev';
 const String _prod = 'prod';
@@ -214,6 +224,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i525.InitRemoteConfigUseCase>(
       () => _i525.InitRemoteConfigUseCase(),
     );
+    gh.factory<_i800.HomeWidgetGateway>(() => _i800.HomeWidgetGateway());
     gh.factory<_i978.DownloadCursorRepository>(
       () => _i278.SharedPreferencesDownloadCursorRepository(),
     );
@@ -277,8 +288,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1028.DownloadRateLimitRepository>(),
       ),
     );
+    gh.factory<_i914.WidgetHistoryRepository>(
+      () => _i167.SharedPreferencesWidgetHistoryRepository(),
+    );
     gh.lazySingleton<_i264.QueryRepository>(
       () => _i613.QueryRepositoryImpl(gh<_i522.ObjectboxStoreHolder>()),
+    );
+    gh.factory<_i429.PickRandomWordUseCase>(
+      () => _i429.PickRandomWordUseCase(gh<_i522.ObjectboxStoreHolder>()),
     );
     gh.factory<_i71.AnalyticsAppRepository>(
       () => _i1004.FirebaseAnalyticsAppRepository(),
@@ -433,6 +450,13 @@ extension GetItInjectableX on _i174.GetIt {
         apiWordRepository: gh<_i138.ApiTranslationRepository>(),
         cloudTranslationRepository: gh<_i361.CloudTranslationRepository>(),
         websiteTranslationRepository: gh<_i317.WebsiteTranslationRepository>(),
+      ),
+    );
+    gh.factory<_i621.RefreshWidgetDataUseCase>(
+      () => _i621.RefreshWidgetDataUseCase(
+        gh<_i429.PickRandomWordUseCase>(),
+        gh<_i914.WidgetHistoryRepository>(),
+        gh<_i803.GetTranslationUseCase>(),
       ),
     );
     gh.factory<_i135.LogAnalyticsAddToFavoritesUseCase>(

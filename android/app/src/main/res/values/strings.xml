@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="word_of_day_widget_label">Слова дня</string>
+    <string name="word_of_day_widget_description">Выпадковае слова і яго пераклад.</string>
+</resources>
