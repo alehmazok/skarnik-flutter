@@ -75,9 +75,9 @@ class WordOfDayGlanceWidget : GlanceAppWidget() {
     private fun buildDeepLinkIntent(context: Context, wordId: String): Intent {
         // Explicit intent (setClass) bypasses intent-filter resolution entirely,
         // landing directly in MainActivity exactly as if Android had routed it
-        // through the existing verified skarnik.by App Link — no new manifest
+        // through the existing verified skarnik.app App Link — no new manifest
         // entries or Dart parsing code needed for tap-through.
-        val uri = Uri.parse("https://skarnik.by/belrus/$wordId/")
+        val uri = Uri.parse("https://skarnik.app/belrus/$wordId/")
         return Intent(Intent.ACTION_VIEW, uri).apply {
             setClass(context, MainActivity::class.java)
         }
