@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -14,15 +16,37 @@ const _searchDirectoryName = 'objectbox_search';
 const _historyDirectoryName = 'objectbox_history';
 const _translationDirectoryName = 'objectbox_translation';
 
-bool _initialized = false;
+Completer<void>? _initialization;
 
 /// Minimal DI bootstrap for the `workmanager` background isolate — trimmed to
 /// what `RefreshWidgetDataUseCase`'s dependency graph needs. Runs in a
 /// separate Dart isolate within the same OS process as the main app
 /// (confirmed via spike), so ObjectBox stores must be attached to, not
 /// re-opened, when the main app already has them open.
-Future<void> ensureWidgetBootstrap() async {
-  if (_initialized) return;
+///
+/// The periodic and initial one-off tasks can both invoke this concurrently
+/// in the same isolate (confirmed on-device — see `_openOrAttach`'s retry
+/// loop) — a plain `bool` guard would let both proceed past the check before
+/// either finishes, so `getIt.registerSingleton` would throw on the second
+/// call. Guard with a `Completer` instead so the second caller awaits the
+/// first's in-flight bootstrap rather than racing it.
+Future<void> ensureWidgetBootstrap() {
+  final inProgress = _initialization;
+  if (inProgress != null) return inProgress.future;
+
+  final completer = Completer<void>();
+  _initialization = completer;
+  _bootstrap().then(
+    completer.complete,
+    onError: (Object e, StackTrace st) {
+      _initialization = null;
+      completer.completeError(e, st);
+    },
+  );
+  return completer.future;
+}
+
+Future<void> _bootstrap() async {
   // Runs in its own Dart isolate group (separate FlutterEngine) with its own
   // static state, so logging/DI must be set up here too, not inherited from
   // the main isolate.
@@ -35,7 +59,6 @@ Future<void> ensureWidgetBootstrap() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _registerObjectboxStoreHolder();
   await SupabaseConfig.initialize();
-  _initialized = true;
 }
 
 Future<void> _registerObjectboxStoreHolder() async {

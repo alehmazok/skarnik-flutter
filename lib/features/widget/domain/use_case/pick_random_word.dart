@@ -19,10 +19,13 @@ class PickRandomWordUseCase {
     final query = box.query(ObjectboxSearchWord_.langId.equals(Dictionary.belRus.langId)).build();
     final total = query.count();
     if (total == 0) {
+      query.close();
       throw StateError('Пусты слоўнік бел-рус, немагчыма выбраць выпадковае слова.');
     }
     query.offset = _random.nextInt(total);
     query.limit = 1;
-    return query.find().first.toEntity();
+    final word = query.find().first.toEntity();
+    query.close();
+    return word;
   }
 }

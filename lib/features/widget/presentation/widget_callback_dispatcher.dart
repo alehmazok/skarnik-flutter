@@ -8,7 +8,7 @@ import '../domain/use_case/refresh_widget_data.dart';
 
 const wordOfDayTaskName = 'wordOfDayRefreshTask';
 
-final _logger = getLogger(RefreshWidgetDataUseCase);
+final _logger = Logger('widgetCallbackDispatcher');
 
 @pragma('vm:entry-point')
 void widgetCallbackDispatcher() {
