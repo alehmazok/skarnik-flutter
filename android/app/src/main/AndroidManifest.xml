@@ -32,6 +32,12 @@
                     android:name="io.flutter.embedding.android.NormalTheme"
                     android:resource="@style/NormalTheme"
             />
+            <!-- App owns deep-link handling via app_links + HandleAppLinkUseCase (regex → SkarnikAppBloc).
+                 Flutter's default raw-URI forwarding would otherwise push the full https:// URL into
+                 go_router as initial route on cold start, which has no matching route → crashes to error page. -->
+            <meta-data
+                    android:name="flutter_deeplinking_enabled"
+                    android:value="false"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
