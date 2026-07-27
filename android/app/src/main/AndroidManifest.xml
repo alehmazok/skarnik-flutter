@@ -56,6 +56,17 @@
                 <data android:pathPrefix="/r/"/>
             </intent-filter>
         </activity>
+        <receiver
+                android:name=".widget.WordOfDayWidgetReceiver"
+                android:exported="true"
+                android:label="@string/word_of_day_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/word_of_day_widget_info"/>
+        </receiver>
         <!-- Не лагаваць у аналітыку пераходы па экранах -->
         <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false"/>
         <!-- Don't delete the meta-data below.

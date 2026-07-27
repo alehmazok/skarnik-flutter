@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'bloc_observer.dart';
 import 'di.skarnik.dart';
 import 'features/app/presentation/skarnik_app.dart';
+import 'features/widget/presentation/widget_callback_dispatcher.dart' as word_of_day_widget;
 import 'firebase_options.dart';
 import 'logging.dart';
 import 'supabase_client.dart';
@@ -26,6 +30,24 @@ void main() async {
   );
 
   await SupabaseConfig.initialize();
+
+  if (Platform.isAndroid) {
+    await Workmanager().initialize(
+      word_of_day_widget.widgetCallbackDispatcher,
+      isInDebugMode: kDebugMode,
+    );
+    await Workmanager().registerPeriodicTask(
+      'word-of-day-refresh',
+      word_of_day_widget.wordOfDayTaskName,
+      frequency: const Duration(hours: 1),
+    );
+    // Populate a freshly-added widget immediately instead of leaving it blank
+    // for up to an hour until the first periodic tick.
+    await Workmanager().registerOneOffTask(
+      'word-of-day-refresh-initial',
+      word_of_day_widget.wordOfDayTaskName,
+    );
+  }
 
   if (kDebugMode) {
     Bloc.observer = DevelopmentBlocObserver();
