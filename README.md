@@ -32,6 +32,7 @@ Skarnik is a mobile dictionary app for Belarusian, offering word search, transla
 - Favorites / bookmarks
 - Search history
 - Deep linking support
+- Android home-screen widget ("Слова дня") — random Бел-Рус word + translation, refreshed hourly, tap-through into the word's detail page
 - Firebase Analytics & Crashlytics integration
 
 ## Tech Stack
@@ -43,6 +44,7 @@ Skarnik is a mobile dictionary app for Belarusian, offering word search, transla
 - **Local storage:** [ObjectBox](https://pub.dev/packages/objectbox)
 - **Networking:** [Dio](https://pub.dev/packages/dio) with [dio_http_cache_lts](https://pub.dev/packages/dio_http_cache_lts)
 - **Backend:** Firebase (Analytics, Crashlytics) + Supabase/Django API fallback
+- **Home-screen widget (Android):** [home_widget](https://pub.dev/packages/home_widget) + [workmanager](https://pub.dev/packages/workmanager) on the Dart side, [Jetpack Glance](https://developer.android.com/jetpack/androidx/releases/glance) natively
 
 ## Architecture
 
@@ -58,10 +60,13 @@ lib/
 │   ├── translation/     # Translation detail (Dio API + cache)
 │   ├── favorites/       # Bookmarks
 │   ├── vocabulary/      # Dictionary browse
+│   ├── widget/          # "Слова дня" home-screen widget refresh pipeline (Android)
 │   └── settings/        # Clear history
 ├── widgets/             # Shared widgets
 └── main.dart
 ```
+
+The Android home-screen widget's native side (Jetpack Glance UI, `AppWidgetProvider` receiver) lives outside `lib/`, under `android/app/src/main/kotlin/by/mazokaleh/skarnik/widget/`. A `workmanager` background isolate runs the refresh pipeline hourly, reusing the same `GetTranslationUseCase` cascade and ObjectBox stores as the main app (attached via `Store.attach`, since it's a separate Dart isolate in the same process).
 
 ## Getting Started
 
