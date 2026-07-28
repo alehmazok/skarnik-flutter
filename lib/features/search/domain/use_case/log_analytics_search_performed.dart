@@ -12,9 +12,15 @@ class LogAnalyticsSearchPerformedUseCase {
 
   LogAnalyticsSearchPerformedUseCase(this._analyticsSearchRepository);
 
-  Future<UseCaseResult<bool>> call(({String query, int resultCount}) argument) async {
+  Future<UseCaseResult<bool>> call(
+    ({String query, int resultCount, bool usedPrepositionFallback}) argument,
+  ) async {
     try {
-      await _analyticsSearchRepository.logSearchPerformed(argument.query, argument.resultCount);
+      await _analyticsSearchRepository.logSearchPerformed(
+        argument.query,
+        argument.resultCount,
+        usedPrepositionFallback: argument.usedPrepositionFallback,
+      );
     } catch (e, st) {
       _logger.warning(
         'Адбылася памылка пры спробе залагіраваць падзею пошуку `${argument.query}`:',

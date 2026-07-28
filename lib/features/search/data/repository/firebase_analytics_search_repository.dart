@@ -8,24 +8,33 @@ import '../../domain/repository/analytics_search_repository.dart';
 @Injectable(as: AnalyticsSearchRepository)
 class FirebaseAnalyticsSearchRepository implements AnalyticsSearchRepository {
   @override
-  Future<void> logSearchPerformed(String query, int resultCount) async {
+  Future<void> logSearchPerformed(
+    String query,
+    int resultCount, {
+    bool usedPrepositionFallback = false,
+  }) async {
     final analytics = FirebaseAnalytics.instance;
     await analytics.logEvent(
       name: 'search_performed',
       parameters: {
         'query': query,
         'result_count': resultCount,
+        'used_preposition_fallback': usedPrepositionFallback ? 1 : 0,
       },
     );
   }
 
   @override
-  Future<void> logSearchNoResults(String query) async {
+  Future<void> logSearchNoResults(
+    String query, {
+    bool usedPrepositionFallback = false,
+  }) async {
     final analytics = FirebaseAnalytics.instance;
     await analytics.logEvent(
       name: 'search_no_results',
       parameters: {
         'query': query,
+        'used_preposition_fallback': usedPrepositionFallback ? 1 : 0,
       },
     );
   }

@@ -12,12 +12,17 @@ class LogAnalyticsSearchNoResultsUseCase {
 
   LogAnalyticsSearchNoResultsUseCase(this._analyticsSearchRepository);
 
-  Future<UseCaseResult<bool>> call(String query) async {
+  Future<UseCaseResult<bool>> call(
+    ({String query, bool usedPrepositionFallback}) argument,
+  ) async {
     try {
-      await _analyticsSearchRepository.logSearchNoResults(query);
+      await _analyticsSearchRepository.logSearchNoResults(
+        argument.query,
+        usedPrepositionFallback: argument.usedPrepositionFallback,
+      );
     } catch (e, st) {
       _logger.warning(
-        'Адбылася памылка пры спробе залагіраваць падзею пустога пошуку `$query`:',
+        'Адбылася памылка пры спробе залагіраваць падзею пустога пошуку `${argument.query}`:',
         e,
         st,
       );

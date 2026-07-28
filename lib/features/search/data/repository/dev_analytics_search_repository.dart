@@ -10,15 +10,26 @@ class DevAnalyticsSearchRepository implements AnalyticsSearchRepository {
   final _logger = getLogger(DevAnalyticsSearchRepository);
 
   @override
-  Future<void> logSearchPerformed(String query, int resultCount) async {
+  Future<void> logSearchPerformed(
+    String query,
+    int resultCount, {
+    bool usedPrepositionFallback = false,
+  }) async {
     _logger.info(
-      'Analytics event logged: search_performed {"query": "$query", "result_count": $resultCount}',
+      'Analytics event logged: search_performed {"query": "$query", "result_count": $resultCount, '
+      '"used_preposition_fallback": $usedPrepositionFallback}',
     );
   }
 
   @override
-  Future<void> logSearchNoResults(String query) async {
-    _logger.info('Analytics event logged: search_no_results {"query": "$query"}');
+  Future<void> logSearchNoResults(
+    String query, {
+    bool usedPrepositionFallback = false,
+  }) async {
+    _logger.info(
+      'Analytics event logged: search_no_results {"query": "$query", '
+      '"used_preposition_fallback": $usedPrepositionFallback}',
+    );
   }
 
   @override

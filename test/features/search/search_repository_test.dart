@@ -62,8 +62,9 @@ void main() {
 
         final results = await searchRepository.search('test');
 
-        expect(results.length, equals(1));
-        expect(results, contains(word1));
+        expect(results.words.length, equals(1));
+        expect(results.words, contains(word1));
+        expect(results.usedPrepositionFallback, isFalse);
       });
 
       test('combines results from queryByWord and queryByWordMask', () async {
@@ -85,8 +86,8 @@ void main() {
 
         final results = await searchRepository.search('test');
 
-        expect(results.length, equals(2));
-        expect(results, containsAll([word1, word2]));
+        expect(results.words.length, equals(2));
+        expect(results.words, containsAll([word1, word2]));
       });
 
       test('deduplicates results from both queries', () async {
@@ -107,7 +108,7 @@ void main() {
 
         final results = await searchRepository.search('test');
 
-        expect(results.length, equals(1));
+        expect(results.words.length, equals(1));
       });
 
       test('returns empty list when both queries return nothing', () async {
@@ -127,7 +128,8 @@ void main() {
 
         final results = await searchRepository.search('xyz');
 
-        expect(results, isEmpty);
+        expect(results.words, isEmpty);
+        expect(results.usedPrepositionFallback, isFalse);
       });
 
       test('lowercases query before passing to repositories', () async {
@@ -253,7 +255,7 @@ void main() {
 
         final results = await searchRepository.search('test');
 
-        expect(results.toList(), equals([word1, word2]));
+        expect(results.words.toList(), equals([word1, word2]));
       });
     });
 
@@ -294,26 +296,26 @@ void main() {
       });
     });
 
-    group('fuzzy search', () {
-      void stubExact({
-        required List<SearchWord> byWord,
-        required List<SearchWord> byWordMask,
-      }) {
-        when(
-          () => queryRepository.queryByWord(
-            searchQuery: any(named: 'searchQuery'),
-            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
-          ),
-        ).thenReturn(byWord);
-        when(
-          () => queryRepository.queryByWordMask(
-            searchQuery: any(named: 'searchQuery'),
-            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
-            excluded: any(named: 'excluded'),
-          ),
-        ).thenReturn(byWordMask);
-      }
+    void stubExact({
+      required List<SearchWord> byWord,
+      required List<SearchWord> byWordMask,
+    }) {
+      when(
+        () => queryRepository.queryByWord(
+          searchQuery: any(named: 'searchQuery'),
+          searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+        ),
+      ).thenReturn(byWord);
+      when(
+        () => queryRepository.queryByWordMask(
+          searchQuery: any(named: 'searchQuery'),
+          searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+          excluded: any(named: 'excluded'),
+        ),
+      ).thenReturn(byWordMask);
+    }
 
+    group('fuzzy search', () {
       test(
         'does not call fuzzySearch when there is at least one exact/mask result',
         () async {
@@ -398,7 +400,331 @@ void main() {
 
         final results = await searchRepository.search('test');
 
-        expect(results.toList(), equals([fuzzyWord]));
+        expect(results.words.toList(), equals([fuzzyWord]));
+        expect(results.usedPrepositionFallback, isFalse);
+      });
+    });
+
+    group('glued preposition fallback', () {
+      test(
+        'retries with stripped query and finds a fuzzy match when primary pass is fully empty',
+        () async {
+          // applySubstitutions() turns trailing 'е' into 'ё' in both the raw
+          // and stripped queries ('всмысле' -> 'всмыслё', 'смысле' -> 'смыслё').
+          final smyslWord = _makeWord(id: 4, wordId: 4, letter: 'с', word: 'смысл');
+          when(
+            () => queryRepository.queryByWord(
+              searchQuery: 'всмысле',
+              searchQueryWithSubstitutions: 'всмыслё',
+            ),
+          ).thenReturn([]);
+          when(
+            () => queryRepository.queryByWordMask(
+              searchQuery: 'всмысле',
+              searchQueryWithSubstitutions: 'всмыслё',
+              excluded: [],
+            ),
+          ).thenReturn([]);
+          when(
+            () => queryRepository.fuzzySearch(
+              firstLetter: 'в',
+              searchQuery: 'всмыслё',
+              maxDistance: 2,
+              resultLimit: 15,
+              excluded: any(named: 'excluded'),
+            ),
+          ).thenAnswer((_) async => []);
+
+          when(
+            () => queryRepository.queryByWord(
+              searchQuery: 'смысле',
+              searchQueryWithSubstitutions: 'смыслё',
+            ),
+          ).thenReturn([]);
+          when(
+            () => queryRepository.queryByWordMask(
+              searchQuery: 'смысле',
+              searchQueryWithSubstitutions: 'смыслё',
+              excluded: [],
+            ),
+          ).thenReturn([]);
+          when(
+            () => queryRepository.fuzzySearch(
+              firstLetter: 'с',
+              searchQuery: 'смыслё',
+              maxDistance: 2,
+              resultLimit: 15,
+              excluded: any(named: 'excluded'),
+            ),
+          ).thenAnswer((_) async => [smyslWord]);
+
+          final results = await searchRepository.search('всмысле');
+
+          expect(results.words.toList(), equals([smyslWord]));
+          expect(results.usedPrepositionFallback, isTrue);
+        },
+      );
+
+      test('does not retry when query does not start with a glued-prefix letter', () async {
+        stubExact(byWord: [], byWordMask: []);
+
+        await searchRepository.search('тест');
+
+        verifyNever(
+          () => queryRepository.queryByWord(
+            searchQuery: 'ест',
+            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+          ),
+        );
+      });
+
+      test('does not retry when the primary pass already found results', () async {
+        final word1 = _makeWord();
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'всмысле',
+            searchQueryWithSubstitutions: 'всмыслё',
+          ),
+        ).thenReturn([word1]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'всмысле',
+            searchQueryWithSubstitutions: 'всмыслё',
+            excluded: [word1],
+          ),
+        ).thenReturn([]);
+
+        final results = await searchRepository.search('всмысле');
+
+        expect(results.usedPrepositionFallback, isFalse);
+        verify(
+          () => queryRepository.queryByWord(
+            searchQuery: 'всмысле',
+            searchQueryWithSubstitutions: 'всмыслё',
+          ),
+        ).called(1);
+        verifyNever(
+          () => queryRepository.queryByWord(
+            searchQuery: 'смысле',
+            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+          ),
+        );
+      });
+
+      test('does not strip a single-character query', () async {
+        stubExact(byWord: [], byWordMask: []);
+
+        await searchRepository.search('в');
+
+        verifyNever(
+          () => queryRepository.queryByWord(
+            searchQuery: '',
+            searchQueryWithSubstitutions: any(named: 'searchQueryWithSubstitutions'),
+          ),
+        );
+      });
+
+      test('strips a Belarusian one-letter conjunction (і)', () async {
+        final ranakWord = _makeWord(id: 5, wordId: 5, letter: 'р', word: 'ранак');
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'іранак',
+            searchQueryWithSubstitutions: 'іранак',
+          ),
+        ).thenReturn([]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'іранак',
+            searchQueryWithSubstitutions: 'іранак',
+            excluded: [],
+          ),
+        ).thenReturn([]);
+        when(
+          () => queryRepository.fuzzySearch(
+            firstLetter: 'і',
+            searchQuery: 'іранак',
+            maxDistance: 2,
+            resultLimit: 15,
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenAnswer((_) async => []);
+
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'ранак',
+            searchQueryWithSubstitutions: 'ранак',
+          ),
+        ).thenReturn([ranakWord]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'ранак',
+            searchQueryWithSubstitutions: 'ранак',
+            excluded: [ranakWord],
+          ),
+        ).thenReturn([]);
+
+        final results = await searchRepository.search('іранак');
+
+        expect(results.words.toList(), equals([ranakWord]));
+        expect(results.usedPrepositionFallback, isTrue);
+      });
+
+      // The following cases are real `search_no_results` queries (BigQuery,
+      // 2026-06-01..2026-07-28), each cross-checked against the production
+      // dictionary (Supabase `main_word`) to confirm the stripped query is a
+      // real prefix/exact match. Unlike the 'всмысле' case, these resolve via
+      // the exact/mask stage on the retry, without needing fuzzy search.
+
+      test('strips glued "у" and finds an exact prefix match (узгадва -> згадва)', () async {
+        final zgadvatsWord = _makeWord(id: 6, wordId: 6, letter: 'з', word: 'згадваць');
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'узгадва',
+            searchQueryWithSubstitutions: 'узгадва',
+          ),
+        ).thenReturn([]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'узгадва',
+            searchQueryWithSubstitutions: 'узгадва',
+            excluded: [],
+          ),
+        ).thenReturn([]);
+        when(
+          () => queryRepository.fuzzySearch(
+            firstLetter: 'у',
+            searchQuery: 'узгадва',
+            maxDistance: 2,
+            resultLimit: 15,
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenAnswer((_) async => []);
+
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'згадва',
+            searchQueryWithSubstitutions: 'згадва',
+          ),
+        ).thenReturn([zgadvatsWord]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'згадва',
+            searchQueryWithSubstitutions: 'згадва',
+            excluded: [zgadvatsWord],
+          ),
+        ).thenReturn([]);
+
+        final results = await searchRepository.search('узгадва');
+
+        expect(results.words.toList(), equals([zgadvatsWord]));
+        expect(results.usedPrepositionFallback, isTrue);
+      });
+
+      test(
+        'strips glued "у" and finds an exact match (ураўніннасць -> раўніннасць)',
+        () async {
+          final raunninnascWord = _makeWord(
+            id: 8,
+            wordId: 8,
+            letter: 'р',
+            word: 'раўніннасць',
+          );
+          when(
+            () => queryRepository.queryByWord(
+              searchQuery: 'ураўніннасць',
+              searchQueryWithSubstitutions: 'ураўніннасць',
+            ),
+          ).thenReturn([]);
+          when(
+            () => queryRepository.queryByWordMask(
+              searchQuery: 'ураўніннасць',
+              searchQueryWithSubstitutions: 'ураўніннасць',
+              excluded: [],
+            ),
+          ).thenReturn([]);
+          when(
+            () => queryRepository.fuzzySearch(
+              firstLetter: 'у',
+              searchQuery: 'ураўніннасць',
+              maxDistance: 2,
+              resultLimit: 15,
+              excluded: any(named: 'excluded'),
+            ),
+          ).thenAnswer((_) async => []);
+
+          when(
+            () => queryRepository.queryByWord(
+              searchQuery: 'раўніннасць',
+              searchQueryWithSubstitutions: 'раўніннасць',
+            ),
+          ).thenReturn([raunninnascWord]);
+          when(
+            () => queryRepository.queryByWordMask(
+              searchQuery: 'раўніннасць',
+              searchQueryWithSubstitutions: 'раўніннасць',
+              excluded: [raunninnascWord],
+            ),
+          ).thenReturn([]);
+
+          final results = await searchRepository.search('ураўніннасць');
+
+          expect(results.words.toList(), equals([raunninnascWord]));
+          expect(results.usedPrepositionFallback, isTrue);
+        },
+      );
+
+      test('strips glued "у" and finds an exact prefix match (усціш -> сціш)', () async {
+        final stsishWord = _makeWord(id: 9, wordId: 9, letter: 'с', word: 'сцішаны');
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'усціш',
+            searchQueryWithSubstitutions: 'усціш',
+          ),
+        ).thenReturn([]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'усціш',
+            searchQueryWithSubstitutions: 'усціш',
+            excluded: [],
+          ),
+        ).thenReturn([]);
+        when(
+          () => queryRepository.fuzzySearch(
+            firstLetter: 'у',
+            searchQuery: 'усціш',
+            maxDistance: 1,
+            resultLimit: 15,
+            excluded: any(named: 'excluded'),
+          ),
+        ).thenAnswer((_) async => []);
+
+        when(
+          () => queryRepository.queryByWord(
+            searchQuery: 'сціш',
+            searchQueryWithSubstitutions: 'сціш',
+          ),
+        ).thenReturn([stsishWord]);
+        when(
+          () => queryRepository.queryByWordMask(
+            searchQuery: 'сціш',
+            searchQueryWithSubstitutions: 'сціш',
+            excluded: [stsishWord],
+          ),
+        ).thenReturn([]);
+
+        final results = await searchRepository.search('усціш');
+
+        expect(results.words.toList(), equals([stsishWord]));
+        expect(results.usedPrepositionFallback, isTrue);
+      });
+
+      test('retry itself can return nothing (double miss stays empty)', () async {
+        stubExact(byWord: [], byWordMask: []);
+
+        final results = await searchRepository.search('всмысле');
+
+        expect(results.words, isEmpty);
+        expect(results.usedPrepositionFallback, isTrue);
       });
     });
   });

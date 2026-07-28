@@ -15,10 +15,12 @@ class SearchUseCase {
 
   SearchUseCase(this._searchRepository);
 
-  Future<UseCaseResult<Iterable<SearchWord>>> call(String argument) async {
+  Future<UseCaseResult<({Iterable<SearchWord> words, bool usedPrepositionFallback})>> call(
+    String argument,
+  ) async {
     try {
       final results = await _searchRepository.search(argument);
-      _logger.fine('For query `$argument` found ${results.length} results');
+      _logger.fine('For query `$argument` found ${results.words.length} results');
 
       return Success(results);
     } catch (e, st) {
