@@ -68,6 +68,8 @@ import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_se
     as _i846;
 import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_result_tapped.dart'
     as _i765;
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_vocabulary_shortcut_tapped.dart'
+    as _i755;
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart'
     as _i915;
 import 'package:skarnik_flutter/features/settings/data/repository/dev_analytics_settings_repository.dart'
@@ -416,6 +418,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i765.LogAnalyticsSearchResultTappedUseCase>(
       () => _i765.LogAnalyticsSearchResultTappedUseCase(
+        gh<_i994.AnalyticsSearchRepository>(),
+      ),
+    );
+    gh.factory<_i755.LogAnalyticsVocabularyShortcutTappedUseCase>(
+      () => _i755.LogAnalyticsVocabularyShortcutTappedUseCase(
         gh<_i994.AnalyticsSearchRepository>(),
       ),
     );

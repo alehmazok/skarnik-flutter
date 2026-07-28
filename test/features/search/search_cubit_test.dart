@@ -9,6 +9,7 @@ import 'package:skarnik_flutter/features/search/domain/repository/search_reposit
 import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_no_results.dart';
 import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_performed.dart';
 import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_search_result_tapped.dart';
+import 'package:skarnik_flutter/features/search/domain/use_case/log_analytics_vocabulary_shortcut_tapped.dart';
 import 'package:skarnik_flutter/features/search/domain/use_case/search_use_case.dart';
 import 'package:skarnik_flutter/features/search/presentation/search_cubit.dart';
 
@@ -27,6 +28,9 @@ class MockLogAnalyticsSearchNoResultsUseCase extends Mock
 class MockLogAnalyticsSearchResultTappedUseCase extends Mock
     implements LogAnalyticsSearchResultTappedUseCase {}
 
+class MockLogAnalyticsVocabularyShortcutTappedUseCase extends Mock
+    implements LogAnalyticsVocabularyShortcutTappedUseCase {}
+
 void main() {
   group('SearchCubit', () {
     final keyboardController = MockKeyboardVisibilityController();
@@ -34,6 +38,8 @@ void main() {
     final logAnalyticsSearchPerformedUseCase = MockLogAnalyticsSearchPerformedUseCase();
     final logAnalyticsSearchNoResultsUseCase = MockLogAnalyticsSearchNoResultsUseCase();
     final logAnalyticsSearchResultTappedUseCase = MockLogAnalyticsSearchResultTappedUseCase();
+    final logAnalyticsVocabularyShortcutTappedUseCase =
+        MockLogAnalyticsVocabularyShortcutTappedUseCase();
 
     setUpAll(() {
       registerFallbackValue((query: '', resultCount: 0));
@@ -47,6 +53,9 @@ void main() {
       when(
         () => logAnalyticsSearchResultTappedUseCase(any()),
       ).thenAnswer((_) async => const Success(true));
+      when(
+        () => logAnalyticsVocabularyShortcutTappedUseCase(),
+      ).thenAnswer((_) async => const Success(true));
     });
 
     SearchCubit newInstance() => SearchCubit(
@@ -55,6 +64,7 @@ void main() {
       logAnalyticsSearchPerformedUseCase: logAnalyticsSearchPerformedUseCase,
       logAnalyticsSearchNoResultsUseCase: logAnalyticsSearchNoResultsUseCase,
       logAnalyticsSearchResultTappedUseCase: logAnalyticsSearchResultTappedUseCase,
+      logAnalyticsVocabularyShortcutTappedUseCase: logAnalyticsVocabularyShortcutTappedUseCase,
     );
 
     group('_search()', () {

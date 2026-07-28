@@ -19,7 +19,6 @@ class HomeShell extends StatelessWidget {
   static final _destinations = [
     (icon: AdaptiveIcons.search, label: Strings.search),
     (icon: AdaptiveIcons.bookmark, label: Strings.bookmarks),
-    (icon: AdaptiveIcons.book, label: Strings.dictionary),
   ];
 
   @override

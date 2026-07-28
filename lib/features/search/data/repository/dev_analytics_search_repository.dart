@@ -27,4 +27,9 @@ class DevAnalyticsSearchRepository implements AnalyticsSearchRepository {
       'Analytics event logged: search_result_tapped {"word": "${word.word}", "position": $position}',
     );
   }
+
+  @override
+  Future<void> logVocabularyShortcutTapped() async {
+    _logger.info('Analytics event logged: vocabulary_shortcut_tapped');
+  }
 }

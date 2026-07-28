@@ -46,4 +46,10 @@ class FirebaseAnalyticsSearchRepository implements AnalyticsSearchRepository {
       },
     );
   }
+
+  @override
+  Future<void> logVocabularyShortcutTapped() async {
+    final analytics = FirebaseAnalytics.instance;
+    await analytics.logEvent(name: 'vocabulary_shortcut_tapped');
+  }
 }

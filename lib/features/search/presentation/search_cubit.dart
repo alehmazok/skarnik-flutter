@@ -14,6 +14,7 @@ import 'package:skarnik_flutter/logging.dart';
 import '../domain/use_case/log_analytics_search_no_results.dart';
 import '../domain/use_case/log_analytics_search_performed.dart';
 import '../domain/use_case/log_analytics_search_result_tapped.dart';
+import '../domain/use_case/log_analytics_vocabulary_shortcut_tapped.dart';
 import '../domain/use_case/search_use_case.dart';
 
 abstract class SearchState extends Equatable {
@@ -76,6 +77,7 @@ class SearchCubit extends Cubit<SearchState> {
   final LogAnalyticsSearchPerformedUseCase logAnalyticsSearchPerformedUseCase;
   final LogAnalyticsSearchNoResultsUseCase logAnalyticsSearchNoResultsUseCase;
   final LogAnalyticsSearchResultTappedUseCase logAnalyticsSearchResultTappedUseCase;
+  final LogAnalyticsVocabularyShortcutTappedUseCase logAnalyticsVocabularyShortcutTappedUseCase;
 
   final _bag = DisposeBag();
   final searchTextController = TextEditingController();
@@ -88,6 +90,7 @@ class SearchCubit extends Cubit<SearchState> {
     required this.logAnalyticsSearchPerformedUseCase,
     required this.logAnalyticsSearchNoResultsUseCase,
     required this.logAnalyticsSearchResultTappedUseCase,
+    required this.logAnalyticsVocabularyShortcutTappedUseCase,
   }) : super(const SearchInitedState()) {
     keyboardVisibilityController.onChange.listen(_toggleKeyboard).disposedBy(_bag);
     searchTextController.addListener(() => _streamController.add(searchTextController.text));
@@ -137,6 +140,8 @@ class SearchCubit extends Cubit<SearchState> {
       logAnalyticsSearchResultTappedUseCase((word: word, position: position, query: query)),
     );
   }
+
+  void onVocabularyShortcutTapped() => unawaited(logAnalyticsVocabularyShortcutTappedUseCase());
 
   void appendLetter(String letter) {
     final selection = searchTextController.selection;

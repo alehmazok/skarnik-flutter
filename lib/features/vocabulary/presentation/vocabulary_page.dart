@@ -51,7 +51,7 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
           final cubit = context.read<VocabularyCubit>();
           return Scaffold(
             appBar: AppBar(
-              toolbarHeight: 0,
+              title: const Text(Strings.dictionary),
               bottom: TabBar(
                 controller: cubit.tabController,
                 tabs: const [

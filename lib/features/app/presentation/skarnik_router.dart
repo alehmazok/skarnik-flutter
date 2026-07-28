@@ -36,19 +36,15 @@ abstract class SkarnikRouter {
               ),
             ],
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/vocabulary',
-                builder: (context, state) => const VocabularyPage(),
-              ),
-            ],
-          ),
         ],
       ),
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchPage(),
+      ),
+      GoRoute(
+        path: '/vocabulary',
+        builder: (context, state) => const VocabularyPage(),
       ),
       GoRoute(
         path: '/settings',

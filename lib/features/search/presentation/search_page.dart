@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
 import 'package:skarnik_flutter/features/app/domain/entity/word.dart';
 import 'package:skarnik_flutter/features/translation/presentation/translation_page.dart';
+import 'package:skarnik_flutter/strings.dart';
 import 'package:skarnik_flutter/widgets/adaptive_icons.dart';
 import 'package:skarnik_flutter/widgets/breakpoints.dart';
 import 'package:skarnik_flutter/widgets/master_detail_view.dart';
@@ -12,6 +13,7 @@ import 'package:skarnik_flutter/widgets/master_detail_view.dart';
 import '../domain/use_case/log_analytics_search_no_results.dart';
 import '../domain/use_case/log_analytics_search_performed.dart';
 import '../domain/use_case/log_analytics_search_result_tapped.dart';
+import '../domain/use_case/log_analytics_vocabulary_shortcut_tapped.dart';
 import '../domain/use_case/search_use_case.dart';
 import 'search_cubit.dart';
 import 'widgets/search_extra_buttons.dart';
@@ -56,10 +58,24 @@ class _SearchPageState extends State<SearchPage> {
         logAnalyticsSearchPerformedUseCase: getIt<LogAnalyticsSearchPerformedUseCase>(),
         logAnalyticsSearchNoResultsUseCase: getIt<LogAnalyticsSearchNoResultsUseCase>(),
         logAnalyticsSearchResultTappedUseCase: getIt<LogAnalyticsSearchResultTappedUseCase>(),
+        logAnalyticsVocabularyShortcutTappedUseCase:
+            getIt<LogAnalyticsVocabularyShortcutTappedUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 8,
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(AdaptiveIcons.book),
+                tooltip: Strings.dictionary,
+                onPressed: () {
+                  context.read<SearchCubit>().onVocabularyShortcutTapped();
+                  context.push('/vocabulary');
+                },
+              ),
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1),
             child: Container(

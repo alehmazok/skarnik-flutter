@@ -8,4 +8,6 @@ abstract class AnalyticsSearchRepository {
   Future<void> logSearchNoResults(String query);
 
   Future<void> logSearchResultTapped(SearchWord word, int position, String query);
+
+  Future<void> logVocabularyShortcutTapped();
 }
