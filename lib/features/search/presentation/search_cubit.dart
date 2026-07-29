@@ -101,33 +101,45 @@ class SearchCubit extends Cubit<SearchState> {
 
   Future<void> _search(String query) async {
     if (query.isEmpty) {
-      emit(SearchLoadedState.empty());
+      if (!isClosed) emit(SearchLoadedState.empty());
       return;
     }
     query = query.trim();
     final search = await searchUseCase(query);
+    if (isClosed) return;
     switch (search) {
       case Failure(error: final error):
         emit(SearchFailedState(error));
       case Success(result: final result):
-        final items = result.toBuiltList();
+        final items = result.words.toBuiltList();
         emit(
           SearchLoadedState(
             query: query,
             items: items,
           ),
         );
-        _debounceSearchAnalytics(query, items.length);
+        _debounceSearchAnalytics(query, items.length, result.usedPrepositionFallback);
     }
   }
 
-  void _debounceSearchAnalytics(String query, int resultCount) {
+  void _debounceSearchAnalytics(String query, int resultCount, bool usedPrepositionFallback) {
     _analyticsDebounce?.cancel();
     _analyticsDebounce = Timer(const Duration(milliseconds: 500), () {
       if (resultCount > 0) {
-        unawaited(logAnalyticsSearchPerformedUseCase((query: query, resultCount: resultCount)));
+        unawaited(
+          logAnalyticsSearchPerformedUseCase((
+            query: query,
+            resultCount: resultCount,
+            usedPrepositionFallback: usedPrepositionFallback,
+          )),
+        );
       } else {
-        unawaited(logAnalyticsSearchNoResultsUseCase(query));
+        unawaited(
+          logAnalyticsSearchNoResultsUseCase((
+            query: query,
+            usedPrepositionFallback: usedPrepositionFallback,
+          )),
+        );
       }
     });
   }

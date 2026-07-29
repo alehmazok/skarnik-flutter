@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -36,7 +38,10 @@ void main() {
     final logAnalyticsSearchResultTappedUseCase = MockLogAnalyticsSearchResultTappedUseCase();
 
     setUpAll(() {
-      registerFallbackValue((query: '', resultCount: 0));
+      registerFallbackValue(
+        (query: '', resultCount: 0, usedPrepositionFallback: false),
+      );
+      registerFallbackValue((query: '', usedPrepositionFallback: false));
       registerFallbackValue((word: MockWord(), position: 0, query: ''));
       when(
         () => logAnalyticsSearchPerformedUseCase(any()),
@@ -104,7 +109,7 @@ void main() {
           when(
             () => searchRepository.search(any()),
           ).thenAnswer(
-            (_) async => [word1, word2],
+            (_) async => (words: [word1, word2], usedPrepositionFallback: false),
           );
         },
         build: () => newInstance(),
@@ -127,6 +132,58 @@ void main() {
               ),
         ],
       );
+
+      blocTest(
+        'forwards usedPrepositionFallback from search results to the analytics use case',
+        setUp: () {
+          when(
+            () => keyboardController.onChange,
+          ).thenAnswer(
+            (_) => Stream.value(true),
+          );
+          when(
+            () => searchRepository.search(any()),
+          ).thenAnswer(
+            (_) async => (words: [MockWord()], usedPrepositionFallback: true),
+          );
+        },
+        build: () => newInstance(),
+        wait: const Duration(milliseconds: 700),
+        act: (cubit) async {
+          cubit.searchTextController.text = 'всмысле';
+        },
+        verify: (_) {
+          verify(
+            () => logAnalyticsSearchPerformedUseCase(
+              (query: 'всмысле', resultCount: 1, usedPrepositionFallback: true),
+            ),
+          ).called(1);
+        },
+      );
+
+      test('does not emit after the cubit is closed while a search is in flight', () async {
+        final completer = Completer<({Iterable<SearchWord> words, bool usedPrepositionFallback})>();
+        when(
+          () => keyboardController.onChange,
+        ).thenAnswer((_) => const Stream.empty());
+        when(
+          () => searchRepository.search(any()),
+        ).thenAnswer((_) => completer.future);
+
+        final cubit = newInstance();
+        cubit.searchTextController.text = 'впику';
+        // Let the 50ms rxdart debounce fire so _search() starts awaiting the
+        // (still-pending) repository call.
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+
+        await cubit.close();
+        // Resolving after close() reproduces the race that previously threw
+        // "Bad state: Cannot emit new states after calling close".
+        completer.complete((words: [MockWord()], usedPrepositionFallback: false));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(cubit.state, isNot(isA<SearchLoadedState>()));
+      });
     });
 
     group('search input', () {

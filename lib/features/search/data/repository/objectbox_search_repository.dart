@@ -15,6 +15,24 @@ class ObjectboxSearchRepository implements SearchRepository {
     '\'': '‘',
   };
 
+  /// RU/BE one-letter prepositions and conjunctions, derived from the
+  /// dictionary's own part-of-speech tags (see main_word translations
+  /// tagged "предлог/прыназоўнік"/"союз/злучнік"). Users often type these
+  /// glued to the next word (e.g. "всмысле" for "в смысле").
+  static const _gluedPrefixLetters = {
+    'а',
+    'в',
+    'ж',
+    'з',
+    'и',
+    'і',
+    'к',
+    'о',
+    'с',
+    'у',
+    'ў',
+  };
+
   final QueryRepository _queryRepository;
 
   ObjectboxSearchRepository(
@@ -22,8 +40,35 @@ class ObjectboxSearchRepository implements SearchRepository {
   );
 
   @override
-  Future<Iterable<SearchWord>> search(String searchQuery) async {
+  Future<({Iterable<SearchWord> words, bool usedPrepositionFallback})> search(
+    String searchQuery,
+  ) async {
     searchQuery = searchQuery.toLowerCase();
+    final primaryResults = await _searchOnce(searchQuery);
+    if (primaryResults.isNotEmpty) {
+      return (words: primaryResults, usedPrepositionFallback: false);
+    }
+
+    final strippedQuery = _stripGluedPrefixLetter(searchQuery);
+    if (strippedQuery == null) {
+      return (words: primaryResults, usedPrepositionFallback: false);
+    }
+
+    final retryResults = await _searchOnce(strippedQuery);
+    return (words: retryResults, usedPrepositionFallback: true);
+  }
+
+  /// Returns [searchQuery] with a leading glued preposition/conjunction
+  /// removed, or null if no such stripping applies. Only ever called on
+  /// the original query, never on its own output, so it can strip at
+  /// most one letter.
+  String? _stripGluedPrefixLetter(String searchQuery) {
+    if (searchQuery.length < 2) return null;
+    if (!_gluedPrefixLetters.contains(searchQuery[0])) return null;
+    return searchQuery.substring(1);
+  }
+
+  Future<Iterable<SearchWord>> _searchOnce(String searchQuery) async {
     final searchQueryWithSubstitutions = applySubstitutions(searchQuery);
 
     final resultsByWord = _queryRepository.queryByWord(
