@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
+import 'package:skarnik_flutter/features/analytics_consent/presentation/analytics_consent_cubit.dart';
 import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
 import 'package:skarnik_flutter/strings.dart';
 
@@ -83,6 +84,18 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: const Text(Strings.clearHistory),
                         onTap: () => _showClearHistoryConfirmation(context),
                         enabled: enabled,
+                      );
+                    },
+                  ),
+                  BlocBuilder<AnalyticsConsentCubit, AnalyticsConsentState?>(
+                    bloc: getIt<AnalyticsConsentCubit>(),
+                    builder: (context, consentState) {
+                      return SwitchListTile(
+                        secondary: const Icon(Icons.query_stats_outlined),
+                        title: const Text(Strings.analyticsConsentSettingsTitle),
+                        subtitle: const Text(Strings.analyticsConsentSettingsSubtitle),
+                        value: consentState?.granted ?? false,
+                        onChanged: (granted) => getIt<AnalyticsConsentCubit>().setConsent(granted),
                       );
                     },
                   ),

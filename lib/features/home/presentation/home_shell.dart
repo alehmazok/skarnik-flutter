@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skarnik_flutter/di.skarnik.dart';
+import 'package:skarnik_flutter/features/analytics_consent/presentation/analytics_consent_cubit.dart';
+import 'package:skarnik_flutter/features/analytics_consent/presentation/widgets/analytics_consent_dialog.dart';
 import 'package:skarnik_flutter/features/history/presentation/history_cubit.dart';
 import 'package:skarnik_flutter/features/home/domain/use_case/load_history.dart';
 import 'package:skarnik_flutter/features/settings/presentation/widgets/settings_button.dart';
@@ -24,74 +26,83 @@ class HomeShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SkarnikAppBloc, SkarnikAppState>(
-      buildWhen: (_, current) => current is SkarnikAppInitedState,
-      builder: (context, appState) {
-        if (appState is! SkarnikAppInitedState) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+    return BlocListener<AnalyticsConsentCubit, AnalyticsConsentState?>(
+      bloc: getIt<AnalyticsConsentCubit>(),
+      listenWhen: (previous, current) => current != null && !current.hasAnswered,
+      listener: (context, state) => showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const AnalyticsConsentDialog(),
+      ),
+      child: BlocBuilder<SkarnikAppBloc, SkarnikAppState>(
+        buildWhen: (_, current) => current is SkarnikAppInitedState,
+        builder: (context, appState) {
+          if (appState is! SkarnikAppInitedState) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return BlocProvider(
+            create: (context) => HistoryCubit(
+              loadHistoryUseCase: getIt<LoadHistoryUseCase>(),
             ),
-          );
-        }
-
-        return BlocProvider(
-          create: (context) => HistoryCubit(
-            loadHistoryUseCase: getIt<LoadHistoryUseCase>(),
-          ),
-          child: Builder(
-            builder: (context) {
-              final isRail = MediaQuery.sizeOf(context).width >= Breakpoints.rail;
-              if (!isRail) {
-                return Scaffold(
-                  body: navigationShell,
-                  bottomNavigationBar: NavigationBar(
-                    selectedIndex: navigationShell.currentIndex,
-                    onDestinationSelected: navigationShell.goBranch,
-                    destinations: [
-                      for (final destination in _destinations)
-                        NavigationDestination(
-                          icon: Icon(destination.icon),
-                          label: destination.label,
-                        ),
-                    ],
-                  ),
-                );
-              }
-
-              return Scaffold(
-                body: Row(
-                  children: [
-                    NavigationRail(
+            child: Builder(
+              builder: (context) {
+                final isRail = MediaQuery.sizeOf(context).width >= Breakpoints.rail;
+                if (!isRail) {
+                  return Scaffold(
+                    body: navigationShell,
+                    bottomNavigationBar: NavigationBar(
                       selectedIndex: navigationShell.currentIndex,
                       onDestinationSelected: navigationShell.goBranch,
-                      labelType: NavigationRailLabelType.all,
-                      trailing: const Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: SettingsButton(),
-                          ),
-                        ),
-                      ),
                       destinations: [
                         for (final destination in _destinations)
-                          NavigationRailDestination(
+                          NavigationDestination(
                             icon: Icon(destination.icon),
-                            label: Text(destination.label),
+                            label: destination.label,
                           ),
                       ],
                     ),
-                    const VerticalDivider(width: 1),
-                    Expanded(child: navigationShell),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
+                  );
+                }
+
+                return Scaffold(
+                  body: Row(
+                    children: [
+                      NavigationRail(
+                        selectedIndex: navigationShell.currentIndex,
+                        onDestinationSelected: navigationShell.goBranch,
+                        labelType: NavigationRailLabelType.all,
+                        trailing: const Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: SettingsButton(),
+                            ),
+                          ),
+                        ),
+                        destinations: [
+                          for (final destination in _destinations)
+                            NavigationRailDestination(
+                              icon: Icon(destination.icon),
+                              label: Text(destination.label),
+                            ),
+                        ],
+                      ),
+                      const VerticalDivider(width: 1),
+                      Expanded(child: navigationShell),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

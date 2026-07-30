@@ -9,6 +9,7 @@ import 'package:workmanager/workmanager.dart';
 
 import 'bloc_observer.dart';
 import 'di.skarnik.dart';
+import 'features/analytics_consent/domain/use_case/init_analytics_consent.dart';
 import 'features/app/presentation/skarnik_app.dart';
 import 'features/widget/presentation/widget_callback_dispatcher.dart' as word_of_day_widget;
 import 'firebase_options.dart';
@@ -28,6 +29,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Must run before any Analytics event can fire (e.g. SkarnikAppBloc's
+  // app-open log), so the persisted/default-off consent flag is already
+  // applied to the SDK by the time the app starts.
+  await getIt<InitAnalyticsConsentUseCase>()();
 
   await SupabaseConfig.initialize();
 

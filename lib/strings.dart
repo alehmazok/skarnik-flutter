@@ -3,6 +3,14 @@ abstract interface class Strings {
 
   static const aboutSkarnik = 'Пра Скарнік';
   static const addedToBookmarks = 'Дададзена ў закладкі.';
+  static const analyticsConsentTitle = 'Аналітыка выкарыстання';
+  static const analyticsConsentMessage =
+      'Дазвольце збіраць ананімную статыстыку выкарыстання праграмы, каб дапамагчы нам паляпшаць «Скарнік». Гэта не ўплывае на вашы асабістыя даныя і можа быць зменена ў любы момант у наладах.';
+  static const analyticsConsentAccept = 'Дазволіць';
+  static const analyticsConsentDecline = 'Не дазваляць';
+  static const analyticsConsentSettingsTitle = 'Аналітыка выкарыстання';
+  static const analyticsConsentSettingsSubtitle =
+      'Дазволіць зборы ананімнай статыстыкі выкарыстання праграмы';
   static const attention = 'Увага';
   static const bookmarks = 'Закладкі';
   static const clearHistory = 'Ачысціць гісторыю пошуку';

@@ -12,6 +12,16 @@
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:skarnik_flutter/features/analytics_consent/data/repository/analytics_consent_repository_impl.dart'
+    as _i38;
+import 'package:skarnik_flutter/features/analytics_consent/domain/repository/analytics_consent_repository.dart'
+    as _i835;
+import 'package:skarnik_flutter/features/analytics_consent/domain/use_case/init_analytics_consent.dart'
+    as _i871;
+import 'package:skarnik_flutter/features/analytics_consent/domain/use_case/set_analytics_consent.dart'
+    as _i152;
+import 'package:skarnik_flutter/features/analytics_consent/presentation/analytics_consent_cubit.dart'
+    as _i932;
 import 'package:skarnik_flutter/features/app/data/repository/dev_analytics_app_repository.dart'
     as _i805;
 import 'package:skarnik_flutter/features/app/data/repository/firebase_analytics_app_repository.dart'
@@ -239,6 +249,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i636.FavoritesSortRepository>(
       () => _i1037.SharedPreferencesFavoritesSortRepository(),
     );
+    gh.factory<_i835.AnalyticsConsentRepository>(
+      () => _i38.AnalyticsConsentRepositoryImpl(),
+    );
     gh.factory<_i994.AnalyticsSearchRepository>(
       () => _i772.DevAnalyticsSearchRepository(),
       registerFor: {_dev},
@@ -330,6 +343,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i861.ClearHistoryUseCase>(
       () => _i861.ClearHistoryUseCase(gh<_i531.SettingsHistoryRepository>()),
     );
+    gh.factory<_i871.InitAnalyticsConsentUseCase>(
+      () => _i871.InitAnalyticsConsentUseCase(
+        gh<_i835.AnalyticsConsentRepository>(),
+      ),
+    );
+    gh.factory<_i152.SetAnalyticsConsentUseCase>(
+      () => _i152.SetAnalyticsConsentUseCase(
+        gh<_i835.AnalyticsConsentRepository>(),
+      ),
+    );
     gh.factory<_i361.FavoritesRepository>(
       () =>
           _i792.ObjectboxFavoritesRepository(gh<_i522.ObjectboxStoreHolder>()),
@@ -345,6 +368,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i223.AnalyticsTranslationRepository>(
       () => _i646.FirebaseAnalyticsTranslationRepository(),
       registerFor: {_prod},
+    );
+    gh.lazySingleton<_i932.AnalyticsConsentCubit>(
+      () => _i932.AnalyticsConsentCubit(
+        gh<_i835.AnalyticsConsentRepository>(),
+        gh<_i152.SetAnalyticsConsentUseCase>(),
+      ),
     );
     gh.factory<_i118.ClearDownloadedDictionaryUseCase>(
       () => _i118.ClearDownloadedDictionaryUseCase(
