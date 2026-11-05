@@ -1,5 +1,10 @@
 # Skarnik Flutter — Claude Code Context
 
+> **Deprecated (2026-11-05).** Replaced by the native apps
+> [skarnik_android](https://github.com/alehmazok/skarnik_android) and
+> [skarnik_ios](https://github.com/alehmazok/skarnik_ios). Do not add features here; this code is kept
+> as the behaviour reference for the native ports.
+
 ## Project
 
 Belarusian dictionary app (Скарнік). Three dictionaries: Бел-Рус, Рус-Бел, Тлумачальны. Flutter, Android + iOS. Firebase analytics/crashlytics, deep linking, ObjectBox local DB.

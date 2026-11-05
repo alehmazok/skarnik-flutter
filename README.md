@@ -14,6 +14,14 @@
   </a>
 </div>
 
+> [!WARNING]
+> **This app is deprecated and no longer maintained.** Skarnik is now built as native apps:
+>
+> - **Android:** [skarnik_android](https://github.com/alehmazok/skarnik_android) (Kotlin, Jetpack Compose). It ships as an update of the same Google Play app, `by.mazokaleh.skarnik`, and keeps your history, bookmarks and downloaded dictionaries.
+> - **iOS:** [skarnik_ios](https://github.com/alehmazok/skarnik_ios) (Swift).
+>
+> This repository stays readable for reference. New issues and pull requests belong in the native repositories.
+
 ## About
 
 Skarnik is a mobile dictionary app for Belarusian, offering word search, translation, and browsing across three dictionaries:
@@ -121,7 +129,7 @@ flutter test
 
 ## Contributing
 
-This is a personal project. Issues and pull requests are welcome — please open an issue to discuss significant changes before submitting a PR.
+This repository no longer takes contributions. Please open issues and pull requests in [skarnik_android](https://github.com/alehmazok/skarnik_android) or [skarnik_ios](https://github.com/alehmazok/skarnik_ios).
 
 ## License
 
