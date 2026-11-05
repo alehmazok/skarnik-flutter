@@ -1,5 +1,8 @@
 name: Deploy Android (Internal track)
 
+# Deprecated app. Kept (manual only) as an emergency hotfix path until the native
+# Android app (skarnik_android) has replaced this build on Google Play; delete after.
+
 on:
   workflow_dispatch:
 

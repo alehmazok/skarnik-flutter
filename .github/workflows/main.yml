@@ -1,10 +1,7 @@
 name: CI
 
+# The Flutter app is deprecated: CI runs only on demand.
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
